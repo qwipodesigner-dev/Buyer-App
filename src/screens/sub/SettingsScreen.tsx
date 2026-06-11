@@ -1,7 +1,7 @@
 import { useState } from 'react';
 import { Icon, StatusBar } from '../../components/Icons';
 
-export default function SettingsScreen({ onBack, page = 'settings' }) {
+export default function SettingsScreen({ onBack, page = 'settings' }: any) {
   // Notification preferences
   const [notifPrefs, setNotifPrefs] = useState({
     orderUpdates: true,
@@ -172,7 +172,7 @@ export default function SettingsScreen({ onBack, page = 'settings' }) {
   );
 }
 
-function Toggle({ label, detail, value, onToggle, last }) {
+function Toggle({ label, detail, value, onToggle, last }: any) {
   return (
     <button className={`toggle-row ${last ? 'last' : ''}`} onClick={onToggle}>
       <div className="profile-menu-text">

@@ -2,7 +2,7 @@ import { useState } from 'react';
 import { Icon, StatusBar } from '../../components/Icons';
 import { savedAddresses as initialAddresses } from '../../data/mockData';
 
-export default function AddressesScreen({ onBack }) {
+export default function AddressesScreen({ onBack }: any) {
   const [addresses, setAddresses] = useState(initialAddresses);
 
   const setDefault = (id) => {

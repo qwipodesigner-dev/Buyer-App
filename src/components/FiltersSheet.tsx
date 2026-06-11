@@ -32,7 +32,7 @@ const MARGIN_OPTIONS = [
   { value: 16, label: '16% +' },
 ];
 
-export default function FiltersSheet({ initialFilters, onClose, onApply }) {
+export default function FiltersSheet({ initialFilters, onClose, onApply }: any) {
   const { dragHandlers, sheetStyle } = useSheetSwipe(onClose);
   const [filters, setFilters] = useState(initialFilters);
 

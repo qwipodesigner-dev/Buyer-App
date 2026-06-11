@@ -61,7 +61,7 @@ function computeOffers(variant) {
   return offers;
 }
 
-export default function DiscountsSheet({ product, variant, onClose }) {
+export default function DiscountsSheet({ product, variant, onClose }: any) {
   const { dragHandlers, sheetStyle } = useSheetSwipe(onClose);
   const slabs = computeSlabs(variant);
   const offers = computeOffers(variant);
@@ -117,7 +117,7 @@ export default function DiscountsSheet({ product, variant, onClose }) {
   );
 }
 
-function OfferAccordion({ offer }) {
+function OfferAccordion({ offer }: any) {
   const [open, setOpen] = useState(false);
   return (
     <div className={`offer-accordion ${open ? 'open' : ''}`}>

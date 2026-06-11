@@ -1,7 +1,7 @@
 import { Icon, StatusBar } from '../../components/Icons';
 import { helpTopics } from '../../data/mockData';
 
-export default function HelpScreen({ onBack }) {
+export default function HelpScreen({ onBack }: any) {
   return (
     <>
       <StatusBar />

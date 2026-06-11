@@ -2,7 +2,7 @@ import { useState } from 'react';
 import { Icon, StatusBar } from '../components/Icons';
 import { notifications as initialNotifs } from '../data/mockData';
 
-export default function NotificationsScreen({ onBack }) {
+export default function NotificationsScreen({ onBack }: any) {
   const [tab, setTab] = useState('all');
   const [notifs, setNotifs] = useState(initialNotifs);
 

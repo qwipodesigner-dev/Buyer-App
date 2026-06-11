@@ -2,7 +2,7 @@ import { useState } from 'react';
 import { Icon, StatusBar } from '../../components/Icons';
 import { paymentMethods as initialMethods } from '../../data/mockData';
 
-export default function PaymentScreen({ onBack }) {
+export default function PaymentScreen({ onBack }: any) {
   const [methods, setMethods] = useState(initialMethods);
 
   const setDefault = (id) => {

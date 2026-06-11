@@ -34,8 +34,8 @@ export default function ProductListing({
   onOpenFilters,
   onGoToCart,
   onUpdateQty,
-}) {
-  const [selectedVariant, setSelectedVariant] = useState({});
+}: any) {
+  const [selectedVariant, setSelectedVariant] = useState<any>({});
 
   const activeFilters = filters || DEFAULT_FILTERS;
 
@@ -270,7 +270,7 @@ export default function ProductListing({
           <button className="cart-strip-btn" onClick={onGoToCart}>
             <Icon.Cart />
             <span className="badge">
-              {Object.values(cartItems).reduce((a, b) => a + b, 0)}
+              {(Object.values(cartItems) as number[]).reduce((a, b) => a + b, 0)}
             </span>
             View Cart
           </button>

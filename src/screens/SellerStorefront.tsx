@@ -2,7 +2,7 @@ import { Icon, StatusBar } from '../components/Icons';
 import BottomNav from '../components/BottomNav';
 import { seller, categories, brands, products } from '../data/mockData';
 
-export default function SellerStorefront({ cartCount, distributor, onBack, onNavigate, onSelectCategory, onSelectProduct }) {
+export default function SellerStorefront({ cartCount, distributor, onBack, onNavigate, onSelectCategory, onSelectProduct }: any) {
   const featured = products.slice(0, 4);
   const activeSeller = distributor
     ? {

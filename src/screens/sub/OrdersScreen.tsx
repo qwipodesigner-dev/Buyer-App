@@ -2,7 +2,7 @@ import { useState } from 'react';
 import { Icon, StatusBar } from '../../components/Icons';
 import { orderHistoryList } from '../../data/mockData';
 
-export default function OrdersScreen({ onBack }) {
+export default function OrdersScreen({ onBack }: any) {
   const [tab, setTab] = useState('active');
 
   const isActive = (o) => o.status === 'in_transit' || o.status === 'processing';

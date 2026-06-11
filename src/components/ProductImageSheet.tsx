@@ -10,7 +10,7 @@ const ImageIcon = () => (
   </svg>
 );
 
-export default function ProductImageSheet({ product, onClose, onAddClick }) {
+export default function ProductImageSheet({ product, onClose, onAddClick }: any) {
   const { dragHandlers, sheetStyle } = useSheetSwipe(onClose);
   const [activeIdx, setActiveIdx] = useState(0);
   const railRef = useRef(null);
@@ -153,7 +153,7 @@ export default function ProductImageSheet({ product, onClose, onAddClick }) {
                     src={img}
                     alt={`thumb-${idx}`}
                     style={{ width: '100%', height: '100%', objectFit: 'contain' }}
-                    onError={(e) => (e.currentTarget.style.opacity = 0.3)}
+                    onError={(e) => (e.currentTarget.style.opacity = '0.3')}
                   />
                 </button>
               ))}
@@ -275,7 +275,7 @@ export default function ProductImageSheet({ product, onClose, onAddClick }) {
   );
 }
 
-function SpecCell({ label, value }) {
+function SpecCell({ label, value }: any) {
   return (
     <div
       style={{

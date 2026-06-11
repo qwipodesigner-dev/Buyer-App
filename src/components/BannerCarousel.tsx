@@ -1,7 +1,7 @@
 import { useState, useEffect, useRef } from 'react';
 
 // Auto-scrolling banner rail with manual swipe + dots indicator
-export default function BannerCarousel({ banners, renderBanner, autoScrollMs = 5000, pauseAfterTouchMs = 8000 }) {
+export default function BannerCarousel({ banners, renderBanner, autoScrollMs = 5000, pauseAfterTouchMs = 8000 }: any) {
   const railRef = useRef(null);
   const [activeIdx, setActiveIdx] = useState(0);
   const lastUserActionRef = useRef(0);

@@ -21,15 +21,15 @@ import { filtersDefault } from './screens/ProductListing';
 import { initialCart, categories } from './data/mockData';
 
 export default function App() {
-  const [screen, setScreen] = useState('home');
-  const [selectedCategory, setSelectedCategory] = useState(categories[0]);
-  const [selectedDistributor, setSelectedDistributor] = useState(null);
-  const [sheetProduct, setSheetProduct] = useState(null);
-  const [sheetVariant, setSheetVariant] = useState(null);
-  const [imageSheetProduct, setImageSheetProduct] = useState(null);
-  const [discountsSheet, setDiscountsSheet] = useState(null); // {product, variant}
-  const [filtersOpen, setFiltersOpen] = useState(false);
-  const [listingFilters, setListingFilters] = useState(filtersDefault);
+  const [screen, setScreen] = useState<string>('home');
+  const [selectedCategory, setSelectedCategory] = useState<any>(categories[0]);
+  const [selectedDistributor, setSelectedDistributor] = useState<any>(null);
+  const [sheetProduct, setSheetProduct] = useState<any>(null);
+  const [sheetVariant, setSheetVariant] = useState<any>(null);
+  const [imageSheetProduct, setImageSheetProduct] = useState<any>(null);
+  const [discountsSheet, setDiscountsSheet] = useState<any>(null); // {product, variant}
+  const [filtersOpen, setFiltersOpen] = useState<boolean>(false);
+  const [listingFilters, setListingFilters] = useState<any>(filtersDefault);
   const [cart, setCart] = useState(initialCart);
   const [listingCart, setListingCart] = useState({});
   const [toast, setToast] = useState('');

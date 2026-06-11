@@ -10,7 +10,7 @@ const CartIcon = () => (
   </svg>
 );
 
-export default function AddToCartSheet({ product, initialVariant, onClose, onConfirm }) {
+export default function AddToCartSheet({ product, initialVariant, onClose, onConfirm }: any) {
   const { dragHandlers, sheetStyle } = useSheetSwipe(onClose);
   const [variantId, setVariantId] = useState(initialVariant?.id || product.variants[0].id);
   const [packQuantities, setPackQuantities] = useState({ pc: 0, set: 0, case: 0 });

@@ -11,7 +11,7 @@ import {
   exclusiveOffers,
 } from '../data/mockData';
 
-export default function HomeScreen({ cartCount, onNavigate, onSelectDistributor, onSelectBrand, onOpenNotifications }) {
+export default function HomeScreen({ cartCount, onNavigate, onSelectDistributor, onSelectBrand, onOpenNotifications }: any) {
   const [tab, setTab] = useState('distributors');
 
   const visibleDistributors = distributors.filter((d) =>
@@ -94,7 +94,7 @@ export default function HomeScreen({ cartCount, onNavigate, onSelectDistributor,
   );
 }
 
-function DistributorsView({ visibleDistributors, onSelectDistributor, onSelectBrand }) {
+function DistributorsView({ visibleDistributors, onSelectDistributor, onSelectBrand }: any) {
   return (
     <>
       {/* Hero banner carousel — auto-scrolls every 5s */}
@@ -185,7 +185,7 @@ function DistributorsView({ visibleDistributors, onSelectDistributor, onSelectBr
   );
 }
 
-function WholesalersView({ onSelectBrand }) {
+function WholesalersView({ onSelectBrand }: any) {
   return (
     <>
       {/* Snack banner carousel — auto-scrolls every 5s */}

@@ -1,7 +1,7 @@
 import { Icon, StatusBar } from '../components/Icons';
 import { movSuggestions } from '../data/mockData';
 
-export default function MultiSellerCart({ cart, onBack, onUpdateItemQty, onAddSuggestion, onContinueShopping }) {
+export default function MultiSellerCart({ cart, onBack, onUpdateItemQty, onAddSuggestion, onContinueShopping }: any) {
   // Compute subtotals per seller
   const sellerData = cart.sellers.map((seller) => {
     let subtotal = 0;

@@ -9,7 +9,7 @@ const recentCreditTxns = [
   { id: 't5', date: '2026-05-15', label: 'Order #QW2390', amount: -1860, type: 'purchase' },
 ];
 
-export default function CreditScreen({ onBack }) {
+export default function CreditScreen({ onBack }: any) {
   const available = userProfile.creditLimit - userProfile.creditUsed;
   const creditPct = (userProfile.creditUsed / userProfile.creditLimit) * 100;
   const formatDate = (s) => new Date(s).toLocaleDateString('en-IN', { month: 'short', day: 'numeric' });

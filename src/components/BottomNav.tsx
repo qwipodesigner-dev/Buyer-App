@@ -1,6 +1,6 @@
 import { Icon } from './Icons';
 
-export default function BottomNav({ active, cartCount, onNavigate }) {
+export default function BottomNav({ active, cartCount, onNavigate }: any) {
   return (
     <div className="bottom-nav">
       <button

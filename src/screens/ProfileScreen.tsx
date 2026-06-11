@@ -12,7 +12,7 @@ const SignOutIcon = () => (
   </svg>
 );
 
-export default function ProfileScreen({ cartCount, onNavigate, onOpenSubPage }) {
+export default function ProfileScreen({ cartCount, onNavigate, onOpenSubPage }: any) {
   const [signOutOpen, setSignOutOpen] = useState(false);
 
   const initials = userProfile.name
@@ -143,7 +143,7 @@ export default function ProfileScreen({ cartCount, onNavigate, onOpenSubPage }) 
   );
 }
 
-function SignOutSheet({ onClose }) {
+function SignOutSheet({ onClose }: any) {
   const { dragHandlers, sheetStyle } = useSheetSwipe(onClose);
   return (
     <div className="sheet-backdrop" onClick={onClose}>
@@ -194,7 +194,7 @@ function SignOutSheet({ onClose }) {
   );
 }
 
-function ProfileRow({ label, value, mono, last }) {
+function ProfileRow({ label, value, mono, last }: any) {
   return (
     <div className={`profile-row ${last ? 'last' : ''}`}>
       <span className="profile-row-label">{label}</span>
@@ -203,7 +203,7 @@ function ProfileRow({ label, value, mono, last }) {
   );
 }
 
-function ProfileMenuItem({ icon, label, detail, danger, last, onClick }) {
+function ProfileMenuItem({ icon, label, detail, danger, last, onClick }: any) {
   return (
     <button className={`profile-menu-item ${last ? 'last' : ''} ${danger ? 'danger' : ''}`} onClick={onClick}>
       <span className="profile-menu-icon">{icon}</span>

@@ -2,8 +2,31 @@
 // Brand info + MRPs verified from JioMart, BigBasket, Blinkit, Zepto, official brand sites (June 2026)
 // Wikipedia logos and product photos served via upload.wikimedia.org (CORS-friendly)
 
+import type {
+  AppNotification,
+  Brand,
+  BrandRegistryEntry,
+  Cart,
+  Category,
+  Distributor,
+  ExclusiveOffer,
+  HelpTopic,
+  HeroBanner,
+  MovSuggestion,
+  OrderHistoryEntry,
+  PaymentMethod,
+  Product,
+  ReorderHistoryEntry,
+  SavedAddress,
+  Seller,
+  SellerType,
+  UserProfile,
+  WholesalerBanner,
+  WholesalerCategory,
+} from '../types';
+
 // Product photo URLs — all from Wikimedia Commons (CDN, no hotlink protection)
-const IMG = {
+const IMG: Record<string, string[]> = {
   sunflowerOil: [
     'https://upload.wikimedia.org/wikipedia/commons/thumb/3/33/Bottle_1_liter_Sunflower_refined_oil.jpg/500px-Bottle_1_liter_Sunflower_refined_oil.jpg',
     'https://upload.wikimedia.org/wikipedia/commons/thumb/6/60/Sunflower_oil.jpg/500px-Sunflower_oil.jpg',
@@ -55,7 +78,7 @@ const IMG = {
   ],
 };
 
-export const seller = {
+export const seller: Seller = {
   id: 'seller-a',
   name: 'Sri Sai Krishna Traders',
   shortName: 'SSKT',
@@ -69,7 +92,7 @@ export const seller = {
 };
 
 // All distributors shown on Home screen — Authorised Distributors tab
-export const distributors = [
+export const distributors: Distributor[] = [
   {
     id: 'sskt',
     name: 'Sri Sai Krishna Traders',
@@ -133,7 +156,7 @@ export const distributors = [
 ];
 
 // Hero banners for Home screen
-export const heroBanners = [
+export const heroBanners: HeroBanner[] = [
   {
     id: 'b1',
     tag: 'INDIA\'S FIRST',
@@ -167,7 +190,7 @@ export const heroBanners = [
 ];
 
 // Wholesalers tab — snack deals + categories
-export const wholesalerBanners = [
+export const wholesalerBanners: WholesalerBanner[] = [
   {
     id: 'wb1',
     tag: 'SNACK TIME DEALS',
@@ -188,7 +211,7 @@ export const wholesalerBanners = [
   },
 ];
 
-export const wholesalerCategories = [
+export const wholesalerCategories: WholesalerCategory[] = [
   {
     id: 'groceries',
     name: 'Groceries',
@@ -203,7 +226,7 @@ export const wholesalerCategories = [
   },
 ];
 
-export const exclusiveOffers = [
+export const exclusiveOffers: ExclusiveOffer[] = [
   {
     id: 'ex1',
     title: 'Tata Sampann',
@@ -234,7 +257,7 @@ export const exclusiveOffers = [
 ];
 
 // Brand registry — real parents, founding, logos
-export const brandRegistry = {
+export const brandRegistry: Record<string, BrandRegistryEntry> = {
   freedom: {
     name: 'Freedom',
     parent: 'Gemini Edibles & Fats India Ltd',
@@ -310,7 +333,7 @@ export const brandRegistry = {
   },
 };
 
-export const categories = [
+export const categories: Category[] = [
   { id: 'cooking-oil', name: 'Cooking Oil', icon: '🛢️', count: 142, color: '#FEF3C7' },
   { id: 'rice', name: 'Rice & Grains', icon: '🌾', count: 87, color: '#FED7AA' },
   { id: 'flour', name: 'Atta & Flour', icon: '🥖', count: 64, color: '#FDE68A' },
@@ -322,7 +345,7 @@ export const categories = [
 ];
 
 // Brands rail (uses registry data)
-export const brands = [
+export const brands: Brand[] = [
   { id: 'freedom', ...brandRegistry.freedom, logoText: 'F' },
   { id: 'aashirvaad', ...brandRegistry.aashirvaad, logoText: 'आ' },
   { id: 'fortune', ...brandRegistry.fortune, logoText: 'Fo' },
@@ -336,7 +359,7 @@ export const brands = [
 
 // Products — real MRPs verified from public listings (June 2026)
 // All variants include real case-pack/MOQ structure used by Indian distributors
-export const products = [
+export const products: Product[] = [
   {
     id: 'freedom-sunflower',
     name: 'Freedom Refined Sunflower Oil',
@@ -812,7 +835,7 @@ export const products = [
 ];
 
 // Initial cart with items from 2 sellers — shows MOV met, MOV pending, multi-seller complexity
-export const initialCart = {
+export const initialCart: Cart = {
   sellers: [
     {
       id: 'seller-a',
@@ -895,7 +918,7 @@ export const initialCart = {
 
 // Per-product seller availability (which seller type stocks this SKU)
 // Distributors carry brand-authorised staples; Wholesalers cover broader FMCG
-export const sellerTypeMap = {
+export const sellerTypeMap: Record<string, SellerType[]> = {
   'freedom-sunflower': ['distributor', 'wholesaler'],
   'freedom-groundnut': ['distributor'],
   'fortune-soya': ['distributor', 'wholesaler'],
@@ -909,7 +932,7 @@ export const sellerTypeMap = {
 };
 
 // Reorder history — what the retailer ordered before
-export const reorderHistory = [
+export const reorderHistory: ReorderHistoryEntry[] = [
   { productId: 'freedom-sunflower', variantId: 'v1', lastOrderedAt: '2026-05-28', lastQty: 16, timesOrdered: 12, sellerType: 'distributor' },
   { productId: 'aashirvaad-atta', variantId: 'v1', lastOrderedAt: '2026-05-30', lastQty: 8, timesOrdered: 18, sellerType: 'distributor' },
   { productId: 'aashirvaad-ghee', variantId: 'v1', lastOrderedAt: '2026-05-22', lastQty: 6, timesOrdered: 5, sellerType: 'distributor' },
@@ -923,7 +946,7 @@ export const reorderHistory = [
 ];
 
 // Notifications data
-export const notifications = [
+export const notifications: AppNotification[] = [
   {
     id: 'n1',
     type: 'order',
@@ -987,7 +1010,7 @@ export const notifications = [
 ];
 
 // Saved delivery addresses
-export const savedAddresses = [
+export const savedAddresses: SavedAddress[] = [
   {
     id: 'addr1',
     type: 'Shop',
@@ -1030,7 +1053,7 @@ export const savedAddresses = [
 ];
 
 // Order history
-export const orderHistoryList = [
+export const orderHistoryList: OrderHistoryEntry[] = [
   {
     id: 'QW2401',
     placedAt: '2026-06-05',
@@ -1099,7 +1122,7 @@ export const orderHistoryList = [
 ];
 
 // Payment methods
-export const paymentMethods = [
+export const paymentMethods: PaymentMethod[] = [
   {
     id: 'pm1',
     type: 'upi',
@@ -1139,7 +1162,7 @@ export const paymentMethods = [
 ];
 
 // Help & support topics
-export const helpTopics = [
+export const helpTopics: HelpTopic[] = [
   {
     id: 'h1',
     icon: '📦',
@@ -1167,7 +1190,7 @@ export const helpTopics = [
 ];
 
 // Profile / business data
-export const userProfile = {
+export const userProfile: UserProfile = {
   name: 'Vikas Mittapalli',
   businessName: 'Sri Venkateswara Kirana Store',
   businessType: 'Kirana Store',
@@ -1185,7 +1208,7 @@ export const userProfile = {
 };
 
 // MOV suggestions — realistic add-ons
-export const movSuggestions = [
+export const movSuggestions: MovSuggestion[] = [
   {
     id: 'sug1',
     name: 'Tata Salt Iodised 1 Kg',

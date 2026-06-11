@@ -3,7 +3,7 @@ import { Icon, StatusBar } from '../components/Icons';
 import BottomNav from '../components/BottomNav';
 import { reorderHistory, products } from '../data/mockData';
 
-export default function ReorderScreen({ cartCount, onNavigate, onOpenSheet, onOpenImageSheet }) {
+export default function ReorderScreen({ cartCount, onNavigate, onOpenSheet, onOpenImageSheet }: any) {
   const [tab, setTab] = useState('distributor');
 
   const visibleHistory = reorderHistory.filter((h) => h.sellerType === tab);
