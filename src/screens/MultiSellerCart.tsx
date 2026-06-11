@@ -219,7 +219,7 @@ export default function MultiSellerCart({ cart, onBack, onUpdateItemQty, onAddSu
               border: '1px dashed #d1d5db',
               borderRadius: '12px',
               fontSize: '13px',
-              fontWeight: 600,
+              fontWeight: 500,
               color: '#4b5563',
               display: 'flex',
               alignItems: 'center',
@@ -227,7 +227,7 @@ export default function MultiSellerCart({ cart, onBack, onUpdateItemQty, onAddSu
               gap: '6px',
             }}
           >
-            <Icon.Plus /> Continue Shopping
+            <Icon.Plus /> Continue shopping
           </button>
         </div>
       </div>

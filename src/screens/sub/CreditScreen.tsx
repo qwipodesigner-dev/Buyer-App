@@ -57,7 +57,7 @@ export default function CreditScreen({ onBack }: any) {
         </div>
 
         <div className="profile-section" style={{ paddingBottom: 30 }}>
-          <div className="profile-section-title">Recent Activity</div>
+          <div className="profile-section-title">Recent activity</div>
           <div className="profile-card">
             {recentCreditTxns.map((t, i) => (
               <div

@@ -1,5 +1,57 @@
 @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap');
 
+/* ============================================================
+   QWIPO DESIGN SYSTEM TOKENS
+   Per DESIGN-SYSTEM.md — single source of truth.
+   Never hard-code hex; always reference these vars.
+   ============================================================ */
+:root {
+  /* Brand */
+  --primary: #2563eb;
+  --primary-fg: #ffffff;
+  --ring: #2563eb;
+  --destructive: #d4183d;
+  --destructive-fg: #ffffff;
+  --brand-purple: #bc77ff;   /* Qwipo Q-logo official */
+
+  /* Surfaces (light) */
+  --background: #ffffff;
+  --foreground: #252525;
+  --card: #ffffff;
+  --muted: #ececf0;
+  --muted-fg: #717182;
+  --border: rgba(0, 0, 0, 0.1);
+  --input-bg: #f3f3f5;
+
+  /* Semantic palette */
+  --success: #059669;       --success-bg: #ecfdf5;   --success-border: #a7f3d0;   --success-fg: #047857;
+  --warning: #d97706;       --warning-bg: #fffbeb;   --warning-border: #fde68a;   --warning-fg: #b45309;
+  --danger:  #dc2626;       --danger-bg:  #fef2f2;   --danger-border:  #fecaca;   --danger-fg:  #b91c1c;
+  --info:    #2563eb;       --info-bg:    #eff6ff;   --info-border:    #bfdbfe;   --info-fg:    #1d4ed8;
+  --neutral: #4b5563;       --neutral-bg: #f9fafb;   --neutral-border: #e5e7eb;   --neutral-fg: #374151;
+  --accent:  #9333ea;       --accent-bg:  #faf5ff;   --accent-border:  #e9d5ff;   --accent-fg:  #7e22ce;
+
+  /* Radii */
+  --radius-sm: 2px;     /* pills in cells */
+  --radius-md: 6px;     /* buttons, inputs */
+  --radius-lg: 8px;     /* cards, dialogs */
+  --radius-xl: 12px;    /* hero / brand surfaces */
+  --radius-full: 9999px;
+
+  /* Typography */
+  --font-sans: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+  --font-size: 16px;
+
+  /* Weights — design system rule: only 400 and 500 */
+  --weight-regular: 400;
+  --weight-medium: 500;
+
+  /* Motion */
+  --motion-fast: 150ms;
+  --motion-default: 200ms;
+  --motion-slow: 300ms;
+}
+
 * {
   margin: 0;
   padding: 0;
@@ -11,9 +63,10 @@ html,
 body,
 #root {
   height: 100%;
-  font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
-  color: #111827;
-  background: #f3f4f6;
+  font-family: var(--font-sans);
+  color: var(--foreground);
+  background: var(--muted);
+  font-size: var(--font-size);
 }
 
 button {
@@ -61,10 +114,10 @@ input {
   gap: 8px;
   padding: 6px 12px;
   background: #ffffff;
-  border: 1px solid #e5e7eb;
+  border: 1px solid var(--border);
   border-radius: 999px;
   font-size: 12px;
-  font-weight: 600;
+  font-weight: 500;
   color: #4b5563;
   margin-bottom: 16px;
 }
@@ -78,9 +131,9 @@ input {
 
 .showcase-title {
   font-size: 28px;
-  font-weight: 800;
+  font-weight: 500;
   letter-spacing: -0.02em;
-  color: #111827;
+  color: var(--foreground);
   margin-bottom: 12px;
   line-height: 1.2;
 }
@@ -101,7 +154,7 @@ input {
 .screen-pill {
   padding: 12px 16px;
   background: #ffffff;
-  border: 1px solid #e5e7eb;
+  border: 1px solid var(--border);
   border-radius: 12px;
   font-size: 13px;
   font-weight: 500;
@@ -135,7 +188,7 @@ input {
   align-items: center;
   justify-content: center;
   font-size: 11px;
-  font-weight: 700;
+  font-weight: 500;
   color: #6b7280;
   flex-shrink: 0;
 }
@@ -192,8 +245,8 @@ input {
   justify-content: space-between;
   padding: 14px 28px 0;
   font-size: 14px;
-  font-weight: 600;
-  color: #111827;
+  font-weight: 500;
+  color: var(--foreground);
   flex-shrink: 0;
 }
 
@@ -233,31 +286,11 @@ input {
   border-bottom: 1px solid #f3f4f6;
 }
 
-.home-brand {
-  display: flex;
-  align-items: center;
-  gap: 2px;
-}
-
-.qwipo-logo {
-  width: 28px;
+/* Brand SVG — keeps natural aspect ratio */
+.home-brand-logo {
   height: 28px;
-  background: linear-gradient(135deg, #a855f7 0%, #7c3aed 100%);
-  border-radius: 8px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  color: #ffffff;
-  font-size: 16px;
-  font-weight: 800;
-  letter-spacing: -0.02em;
-}
-
-.qwipo-wordmark {
-  font-size: 18px;
-  font-weight: 800;
-  color: #111827;
-  letter-spacing: -0.02em;
+  width: auto;
+  display: block;
 }
 
 .ondc-badge {
@@ -266,30 +299,20 @@ input {
   flex-direction: column;
   align-items: center;
   line-height: 1.1;
+  gap: 3px;
 }
 
 .ondc-by {
-  font-size: 8px;
-  font-weight: 600;
-  color: #6b7280;
-  letter-spacing: 0.06em;
+  font-size: 9px;
+  font-weight: var(--weight-medium);
+  color: var(--muted-fg);
+  letter-spacing: 0.04em;
 }
 
-.ondc-mark {
-  font-size: 12px;
-  font-weight: 700;
-  display: flex;
-  gap: 3px;
-  align-items: baseline;
-}
-
-.ondc-mono {
-  color: #4338ca;
-  font-weight: 800;
-}
-
-.ondc-name {
-  color: #1e40af;
+.ondc-logo-img {
+  height: 26px;
+  width: auto;
+  display: block;
 }
 
 .home-header-actions {
@@ -306,7 +329,7 @@ input {
   gap: 4px;
   font-size: 13px;
   color: #2563eb;
-  font-weight: 600;
+  font-weight: 500;
   border-bottom: 1px solid #f3f4f6;
 }
 
@@ -321,7 +344,7 @@ input {
 
 .location-value {
   color: #2563eb;
-  font-weight: 700;
+  font-weight: 500;
 }
 
 .location-bar svg {
@@ -346,7 +369,7 @@ input {
   border: 1.5px solid #e5e7eb;
   border-radius: 12px;
   font-size: 12px;
-  font-weight: 700;
+  font-weight: 500;
   color: #2563eb;
   text-align: left;
   line-height: 1.2;
@@ -391,7 +414,7 @@ input {
 .hero-banner {
   flex-shrink: 0;
   width: 320px;
-  border-radius: 16px;
+  border-radius: 12px;
   padding: 16px;
   display: flex;
   gap: 12px;
@@ -408,7 +431,7 @@ input {
 
 .hero-banner-tag {
   font-size: 9px;
-  font-weight: 800;
+  font-weight: 500;
   letter-spacing: 0.08em;
   color: #be185d;
   margin-bottom: 4px;
@@ -416,7 +439,7 @@ input {
 
 .hero-banner-title {
   font-size: 18px;
-  font-weight: 800;
+  font-weight: 500;
   color: #5b21b6;
   letter-spacing: -0.02em;
   line-height: 1.1;
@@ -425,7 +448,7 @@ input {
 .hero-banner-sub {
   font-size: 11px;
   color: #6b21a8;
-  font-weight: 600;
+  font-weight: 500;
   margin-top: 2px;
 }
 
@@ -441,7 +464,7 @@ input {
 .hero-banner-bullets li {
   font-size: 9px;
   color: #5b21b6;
-  font-weight: 700;
+  font-weight: 500;
   padding-left: 14px;
   position: relative;
   text-transform: uppercase;
@@ -453,7 +476,7 @@ input {
   position: absolute;
   left: 0;
   color: #7c3aed;
-  font-weight: 800;
+  font-weight: 500;
 }
 
 .hero-banner-cta {
@@ -463,7 +486,7 @@ input {
   color: #fef3c7;
   border-radius: 999px;
   font-size: 10px;
-  font-weight: 700;
+  font-weight: 500;
 }
 
 .hero-banner-cta.orange-cta {
@@ -488,7 +511,7 @@ input {
   color: #FEF3C7;
   border-radius: 999px;
   font-size: 11px;
-  font-weight: 800;
+  font-weight: 500;
   letter-spacing: 0.02em;
 }
 
@@ -533,7 +556,7 @@ input {
 .topbar-text-action {
   background: none;
   font-size: 12px;
-  font-weight: 700;
+  font-weight: 500;
   color: #2563eb;
   padding: 8px 4px;
 }
@@ -551,13 +574,13 @@ input {
 }
 
 .reorder-summary strong {
-  color: #111827;
-  font-weight: 700;
+  color: var(--foreground);
+  font-weight: 500;
 }
 
 .reorder-bulk-btn {
   font-size: 12px;
-  font-weight: 700;
+  font-weight: 500;
   color: #2563eb;
   padding: 6px 10px;
   background: #eff6ff;
@@ -573,8 +596,8 @@ input {
 
 .reorder-card {
   background: #ffffff;
-  border: 1px solid #f3f4f6;
-  border-radius: 14px;
+  border: 1px solid var(--border);
+  border-radius: 8px;
   padding: 12px;
   display: flex;
   gap: 12px;
@@ -606,8 +629,8 @@ input {
 
 .reorder-card-name {
   font-size: 13px;
-  font-weight: 700;
-  color: #111827;
+  font-weight: 500;
+  color: var(--foreground);
   line-height: 1.3;
   margin-top: 2px;
   display: -webkit-box;
@@ -640,15 +663,15 @@ input {
 .reorder-meta-label {
   font-size: 9px;
   color: #9ca3af;
-  font-weight: 600;
+  font-weight: 500;
   text-transform: uppercase;
   letter-spacing: 0.04em;
 }
 
 .reorder-meta-value {
   font-size: 11px;
-  color: #111827;
-  font-weight: 700;
+  color: var(--foreground);
+  font-weight: 500;
   margin-top: 1px;
 }
 
@@ -665,7 +688,7 @@ input {
   color: #ffffff;
   border-radius: 10px;
   font-size: 12px;
-  font-weight: 700;
+  font-weight: 500;
   display: flex;
   align-items: center;
   gap: 5px;
@@ -688,8 +711,8 @@ input {
 
 .reorder-empty-title {
   font-size: 15px;
-  font-weight: 700;
-  color: #111827;
+  font-weight: 500;
+  color: var(--foreground);
   margin-bottom: 4px;
 }
 
@@ -711,8 +734,8 @@ input {
 
 .notif-card {
   background: #ffffff;
-  border: 1px solid #f3f4f6;
-  border-radius: 14px;
+  border: 1px solid var(--border);
+  border-radius: 8px;
   padding: 14px;
   display: flex;
   gap: 12px;
@@ -755,8 +778,8 @@ input {
 
 .notif-title {
   font-size: 13px;
-  font-weight: 700;
-  color: #111827;
+  font-weight: 500;
+  color: var(--foreground);
   line-height: 1.3;
 }
 
@@ -778,7 +801,7 @@ input {
 .notif-time {
   font-size: 10px;
   color: #9ca3af;
-  font-weight: 600;
+  font-weight: 500;
   text-transform: uppercase;
   letter-spacing: 0.04em;
 }
@@ -816,7 +839,7 @@ input {
   align-items: center;
   justify-content: center;
   font-size: 22px;
-  font-weight: 800;
+  font-weight: 500;
   margin: 0 auto 10px;
   border: 3px solid rgba(255,255,255,0.4);
   position: relative;
@@ -834,14 +857,14 @@ input {
 
 .profile-name {
   font-size: 17px;
-  font-weight: 700;
+  font-weight: 500;
   letter-spacing: -0.01em;
 }
 
 .profile-business {
   font-size: 13px;
   color: rgba(255, 255, 255, 0.85);
-  font-weight: 600;
+  font-weight: 500;
   margin-top: 2px;
   position: relative;
   z-index: 1;
@@ -864,7 +887,7 @@ input {
   background: rgba(255, 255, 255, 0.1);
   backdrop-filter: blur(10px);
   border: 1px solid rgba(255, 255, 255, 0.15);
-  border-radius: 14px;
+  border-radius: 8px;
   padding: 12px;
   display: grid;
   grid-template-columns: 1fr 1fr 1fr;
@@ -882,7 +905,7 @@ input {
 
 .profile-stat-value {
   font-size: 14px;
-  font-weight: 800;
+  font-weight: 500;
   color: #ffffff;
 }
 
@@ -899,7 +922,7 @@ input {
 
 .profile-section-title {
   font-size: 11px;
-  font-weight: 700;
+  font-weight: 500;
   color: #6b7280;
   text-transform: uppercase;
   letter-spacing: 0.06em;
@@ -908,15 +931,15 @@ input {
 
 .profile-card {
   background: #ffffff;
-  border: 1px solid #f3f4f6;
-  border-radius: 14px;
+  border: 1px solid var(--border);
+  border-radius: 8px;
   overflow: hidden;
 }
 
 .credit-card {
   background: linear-gradient(135deg, #f0fdf4 0%, #d1fae5 100%);
   border: 1px solid #a7f3d0;
-  border-radius: 14px;
+  border-radius: 8px;
   padding: 14px;
 }
 
@@ -928,7 +951,7 @@ input {
 
 .credit-card-label {
   font-size: 11px;
-  font-weight: 700;
+  font-weight: 500;
   color: #065f46;
   text-transform: uppercase;
   letter-spacing: 0.04em;
@@ -936,7 +959,7 @@ input {
 
 .credit-card-value {
   font-size: 17px;
-  font-weight: 800;
+  font-weight: 500;
   color: #065f46;
   margin-top: 2px;
   letter-spacing: -0.01em;
@@ -948,7 +971,7 @@ input {
   padding: 6px 12px;
   border-radius: 8px;
   font-size: 11px;
-  font-weight: 700;
+  font-weight: 500;
 }
 
 .profile-row {
@@ -970,8 +993,8 @@ input {
 
 .profile-row-value {
   font-size: 12px;
-  font-weight: 700;
-  color: #111827;
+  font-weight: 500;
+  color: var(--foreground);
 }
 
 .profile-row-value.mono {
@@ -1013,8 +1036,8 @@ input {
 
 .profile-menu-label {
   font-size: 13px;
-  font-weight: 600;
-  color: #111827;
+  font-weight: 500;
+  color: var(--foreground);
 }
 
 .profile-menu-detail {
@@ -1049,8 +1072,8 @@ input {
 
 .order-card {
   background: #ffffff;
-  border: 1px solid #f3f4f6;
-  border-radius: 14px;
+  border: 1px solid var(--border);
+  border-radius: 8px;
   padding: 14px;
 }
 
@@ -1071,22 +1094,22 @@ input {
 
 .order-card-id {
   font-size: 13px;
-  font-weight: 800;
-  color: #111827;
+  font-weight: 500;
+  color: var(--foreground);
   letter-spacing: -0.01em;
 }
 
 .order-card-seller-name {
   font-size: 11px;
   color: #6b7280;
-  font-weight: 600;
+  font-weight: 500;
 }
 
 .status-badge-pill {
   padding: 4px 10px;
   border-radius: 999px;
   font-size: 11px;
-  font-weight: 700;
+  font-weight: 500;
   white-space: nowrap;
 }
 
@@ -1117,21 +1140,21 @@ input {
 }
 
 .order-card-meta strong {
-  color: #111827;
-  font-weight: 700;
+  color: var(--foreground);
+  font-weight: 500;
 }
 
 .order-card-eta {
   font-size: 11px;
   color: #2563eb;
-  font-weight: 600;
+  font-weight: 500;
   margin-top: 2px;
 }
 
 .order-card-total {
   font-size: 17px;
-  font-weight: 800;
-  color: #111827;
+  font-weight: 500;
+  color: var(--foreground);
   letter-spacing: -0.01em;
   margin-top: 2px;
 }
@@ -1147,7 +1170,7 @@ input {
   height: 38px;
   border-radius: 10px;
   font-size: 12px;
-  font-weight: 700;
+  font-weight: 500;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -1156,7 +1179,7 @@ input {
 .order-action-btn.ghost {
   background: #ffffff;
   border: 1.5px solid #e5e7eb;
-  color: #111827;
+  color: var(--foreground);
 }
 
 .order-action-btn.primary {
@@ -1176,8 +1199,8 @@ input {
 
 .addr-card {
   background: #ffffff;
-  border: 1px solid #f3f4f6;
-  border-radius: 14px;
+  border: 1px solid var(--border);
+  border-radius: 8px;
   padding: 14px;
   position: relative;
 }
@@ -1214,8 +1237,8 @@ input {
 
 .addr-card-type {
   font-size: 12px;
-  font-weight: 700;
-  color: #111827;
+  font-weight: 500;
+  color: var(--foreground);
   text-transform: uppercase;
   letter-spacing: 0.04em;
 }
@@ -1226,7 +1249,7 @@ input {
   color: #ffffff;
   border-radius: 4px;
   font-size: 9px;
-  font-weight: 700;
+  font-weight: 500;
   letter-spacing: 0.04em;
   text-transform: uppercase;
 }
@@ -1239,8 +1262,8 @@ input {
 
 .addr-card-name {
   font-size: 13px;
-  font-weight: 700;
-  color: #111827;
+  font-weight: 500;
+  color: var(--foreground);
   margin-bottom: 4px;
 }
 
@@ -1272,14 +1295,14 @@ input {
 .addr-add-btn {
   background: #ffffff;
   border: 1.5px dashed #d1d5db;
-  border-radius: 14px;
+  border-radius: 8px;
   padding: 16px;
   display: flex;
   align-items: center;
   justify-content: center;
   gap: 8px;
   font-size: 13px;
-  font-weight: 700;
+  font-weight: 500;
   color: #2563eb;
 }
 
@@ -1328,14 +1351,14 @@ input {
 
 .payment-label {
   font-size: 13px;
-  font-weight: 700;
-  color: #111827;
+  font-weight: 500;
+  color: var(--foreground);
 }
 
 .payment-identifier {
   font-size: 12px;
-  color: #111827;
-  font-weight: 600;
+  color: var(--foreground);
+  font-weight: 500;
   font-family: 'SF Mono', Menlo, monospace;
 }
 
@@ -1347,7 +1370,7 @@ input {
 
 .payment-action {
   font-size: 11px;
-  font-weight: 700;
+  font-weight: 500;
   color: #2563eb;
   white-space: nowrap;
 }
@@ -1363,7 +1386,7 @@ input {
 
 .credit-hero-label {
   font-size: 10px;
-  font-weight: 700;
+  font-weight: 500;
   color: rgba(255, 255, 255, 0.75);
   text-transform: uppercase;
   letter-spacing: 0.08em;
@@ -1371,7 +1394,7 @@ input {
 
 .credit-hero-value {
   font-size: 36px;
-  font-weight: 800;
+  font-weight: 500;
   letter-spacing: -0.03em;
   margin-top: 2px;
 }
@@ -1385,12 +1408,12 @@ input {
 .credit-hero-meta {
   font-size: 10px;
   color: rgba(255, 255, 255, 0.75);
-  font-weight: 600;
+  font-weight: 500;
 }
 
 .credit-hero-strong {
   font-size: 14px;
-  font-weight: 700;
+  font-weight: 500;
   color: #ffffff;
   margin-top: 2px;
 }
@@ -1398,7 +1421,7 @@ input {
 .credit-due-card {
   background: #fffbeb;
   border: 1px solid #fde68a;
-  border-radius: 14px;
+  border-radius: 8px;
   padding: 14px;
   display: flex;
   align-items: center;
@@ -1408,7 +1431,7 @@ input {
 
 .credit-due-label {
   font-size: 10px;
-  font-weight: 700;
+  font-weight: 500;
   color: #92400e;
   text-transform: uppercase;
   letter-spacing: 0.04em;
@@ -1416,7 +1439,7 @@ input {
 
 .credit-due-date {
   font-size: 15px;
-  font-weight: 800;
+  font-weight: 500;
   color: #78350f;
   margin-top: 2px;
 }
@@ -1427,7 +1450,7 @@ input {
   color: #ffffff;
   border-radius: 10px;
   font-size: 12px;
-  font-weight: 700;
+  font-weight: 500;
 }
 
 .credit-txn {
@@ -1450,7 +1473,7 @@ input {
   align-items: center;
   justify-content: center;
   font-size: 16px;
-  font-weight: 800;
+  font-weight: 500;
   flex-shrink: 0;
 }
 
@@ -1461,8 +1484,8 @@ input {
 
 .credit-txn-label {
   font-size: 12px;
-  font-weight: 700;
-  color: #111827;
+  font-weight: 500;
+  color: var(--foreground);
 }
 
 .credit-txn-date {
@@ -1473,8 +1496,8 @@ input {
 
 .credit-txn-amount {
   font-size: 13px;
-  font-weight: 800;
-  color: #111827;
+  font-weight: 500;
+  color: var(--foreground);
   white-space: nowrap;
 }
 
@@ -1493,7 +1516,7 @@ input {
 
 .help-contact-card {
   background: #ffffff;
-  border: 1px solid #f3f4f6;
+  border: 1px solid var(--border);
   border-radius: 12px;
   padding: 12px 6px;
   display: flex;
@@ -1521,8 +1544,8 @@ input {
 
 .help-contact-label {
   font-size: 11px;
-  font-weight: 700;
-  color: #111827;
+  font-weight: 500;
+  color: var(--foreground);
   text-align: center;
 }
 
@@ -1550,8 +1573,8 @@ input {
 
 .help-topic-title {
   font-size: 13px;
-  font-weight: 700;
-  color: #111827;
+  font-weight: 500;
+  color: var(--foreground);
 }
 
 /* ============================================================
@@ -1612,22 +1635,22 @@ input {
   align-items: center;
   justify-content: center;
   font-size: 11px;
-  font-weight: 800;
+  font-weight: 500;
 }
 
 /* Terms text */
 .terms-body {
   background: #ffffff;
-  border: 1px solid #f3f4f6;
-  border-radius: 14px;
+  border: 1px solid var(--border);
+  border-radius: 8px;
   padding: 16px;
   color: #4b5563;
 }
 
 .terms-body h3 {
   font-size: 13px;
-  font-weight: 800;
-  color: #111827;
+  font-weight: 500;
+  color: var(--foreground);
   margin: 14px 0 6px;
   letter-spacing: -0.01em;
 }
@@ -1652,7 +1675,7 @@ input {
 
 .refer-headline {
   font-size: 22px;
-  font-weight: 800;
+  font-weight: 500;
   color: #78350f;
   letter-spacing: -0.02em;
 }
@@ -1670,7 +1693,7 @@ input {
 .refer-code-card {
   background: #ffffff;
   border: 2px dashed #fbbf24;
-  border-radius: 14px;
+  border-radius: 8px;
   padding: 14px;
   display: flex;
   align-items: center;
@@ -1680,7 +1703,7 @@ input {
 
 .refer-code-label {
   font-size: 10px;
-  font-weight: 700;
+  font-weight: 500;
   color: #92400e;
   text-transform: uppercase;
   letter-spacing: 0.06em;
@@ -1688,7 +1711,7 @@ input {
 
 .refer-code-value {
   font-size: 22px;
-  font-weight: 800;
+  font-weight: 500;
   letter-spacing: 0.1em;
   color: #78350f;
   font-family: 'SF Mono', Menlo, monospace;
@@ -1699,15 +1722,15 @@ input {
    ============================================================ */
 .discount-section-title {
   font-size: 13px;
-  font-weight: 800;
-  color: #111827;
+  font-weight: 500;
+  color: var(--foreground);
   margin-bottom: 10px;
   letter-spacing: -0.01em;
 }
 
 .slab-table {
   background: #ffffff;
-  border: 1px solid #e5e7eb;
+  border: 1px solid var(--border);
   border-radius: 12px;
   overflow: hidden;
 }
@@ -1718,7 +1741,7 @@ input {
   padding: 12px 14px;
   border-bottom: 1px solid #f3f4f6;
   font-size: 13px;
-  color: #111827;
+  color: var(--foreground);
 }
 
 .slab-row.last {
@@ -1728,7 +1751,7 @@ input {
 .slab-row.slab-head {
   background: #f9fafb;
   font-size: 12px;
-  font-weight: 700;
+  font-weight: 500;
   color: #6b7280;
   padding: 10px 14px;
 }
@@ -1741,17 +1764,17 @@ input {
 
 .slab-qty {
   text-align: left;
-  font-weight: 600;
+  font-weight: 500;
 }
 
 .slab-margin {
   color: #059669;
-  font-weight: 700;
+  font-weight: 500;
 }
 
 .slab-price {
   text-align: right;
-  font-weight: 700;
+  font-weight: 500;
 }
 
 /* Offers list */
@@ -1763,7 +1786,7 @@ input {
 
 .offer-accordion {
   background: #ffffff;
-  border: 1px solid #e5e7eb;
+  border: 1px solid var(--border);
   border-radius: 12px;
   overflow: hidden;
   transition: border-color 0.15s;
@@ -1793,7 +1816,7 @@ input {
   align-items: center;
   justify-content: center;
   font-size: 16px;
-  font-weight: 800;
+  font-weight: 500;
   flex-shrink: 0;
 }
 
@@ -1804,8 +1827,8 @@ input {
 
 .offer-accordion-title {
   font-size: 13px;
-  font-weight: 700;
-  color: #111827;
+  font-weight: 500;
+  color: var(--foreground);
   margin-bottom: 2px;
 }
 
@@ -1849,8 +1872,8 @@ input {
 
 .offer-savings-amount {
   font-size: 13px;
-  font-weight: 800;
-  color: #111827;
+  font-weight: 500;
+  color: var(--foreground);
   letter-spacing: -0.01em;
 }
 
@@ -1869,8 +1892,8 @@ input {
 
 .filter-block-title {
   font-size: 12px;
-  font-weight: 800;
-  color: #111827;
+  font-weight: 500;
+  color: var(--foreground);
   margin-bottom: 10px;
   letter-spacing: -0.01em;
   text-transform: uppercase;
@@ -1879,7 +1902,7 @@ input {
 
 .filter-block-count {
   font-size: 11px;
-  font-weight: 700;
+  font-weight: 500;
   color: #2563eb;
   margin-left: 4px;
   text-transform: none;
@@ -1891,7 +1914,7 @@ input {
   flex-direction: column;
   gap: 6px;
   background: #ffffff;
-  border: 1px solid #f3f4f6;
+  border: 1px solid var(--border);
   border-radius: 12px;
   padding: 4px;
 }
@@ -1947,8 +1970,8 @@ input {
 
 .filter-radio-label {
   font-size: 13px;
-  font-weight: 700;
-  color: #111827;
+  font-weight: 500;
+  color: var(--foreground);
 }
 
 .filter-radio-sub {
@@ -1970,7 +1993,7 @@ input {
   border: 1.5px solid #e5e7eb;
   border-radius: 999px;
   font-size: 12px;
-  font-weight: 600;
+  font-weight: 500;
   color: #4b5563;
   display: inline-flex;
   align-items: center;
@@ -2003,7 +2026,7 @@ input {
   align-items: center;
   gap: 12px;
   background: #ffffff;
-  border: 1px solid #f3f4f6;
+  border: 1px solid var(--border);
   border-radius: 12px;
   text-align: left;
   cursor: pointer;
@@ -2040,10 +2063,10 @@ input {
   height: 44px;
   background: #ffffff;
   border: 1.5px solid #e5e7eb;
-  color: #111827;
+  color: var(--foreground);
   border-radius: 12px;
   font-size: 13px;
-  font-weight: 700;
+  font-weight: 500;
 }
 
 .filter-apply-btn {
@@ -2054,7 +2077,7 @@ input {
   border: none;
   border-radius: 12px;
   font-size: 13px;
-  font-weight: 700;
+  font-weight: 500;
   box-shadow: 0 4px 12px rgba(37, 99, 235, 0.25);
 }
 
@@ -2063,8 +2086,8 @@ input {
   flex-shrink: 0;
   width: 140px;
   background: #ffffff;
-  border: 1px solid #f3f4f6;
-  border-radius: 14px;
+  border: 1px solid var(--border);
+  border-radius: 8px;
   padding: 10px;
   text-align: left;
   cursor: pointer;
@@ -2087,16 +2110,16 @@ input {
 
 .distributor-card-brand {
   font-size: 14px;
-  font-weight: 800;
-  color: #111827;
+  font-weight: 500;
+  color: var(--foreground);
   letter-spacing: -0.02em;
   text-shadow: 0 1px 0 rgba(255,255,255,0.5);
 }
 
 .distributor-card-title {
   font-size: 12px;
-  font-weight: 700;
-  color: #111827;
+  font-weight: 500;
+  color: var(--foreground);
   line-height: 1.3;
   margin-bottom: 2px;
 }
@@ -2132,7 +2155,7 @@ input {
   align-items: center;
   justify-content: center;
   font-size: 14px;
-  font-weight: 800;
+  font-weight: 500;
   color: #ffffff;
   border: 2px solid #ffffff;
   box-shadow: 0 1px 4px rgba(0, 0, 0, 0.08);
@@ -2147,7 +2170,7 @@ input {
 
 .brand-grid-name {
   font-size: 10px;
-  font-weight: 600;
+  font-weight: 500;
   color: #4b5563;
   line-height: 1.2;
 }
@@ -2162,7 +2185,7 @@ input {
 
 .wholesale-category-card {
   aspect-ratio: 1.05 / 1;
-  border-radius: 14px;
+  border-radius: 8px;
   padding: 12px;
   display: flex;
   flex-direction: column;
@@ -2184,15 +2207,15 @@ input {
 
 .wholesale-category-name {
   font-size: 14px;
-  font-weight: 700;
-  color: #111827;
+  font-weight: 500;
+  color: var(--foreground);
 }
 
 /* Exclusive offer cards */
 .exclusive-card {
   flex-shrink: 0;
   width: 160px;
-  border-radius: 14px;
+  border-radius: 8px;
   padding: 12px;
   text-align: left;
   position: relative;
@@ -2213,7 +2236,7 @@ input {
   color: #dc2626;
   border-radius: 6px;
   font-size: 10px;
-  font-weight: 800;
+  font-weight: 500;
   letter-spacing: 0.02em;
   margin-bottom: 8px;
 }
@@ -2226,14 +2249,14 @@ input {
 
 .exclusive-card-title {
   font-size: 13px;
-  font-weight: 800;
+  font-weight: 500;
   letter-spacing: -0.01em;
   line-height: 1.2;
 }
 
 .exclusive-card-sub {
   font-size: 10px;
-  font-weight: 600;
+  font-weight: 500;
   opacity: 0.85;
   margin-top: 2px;
 }
@@ -2241,7 +2264,7 @@ input {
 .exclusive-card-cta {
   margin-top: 8px;
   font-size: 10px;
-  font-weight: 800;
+  font-weight: 500;
   letter-spacing: 0.02em;
 }
 
@@ -2279,7 +2302,7 @@ input {
 .icon-btn svg {
   width: 18px;
   height: 18px;
-  color: #111827;
+  color: var(--foreground);
 }
 
 .top-title {
@@ -2289,8 +2312,8 @@ input {
 
 .top-title h1 {
   font-size: 16px;
-  font-weight: 700;
-  color: #111827;
+  font-weight: 500;
+  color: var(--foreground);
   letter-spacing: -0.01em;
   white-space: nowrap;
   overflow: hidden;
@@ -2376,13 +2399,13 @@ input {
 .seller-logo {
   width: 52px;
   height: 52px;
-  border-radius: 14px;
+  border-radius: 8px;
   background: #ffffff;
   display: flex;
   align-items: center;
   justify-content: center;
   font-size: 16px;
-  font-weight: 800;
+  font-weight: 500;
   color: #1e3a8a;
   flex-shrink: 0;
   letter-spacing: -0.02em;
@@ -2395,7 +2418,7 @@ input {
 
 .seller-name {
   font-size: 17px;
-  font-weight: 700;
+  font-weight: 500;
   margin-bottom: 4px;
   display: flex;
   align-items: center;
@@ -2446,7 +2469,7 @@ input {
   padding: 2px 8px;
   border-radius: 999px;
   font-size: 10px;
-  font-weight: 700;
+  font-weight: 500;
   letter-spacing: 0.04em;
   text-transform: uppercase;
 }
@@ -2456,7 +2479,7 @@ input {
   background: rgba(255, 255, 255, 0.1);
   backdrop-filter: blur(10px);
   border: 1px solid rgba(255, 255, 255, 0.15);
-  border-radius: 14px;
+  border-radius: 8px;
   padding: 12px;
   display: grid;
   grid-template-columns: 1fr 1fr 1fr;
@@ -2484,7 +2507,7 @@ input {
 
 .stat-value {
   font-size: 13px;
-  font-weight: 700;
+  font-weight: 500;
   color: #ffffff;
 }
 
@@ -2505,8 +2528,8 @@ input {
   gap: 10px;
   padding: 12px 14px;
   background: #ffffff;
-  border: 1px solid #e5e7eb;
-  border-radius: 14px;
+  border: 1px solid var(--border);
+  border-radius: 8px;
   box-shadow: 0 1px 2px rgba(0, 0, 0, 0.02);
 }
 
@@ -2520,7 +2543,7 @@ input {
 .search-bar input {
   flex: 1;
   font-size: 14px;
-  color: #111827;
+  color: var(--foreground);
 }
 
 .search-bar input::placeholder {
@@ -2539,7 +2562,7 @@ input {
   gap: 4px;
   color: #2563eb;
   font-size: 13px;
-  font-weight: 600;
+  font-weight: 500;
 }
 
 /* Section block */
@@ -2556,14 +2579,14 @@ input {
 
 .section-title {
   font-size: 15px;
-  font-weight: 700;
-  color: #111827;
+  font-weight: 500;
+  color: var(--foreground);
   letter-spacing: -0.01em;
 }
 
 .section-link {
   font-size: 12px;
-  font-weight: 600;
+  font-weight: 500;
   color: #2563eb;
   background: none;
   padding: 0;
@@ -2578,10 +2601,10 @@ input {
 
 .category-tile {
   background: #ffffff;
-  border-radius: 14px;
+  border-radius: 8px;
   padding: 12px 8px;
   text-align: center;
-  border: 1px solid #f3f4f6;
+  border: 1px solid var(--border);
   transition: all 0.15s;
   cursor: pointer;
 }
@@ -2603,8 +2626,8 @@ input {
 
 .category-name {
   font-size: 11px;
-  font-weight: 600;
-  color: #111827;
+  font-weight: 500;
+  color: var(--foreground);
   line-height: 1.3;
   margin-bottom: 2px;
 }
@@ -2643,7 +2666,7 @@ input {
   align-items: center;
   justify-content: center;
   font-size: 18px;
-  font-weight: 800;
+  font-weight: 500;
   color: #ffffff;
   margin: 0 auto 6px;
   border: 2px solid #ffffff;
@@ -2652,7 +2675,7 @@ input {
 
 .brand-name {
   font-size: 11px;
-  font-weight: 600;
+  font-weight: 500;
   color: #4b5563;
 }
 
@@ -2660,7 +2683,7 @@ input {
 .promo-card {
   margin: 16px;
   background: linear-gradient(135deg, #fef3c7 0%, #fde68a 100%);
-  border-radius: 16px;
+  border-radius: 12px;
   padding: 16px;
   display: flex;
   align-items: center;
@@ -2675,7 +2698,7 @@ input {
 
 .promo-tag {
   font-size: 10px;
-  font-weight: 700;
+  font-weight: 500;
   color: #92400e;
   text-transform: uppercase;
   letter-spacing: 0.05em;
@@ -2684,7 +2707,7 @@ input {
 
 .promo-title {
   font-size: 15px;
-  font-weight: 800;
+  font-weight: 500;
   color: #78350f;
   letter-spacing: -0.01em;
   margin-bottom: 4px;
@@ -2705,8 +2728,8 @@ input {
   flex-shrink: 0;
   width: 152px;
   background: #ffffff;
-  border-radius: 14px;
-  border: 1px solid #f3f4f6;
+  border-radius: 8px;
+  border: 1px solid var(--border);
   padding: 10px;
   cursor: pointer;
 }
@@ -2724,8 +2747,8 @@ input {
 
 .product-rail-name {
   font-size: 12px;
-  font-weight: 600;
-  color: #111827;
+  font-weight: 500;
+  color: var(--foreground);
   line-height: 1.3;
   margin-bottom: 4px;
   display: -webkit-box;
@@ -2740,8 +2763,8 @@ input {
   align-items: center;
   gap: 6px;
   font-size: 13px;
-  font-weight: 700;
-  color: #111827;
+  font-weight: 500;
+  color: var(--foreground);
 }
 
 .product-rail-mrp {
@@ -2777,7 +2800,7 @@ input {
   background: #f3f4f6;
   border-radius: 999px;
   font-size: 12px;
-  font-weight: 600;
+  font-weight: 500;
   color: #4b5563;
   display: flex;
   align-items: center;
@@ -2803,9 +2826,9 @@ input {
 
 .product-card {
   background: #ffffff;
-  border-radius: 14px;
+  border-radius: 8px;
   padding: 12px;
-  border: 1px solid #f3f4f6;
+  border: 1px solid var(--border);
 }
 
 .product-card-top {
@@ -2842,7 +2865,7 @@ input {
   background: rgba(17, 24, 39, 0.7);
   color: #ffffff;
   font-size: 9px;
-  font-weight: 700;
+  font-weight: 500;
   padding: 1px 5px;
   border-radius: 4px;
 }
@@ -2858,7 +2881,7 @@ input {
   background: #f3f4f6;
   border-radius: 4px;
   font-size: 10px;
-  font-weight: 600;
+  font-weight: 500;
   color: #6b7280;
   text-transform: uppercase;
   letter-spacing: 0.04em;
@@ -2867,8 +2890,8 @@ input {
 
 .product-name {
   font-size: 13px;
-  font-weight: 700;
-  color: #111827;
+  font-weight: 500;
+  color: var(--foreground);
   line-height: 1.3;
   margin-top: 4px;
   margin-bottom: 0;
@@ -2886,7 +2909,7 @@ input {
   display: inline-flex;
   align-items: center;
   font-size: 10px;
-  font-weight: 700;
+  font-weight: 500;
   color: #4b5563;
   background: #f3f4f6;
   padding: 3px 8px;
@@ -2900,7 +2923,7 @@ input {
   align-items: center;
   gap: 4px;
   font-size: 10px;
-  font-weight: 700;
+  font-weight: 500;
   padding: 3px 8px;
   border-radius: 6px;
   letter-spacing: 0.02em;
@@ -2950,7 +2973,7 @@ input {
   color: #065f46;
   border-radius: 10px;
   font-size: 13px;
-  font-weight: 700;
+  font-weight: 500;
   display: flex;
   align-items: center;
   gap: 4px;
@@ -2982,11 +3005,11 @@ input {
 .variant-pill {
   flex-shrink: 0;
   padding: 6px 10px;
-  border: 1px solid #e5e7eb;
+  border: 1px solid var(--border);
   border-radius: 8px;
   background: #ffffff;
   font-size: 11px;
-  font-weight: 600;
+  font-weight: 500;
   color: #4b5563;
   cursor: pointer;
   transition: all 0.15s;
@@ -3021,8 +3044,8 @@ input {
 
 .price-current {
   font-size: 16px;
-  font-weight: 800;
-  color: #111827;
+  font-weight: 500;
+  color: var(--foreground);
   letter-spacing: -0.01em;
 }
 
@@ -3046,14 +3069,14 @@ input {
   background: #f3f4f6;
   border-radius: 6px;
   font-size: 11px;
-  font-weight: 600;
+  font-weight: 500;
   color: #374151;
   margin-top: 6px;
 }
 
 .case-pricing-price {
-  color: #111827;
-  font-weight: 700;
+  color: var(--foreground);
+  font-weight: 500;
 }
 
 .margin-badge {
@@ -3064,7 +3087,7 @@ input {
   background: #d1fae5;
   border-radius: 6px;
   font-size: 11px;
-  font-weight: 700;
+  font-weight: 500;
   color: #065f46;
 }
 
@@ -3078,7 +3101,7 @@ input {
   align-items: center;
   gap: 8px;
   font-size: 11px;
-  font-weight: 600;
+  font-weight: 500;
   color: #92400e;
 }
 
@@ -3113,7 +3136,7 @@ input {
   align-items: center;
   gap: 4px;
   font-size: 11px;
-  font-weight: 600;
+  font-weight: 500;
   padding: 6px 10px;
   background: #f9fafb;
   border-radius: 8px;
@@ -3156,7 +3179,7 @@ input {
   color: #ffffff;
   border-radius: 10px;
   font-size: 13px;
-  font-weight: 700;
+  font-weight: 500;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -3202,7 +3225,7 @@ input {
   border: none;
   border-radius: 8px;
   font-size: 12px;
-  font-weight: 700;
+  font-weight: 500;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -3252,7 +3275,7 @@ input {
   color: #ffffff;
   border-radius: 999px;
   font-size: 9px;
-  font-weight: 800;
+  font-weight: 500;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -3278,7 +3301,7 @@ input {
   background: #ffffff;
   color: #2563eb;
   font-size: 18px;
-  font-weight: 600;
+  font-weight: 500;
   transition: background 0.1s;
 }
 
@@ -3294,14 +3317,14 @@ input {
   justify-content: center;
   color: #1d4ed8;
   font-size: 13px;
-  font-weight: 700;
+  font-weight: 500;
   line-height: 1.1;
 }
 
 .qty-value-sub {
   font-size: 9px;
   color: #6b7280;
-  font-weight: 600;
+  font-weight: 500;
 }
 
 /* ============================================================
@@ -3334,14 +3357,14 @@ input {
 
 .cart-strip-value {
   font-size: 16px;
-  font-weight: 800;
-  color: #111827;
+  font-weight: 500;
+  color: var(--foreground);
 }
 
 .cart-strip-meta {
   font-size: 11px;
   color: #059669;
-  font-weight: 600;
+  font-weight: 500;
 }
 
 .cart-strip-btn {
@@ -3350,7 +3373,7 @@ input {
   padding: 12px 18px;
   border-radius: 12px;
   font-size: 13px;
-  font-weight: 700;
+  font-weight: 500;
   display: flex;
   align-items: center;
   gap: 6px;
@@ -3363,11 +3386,11 @@ input {
 
 .cart-strip-btn .badge {
   background: #ffffff;
-  color: #111827;
+  color: var(--foreground);
   font-size: 11px;
   padding: 1px 6px;
   border-radius: 6px;
-  font-weight: 800;
+  font-weight: 500;
 }
 
 /* ============================================================
@@ -3383,7 +3406,7 @@ input {
 .savings-banner {
   background: linear-gradient(135deg, #ecfdf5 0%, #d1fae5 100%);
   border: 1px solid #a7f3d0;
-  border-radius: 14px;
+  border-radius: 8px;
   padding: 12px 14px;
   display: flex;
   align-items: center;
@@ -3414,7 +3437,7 @@ input {
 .savings-text strong {
   font-size: 13px;
   color: #065f46;
-  font-weight: 700;
+  font-weight: 500;
 }
 
 .savings-text p {
@@ -3426,9 +3449,9 @@ input {
 /* Seller block in cart */
 .seller-block {
   background: #ffffff;
-  border-radius: 16px;
+  border-radius: 12px;
   overflow: hidden;
-  border: 1px solid #f3f4f6;
+  border: 1px solid var(--border);
 }
 
 .seller-block-head {
@@ -3447,7 +3470,7 @@ input {
   align-items: center;
   justify-content: center;
   font-size: 12px;
-  font-weight: 800;
+  font-weight: 500;
   color: #ffffff;
   flex-shrink: 0;
 }
@@ -3459,8 +3482,8 @@ input {
 
 .seller-block-name {
   font-size: 13px;
-  font-weight: 700;
-  color: #111827;
+  font-weight: 500;
+  color: var(--foreground);
   margin-bottom: 2px;
 }
 
@@ -3496,13 +3519,13 @@ input {
 
 .mov-label {
   font-size: 11px;
-  font-weight: 600;
+  font-weight: 500;
   color: #4b5563;
 }
 
 .mov-status {
   font-size: 11px;
-  font-weight: 700;
+  font-weight: 500;
 }
 
 .mov-status.met {
@@ -3543,8 +3566,8 @@ input {
 }
 
 .mov-detail strong {
-  color: #111827;
-  font-weight: 700;
+  color: var(--foreground);
+  font-weight: 500;
 }
 
 /* Cart item */
@@ -3581,8 +3604,8 @@ input {
 
 .cart-item-name {
   font-size: 12px;
-  font-weight: 700;
-  color: #111827;
+  font-weight: 500;
+  color: var(--foreground);
   line-height: 1.3;
 }
 
@@ -3601,8 +3624,8 @@ input {
 
 .cart-item-price {
   font-size: 13px;
-  font-weight: 700;
-  color: #111827;
+  font-weight: 500;
+  color: var(--foreground);
 }
 
 .cart-item-mrp {
@@ -3621,14 +3644,14 @@ input {
   background: #fef3c7;
   border-radius: 4px;
   font-size: 10px;
-  font-weight: 700;
+  font-weight: 500;
   color: #92400e;
 }
 
 .cart-item-qty {
   display: flex;
   align-items: center;
-  border: 1px solid #e5e7eb;
+  border: 1px solid var(--border);
   border-radius: 8px;
   height: 28px;
   overflow: hidden;
@@ -3654,8 +3677,8 @@ input {
   width: 30px;
   text-align: center;
   font-size: 12px;
-  font-weight: 700;
-  color: #111827;
+  font-weight: 500;
+  color: var(--foreground);
 }
 
 .free-tag {
@@ -3665,7 +3688,7 @@ input {
   background: #d1fae5;
   border-radius: 4px;
   font-size: 10px;
-  font-weight: 700;
+  font-weight: 500;
   color: #065f46;
 }
 
@@ -3693,7 +3716,7 @@ input {
 
 .mov-suggest-title {
   font-size: 12px;
-  font-weight: 700;
+  font-weight: 500;
   color: #92400e;
 }
 
@@ -3732,8 +3755,8 @@ input {
 
 .suggest-name {
   font-size: 11px;
-  font-weight: 600;
-  color: #111827;
+  font-weight: 500;
+  color: var(--foreground);
   line-height: 1.3;
   margin-bottom: 4px;
   display: -webkit-box;
@@ -3745,8 +3768,8 @@ input {
 
 .suggest-price {
   font-size: 12px;
-  font-weight: 700;
-  color: #111827;
+  font-weight: 500;
+  color: var(--foreground);
 }
 
 .suggest-add {
@@ -3757,7 +3780,7 @@ input {
   color: #ffffff;
   border-radius: 6px;
   font-size: 11px;
-  font-weight: 700;
+  font-weight: 500;
 }
 
 /* Seller subtotal */
@@ -3779,15 +3802,15 @@ input {
 
 .subtotal-row.bold {
   font-size: 13px;
-  font-weight: 700;
-  color: #111827;
+  font-weight: 500;
+  color: var(--foreground);
   padding-top: 6px;
   border-top: 1px solid #e5e7eb;
 }
 
 .subtotal-row .saving {
   color: #059669;
-  font-weight: 600;
+  font-weight: 500;
 }
 
 /* Cart footer */
@@ -3816,15 +3839,15 @@ input {
 
 .cart-footer-total {
   font-size: 22px;
-  font-weight: 800;
-  color: #111827;
+  font-weight: 500;
+  color: var(--foreground);
   letter-spacing: -0.02em;
 }
 
 .cart-footer-savings {
   font-size: 11px;
   color: #059669;
-  font-weight: 600;
+  font-weight: 500;
   text-align: right;
 }
 
@@ -3833,9 +3856,9 @@ input {
   height: 48px;
   background: linear-gradient(135deg, #2563eb 0%, #1d4ed8 100%);
   color: #ffffff;
-  border-radius: 14px;
+  border-radius: 8px;
   font-size: 14px;
-  font-weight: 700;
+  font-weight: 500;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -3966,8 +3989,8 @@ input {
 
 .sheet-title {
   font-size: 15px;
-  font-weight: 700;
-  color: #111827;
+  font-weight: 500;
+  color: var(--foreground);
   margin-bottom: 2px;
   letter-spacing: -0.01em;
   line-height: 1.25;
@@ -4041,8 +4064,8 @@ input {
 
 .sheet-product-name {
   font-size: 13px;
-  font-weight: 700;
-  color: #111827;
+  font-weight: 500;
+  color: var(--foreground);
   line-height: 1.3;
   margin-bottom: 6px;
 }
@@ -4086,8 +4109,8 @@ input {
 
 .pack-label {
   font-size: 12px;
-  font-weight: 700;
-  color: #111827;
+  font-weight: 500;
+  color: var(--foreground);
   margin-bottom: 2px;
 }
 
@@ -4097,8 +4120,8 @@ input {
 }
 
 .pack-detail strong {
-  color: #111827;
-  font-weight: 700;
+  color: var(--foreground);
+  font-weight: 500;
 }
 
 .pack-mini-qty {
@@ -4120,7 +4143,7 @@ input {
   background: #ffffff;
   color: #2563eb;
   font-size: 16px;
-  font-weight: 600;
+  font-weight: 500;
 }
 
 .pack-mini-qty span {
@@ -4128,7 +4151,7 @@ input {
   text-align: center;
   color: #1d4ed8;
   font-size: 13px;
-  font-weight: 700;
+  font-weight: 500;
   padding: 0 6px;
 }
 
@@ -4139,7 +4162,7 @@ input {
   color: #ffffff;
   border-radius: 8px;
   font-size: 12px;
-  font-weight: 700;
+  font-weight: 500;
   display: flex;
   align-items: center;
   gap: 4px;
@@ -4164,8 +4187,8 @@ input {
 
 .sheet-footer-value {
   font-size: 18px;
-  font-weight: 800;
-  color: #111827;
+  font-weight: 500;
+  color: var(--foreground);
 }
 
 .sheet-continue {
@@ -4174,7 +4197,7 @@ input {
   color: #ffffff;
   border-radius: 12px;
   font-size: 13px;
-  font-weight: 700;
+  font-weight: 500;
 }
 
 .sheet-continue:disabled {
@@ -4219,7 +4242,7 @@ input {
 
 .nav-item span {
   font-size: 10px;
-  font-weight: 600;
+  font-weight: 500;
 }
 
 .nav-badge {
@@ -4233,7 +4256,7 @@ input {
   color: #ffffff;
   border-radius: 999px;
   font-size: 9px;
-  font-weight: 700;
+  font-weight: 500;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -4250,7 +4273,7 @@ input {
   padding: 10px 16px;
   border-radius: 999px;
   font-size: 12px;
-  font-weight: 600;
+  font-weight: 500;
   display: flex;
   align-items: center;
   gap: 6px;

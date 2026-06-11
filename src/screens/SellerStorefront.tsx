@@ -91,7 +91,7 @@ export default function SellerStorefront({ cartCount, distributor, onBack, onNav
         {/* Categories */}
         <div className="section">
           <div className="section-head">
-            <div className="section-title">Shop by Category</div>
+            <div className="section-title">Shop by category</div>
             <button className="section-link">See all</button>
           </div>
           <div className="category-grid">
@@ -124,7 +124,7 @@ export default function SellerStorefront({ cartCount, distributor, onBack, onNav
         {/* Brands */}
         <div className="section">
           <div className="section-head">
-            <div className="section-title">Top Brands</div>
+            <div className="section-title">Top brands</div>
             <button className="section-link">See all</button>
           </div>
           <div className="rail">
@@ -162,7 +162,7 @@ export default function SellerStorefront({ cartCount, distributor, onBack, onNav
         {/* Featured */}
         <div className="section" style={{ paddingBottom: '90px' }}>
           <div className="section-head">
-            <div className="section-title">Best Sellers</div>
+            <div className="section-title">Best sellers</div>
             <button className="section-link">View catalog</button>
           </div>
           <div className="rail">

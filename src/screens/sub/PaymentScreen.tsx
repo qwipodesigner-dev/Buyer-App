@@ -18,7 +18,7 @@ export default function PaymentScreen({ onBack }: any) {
             <Icon.Back />
           </button>
           <div className="top-title">
-            <h1>Payment Methods</h1>
+            <h1>Payment methods</h1>
             <p>{methods.length} saved</p>
           </div>
         </div>

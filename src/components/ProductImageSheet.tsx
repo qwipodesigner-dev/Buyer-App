@@ -86,7 +86,7 @@ export default function ProductImageSheet({ product, onClose, onAddClick }: any)
                   background: 'rgba(17,24,39,0.7)',
                   color: '#fff',
                   fontSize: 11,
-                  fontWeight: 600,
+                  fontWeight: 500,
                   padding: '4px 10px',
                   borderRadius: 999,
                 }}
@@ -105,7 +105,7 @@ export default function ProductImageSheet({ product, onClose, onAddClick }: any)
                 padding: '4px 10px',
                 borderRadius: 6,
                 fontSize: 10,
-                fontWeight: 700,
+                fontWeight: 500,
                 color: '#374151',
                 textTransform: 'uppercase',
                 letterSpacing: '0.04em',
@@ -164,7 +164,7 @@ export default function ProductImageSheet({ product, onClose, onAddClick }: any)
           <div style={{ padding: '16px 20px' }}>
             <div style={{ display: 'flex', alignItems: 'center', gap: 8, marginBottom: 14, flexWrap: 'wrap' }}>
               <span className="product-meta-pill">{product.manufacturer}</span>
-              <span style={{ fontSize: 11, color: '#6b7280', fontWeight: 600 }}>
+              <span style={{ fontSize: 11, color: '#6b7280', fontWeight: 500 }}>
                 HSN {product.hsn} · GST {product.gst}%
               </span>
             </div>
@@ -183,11 +183,11 @@ export default function ProductImageSheet({ product, onClose, onAddClick }: any)
               }}
             >
               <div style={{ flex: 1 }}>
-                <div style={{ fontSize: 10, color: '#065f46', fontWeight: 700, textTransform: 'uppercase', letterSpacing: '0.05em' }}>
+                <div style={{ fontSize: 10, color: '#065f46', fontWeight: 500, textTransform: 'uppercase', letterSpacing: '0.05em' }}>
                   Starting from
                 </div>
                 <div style={{ display: 'flex', alignItems: 'baseline', gap: 6, marginTop: 2 }}>
-                  <span style={{ fontSize: 18, fontWeight: 800, color: '#111827' }}>₹{startPrice}</span>
+                  <span style={{ fontSize: 18, fontWeight: 500, color: '#111827' }}>₹{startPrice}</span>
                   <span style={{ fontSize: 12, color: '#9ca3af', textDecoration: 'line-through', fontWeight: 500 }}>
                     ₹{startMrp}
                   </span>
@@ -198,7 +198,7 @@ export default function ProductImageSheet({ product, onClose, onAddClick }: any)
                   background: '#10b981',
                   color: '#fff',
                   fontSize: 11,
-                  fontWeight: 700,
+                  fontWeight: 500,
                   padding: '4px 8px',
                   borderRadius: 6,
                 }}
@@ -226,7 +226,7 @@ export default function ProductImageSheet({ product, onClose, onAddClick }: any)
 
             {/* Available pack sizes */}
             <div style={{ marginBottom: 16 }}>
-              <div style={{ fontSize: 12, fontWeight: 700, color: '#111827', marginBottom: 8 }}>
+              <div style={{ fontSize: 12, fontWeight: 500, color: '#111827', marginBottom: 8 }}>
                 Available Pack Sizes
               </div>
               <div style={{ display: 'flex', flexDirection: 'column', gap: 6 }}>
@@ -244,12 +244,12 @@ export default function ProductImageSheet({ product, onClose, onAddClick }: any)
                     }}
                   >
                     <div>
-                      <span style={{ fontWeight: 700, color: '#111827' }}>{v.size}</span>
+                      <span style={{ fontWeight: 500, color: '#111827' }}>{v.size}</span>
                       <span style={{ color: '#6b7280', marginLeft: 6 }}>· {v.casePack}</span>
                     </div>
                     <div style={{ display: 'flex', alignItems: 'center', gap: 6 }}>
-                      <span style={{ fontWeight: 700, color: '#111827' }}>₹{v.sellingPrice}</span>
-                      <span style={{ fontSize: 10, color: '#059669', fontWeight: 700 }}>
+                      <span style={{ fontWeight: 500, color: '#111827' }}>₹{v.sellingPrice}</span>
+                      <span style={{ fontSize: 10, color: '#059669', fontWeight: 500 }}>
                         {v.margin}% margin
                       </span>
                     </div>
@@ -267,7 +267,7 @@ export default function ProductImageSheet({ product, onClose, onAddClick }: any)
             <div className="sheet-footer-value">₹{startPrice}/pc</div>
           </div>
           <button className="sheet-continue" onClick={() => onAddClick(product)}>
-            Add to Cart →
+            Add to cart →
           </button>
         </div>
       </div>
@@ -285,10 +285,10 @@ function SpecCell({ label, value }: any) {
         border: '1px solid #f3f4f6',
       }}
     >
-      <div style={{ fontSize: 10, color: '#6b7280', fontWeight: 600, textTransform: 'uppercase', letterSpacing: '0.04em' }}>
+      <div style={{ fontSize: 10, color: '#6b7280', fontWeight: 500, textTransform: 'uppercase', letterSpacing: '0.04em' }}>
         {label}
       </div>
-      <div style={{ fontSize: 12, fontWeight: 700, color: '#111827', marginTop: 2, textTransform: 'capitalize' }}>
+      <div style={{ fontSize: 12, fontWeight: 500, color: '#111827', marginTop: 2, textTransform: 'capitalize' }}>
         {value}
       </div>
     </div>

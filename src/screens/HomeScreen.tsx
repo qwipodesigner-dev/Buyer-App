@@ -24,15 +24,17 @@ export default function HomeScreen({ cartCount, onNavigate, onSelectDistributor,
       <div className="screen-body">
         {/* Brand header */}
         <div className="home-header">
-          <div className="home-brand">
-            <div className="qwipo-logo">Q</div>
-            <span className="qwipo-wordmark">wipo</span>
-          </div>
+          <img
+            className="home-brand-logo"
+            src="/brand/qwipo-logo.svg"
+            alt="Qwipo"
+          />
           <div className="ondc-badge">
-            <span className="ondc-by">POWERED BY</span>
-            <span className="ondc-mark">
-              <span className="ondc-mono">ONDC</span> <span className="ondc-name">DigiDukaan</span>
-            </span>
+            <img
+              className="ondc-logo-img"
+              src="/brand/digidukaan-logo.svg"
+              alt="Powered by ONDC DigiDukaan"
+            />
           </div>
           <div className="home-header-actions">
             <button className="icon-btn" onClick={onOpenNotifications}>
@@ -65,7 +67,7 @@ export default function HomeScreen({ cartCount, onNavigate, onSelectDistributor,
             onClick={() => setTab('distributors')}
           >
             <div className="home-tab-img" style={{ background: '#FEF3C7' }}>📦</div>
-            <span>Authorised Distributors</span>
+            <span>Authorised distributors</span>
           </button>
           <button
             className={`home-tab ${tab === 'wholesalers' ? 'active' : ''}`}
@@ -144,10 +146,10 @@ function DistributorsView({ visibleDistributors, onSelectDistributor, onSelectBr
         </div>
       </div>
 
-      {/* All Brands grid */}
+      {/* All brands grid */}
       <div className="section" style={{ paddingBottom: 110 }}>
         <div className="section-head">
-          <div className="section-title">All Brands</div>
+          <div className="section-title">All brands</div>
           <button className="section-link">See all</button>
         </div>
         <div className="brand-grid">
@@ -219,7 +221,7 @@ function WholesalersView({ onSelectBrand }: any) {
       {/* Exclusive offers */}
       <div className="section">
         <div className="section-head">
-          <div className="section-title">Exclusive Offers</div>
+          <div className="section-title">Exclusive offers</div>
           <button className="section-link">See all</button>
         </div>
         <div className="rail">
@@ -233,16 +235,16 @@ function WholesalersView({ onSelectBrand }: any) {
               <div className="exclusive-card-art">{o.emoji}</div>
               <div className="exclusive-card-title">{o.title}</div>
               <div className="exclusive-card-sub">{o.subtitle}</div>
-              <div className="exclusive-card-cta">Shop Now →</div>
+              <div className="exclusive-card-cta">Shop now →</div>
             </button>
           ))}
         </div>
       </div>
 
-      {/* Top Categories */}
+      {/* Top categories */}
       <div className="section" style={{ paddingBottom: 110 }}>
         <div className="section-head">
-          <div className="section-title">Top Categories</div>
+          <div className="section-title">Top categories</div>
           <button className="section-link">See all</button>
         </div>
         <div className="brand-grid">

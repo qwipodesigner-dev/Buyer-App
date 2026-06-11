@@ -26,10 +26,10 @@ export default function SettingsScreen({ onBack, page = 'settings' }: any) {
 
   const titles = {
     settings: 'Settings',
-    'notif-prefs': 'Notification Preferences',
+    'notif-prefs': 'Notification preferences',
     language: 'Language',
     terms: 'Terms & Privacy',
-    invoices: 'Tax Invoices',
+    invoices: 'Tax invoices',
     refer: 'Refer & Earn',
   };
 
@@ -114,7 +114,7 @@ export default function SettingsScreen({ onBack, page = 'settings' }: any) {
                     <div className="profile-menu-label">{m}</div>
                     <div className="profile-menu-detail">B2B invoice GSTR-1 ready</div>
                   </div>
-                  <span style={{ fontSize: 12, fontWeight: 700, color: '#2563eb' }}>Download</span>
+                  <span style={{ fontSize: 12, fontWeight: 500, color: '#2563eb' }}>Download</span>
                 </button>
               ))}
             </div>
