@@ -1,7 +1,45 @@
 @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap');
+@import "tailwindcss";
 
 /* ============================================================
-   QWIPO DESIGN SYSTEM TOKENS
+   TAILWIND v4 @theme — exposes our DS tokens as utility classes.
+   Use class names like `bg-primary`, `text-foreground`, `rounded-lg`,
+   `font-medium` everywhere; they read from these vars.
+   ============================================================ */
+@theme {
+  --color-primary: #2563eb;
+  --color-primary-foreground: #ffffff;
+  --color-destructive: #d4183d;
+  --color-destructive-foreground: #ffffff;
+  --color-brand-purple: #bc77ff;
+
+  --color-background: #ffffff;
+  --color-foreground: #252525;
+  --color-card: #ffffff;
+  --color-muted: #ececf0;
+  --color-muted-foreground: #717182;
+  --color-border-token: rgba(0, 0, 0, 0.1);
+  --color-input: #f3f3f5;
+
+  --color-success: #059669;
+  --color-warning: #d97706;
+  --color-danger: #dc2626;
+  --color-info: #2563eb;
+
+  --radius-sm: 2px;
+  --radius-md: 6px;
+  --radius-lg: 8px;
+  --radius-xl: 12px;
+
+  --font-sans: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+
+  --font-weight-regular: 400;
+  --font-weight-medium: 500;
+}
+
+/* ============================================================
+   QWIPO DESIGN SYSTEM TOKENS (legacy :root vars kept for the existing
+   plain-CSS rules until each component is migrated to Tailwind classes)
    Per DESIGN-SYSTEM.md — single source of truth.
    Never hard-code hex; always reference these vars.
    ============================================================ */

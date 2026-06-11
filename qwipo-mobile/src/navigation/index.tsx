@@ -7,11 +7,14 @@ import { Text, View, StyleSheet } from 'react-native';
 import { colors, fontSize, fontWeight } from '../theme/tokens';
 import { Icon } from '../components/Icons';
 import HomeScreen from '../screens/HomeScreen';
+import SellerStorefront from '../screens/SellerStorefront';
+import ProductListing from '../screens/ProductListing';
+import MultiSellerCart from '../screens/MultiSellerCart';
+import type { MainTabParamList, RootStackParamList } from './types';
 
-const Tab = createBottomTabNavigator();
-const RootStack = createNativeStackNavigator();
+const Tab = createBottomTabNavigator<MainTabParamList>();
+const RootStack = createNativeStackNavigator<RootStackParamList>();
 
-// Placeholder screens — will be ported in subsequent turns.
 function Placeholder({ title }: { title: string }) {
   return (
     <View style={styles.placeholder}>
@@ -22,7 +25,6 @@ function Placeholder({ title }: { title: string }) {
 }
 
 const ReorderScreen = () => <Placeholder title="Reorder" />;
-const CartScreen = () => <Placeholder title="Your cart" />;
 const ProfileScreen = () => <Placeholder title="My account" />;
 
 function MainTabs() {
@@ -47,15 +49,19 @@ function MainTabs() {
           const size = 22;
           if (route.name === 'Home') return <Icon.Home size={size} color={color} />;
           if (route.name === 'Reorder') return <Icon.Reorder size={size} color={color} />;
-          if (route.name === 'Cart') return <Icon.Cart size={size} color={color} />;
+          if (route.name === 'CartTab') return <Icon.Cart size={size} color={color} />;
           return <Icon.Profile size={size} color={color} />;
         },
       })}
     >
       <Tab.Screen name="Home" component={HomeScreen} />
-      <Tab.Screen name="Reorder" component={ReorderScreen} />
-      <Tab.Screen name="Cart" component={CartScreen} options={{ tabBarBadge: 4 }} />
-      <Tab.Screen name="Account" component={ProfileScreen} />
+      <Tab.Screen name="Reorder" component={ReorderScreen} options={{ tabBarLabel: 'Reorder' }} />
+      <Tab.Screen
+        name="CartTab"
+        component={MultiSellerCart}
+        options={{ tabBarLabel: 'Cart', tabBarBadge: 4 }}
+      />
+      <Tab.Screen name="Account" component={ProfileScreen} options={{ tabBarLabel: 'Account' }} />
     </Tab.Navigator>
   );
 }
@@ -63,8 +69,11 @@ function MainTabs() {
 export default function Navigation() {
   return (
     <NavigationContainer>
-      <RootStack.Navigator screenOptions={{ headerShown: false }}>
+      <RootStack.Navigator screenOptions={{ headerShown: false, animation: 'slide_from_right' }}>
         <RootStack.Screen name="Main" component={MainTabs} />
+        <RootStack.Screen name="Storefront" component={SellerStorefront} />
+        <RootStack.Screen name="ProductListing" component={ProductListing} />
+        <RootStack.Screen name="Cart" component={MultiSellerCart} />
       </RootStack.Navigator>
     </NavigationContainer>
   );
