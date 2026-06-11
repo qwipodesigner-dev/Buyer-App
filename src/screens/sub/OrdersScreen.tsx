@@ -88,13 +88,13 @@ export default function OrdersScreen({ onBack }: any) {
                 <div className="order-card-actions">
                   {o.status === 'delivered' ? (
                     <>
-                      <button className="order-action-btn ghost">View Invoice</button>
+                      <button className="order-action-btn ghost">View invoice</button>
                       <button className="order-action-btn primary">Reorder</button>
                     </>
                   ) : (
                     <>
-                      <button className="order-action-btn ghost">Track Order</button>
-                      <button className="order-action-btn primary">Contact Seller</button>
+                      <button className="order-action-btn ghost">Track order</button>
+                      <button className="order-action-btn primary">Contact seller</button>
                     </>
                   )}
                 </div>

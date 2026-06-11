@@ -169,7 +169,7 @@ function SignOutSheet({ onClose }: any) {
               background: '#f3f4f6',
               color: '#111827',
               fontSize: 13,
-              fontWeight: 700,
+              fontWeight: 500,
             }}
           >
             Cancel
@@ -180,10 +180,10 @@ function SignOutSheet({ onClose }: any) {
               flex: 1,
               height: 44,
               borderRadius: 12,
-              background: '#dc2626',
+              background: 'var(--destructive)',
               color: '#ffffff',
               fontSize: 13,
-              fontWeight: 700,
+              fontWeight: 500,
             }}
           >
             Sign out

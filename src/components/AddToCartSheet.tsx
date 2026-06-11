@@ -44,7 +44,7 @@ export default function AddToCartSheet({ product, initialVariant, onClose, onCon
       <div className="sheet" style={sheetStyle} onClick={(e) => e.stopPropagation()}>
         <SheetHeader
           icon={<CartIcon />}
-          title="Add to Cart"
+          title="Add to cart"
           subtitle="Choose pack size and quantity"
           onClose={onClose}
           dragHandlers={dragHandlers}
@@ -144,7 +144,7 @@ export default function AddToCartSheet({ product, initialVariant, onClose, onCon
             <div className="sheet-footer-value">₹{totalValue.toLocaleString('en-IN')}</div>
           </div>
           <button className="sheet-continue" disabled={totalPcs === 0} onClick={handleConfirm}>
-            Add to Cart →
+            Add to cart →
           </button>
         </div>
       </div>

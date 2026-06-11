@@ -272,7 +272,7 @@ export default function ProductListing({
             <span className="badge">
               {(Object.values(cartItems) as number[]).reduce((a, b) => a + b, 0)}
             </span>
-            View Cart
+            View cart
           </button>
         </div>
       )}

@@ -18,7 +18,7 @@ export default function AddressesScreen({ onBack }: any) {
             <Icon.Back />
           </button>
           <div className="top-title">
-            <h1>Saved Addresses</h1>
+            <h1>Saved addresses</h1>
             <p>{addresses.length} delivery locations</p>
           </div>
         </div>
@@ -47,7 +47,7 @@ export default function AddressesScreen({ onBack }: any) {
                 <button className="order-action-btn ghost">Edit</button>
                 {!a.isDefault && (
                   <button className="order-action-btn primary" onClick={() => setDefault(a.id)}>
-                    Set Default
+                    Set default
                   </button>
                 )}
               </div>
