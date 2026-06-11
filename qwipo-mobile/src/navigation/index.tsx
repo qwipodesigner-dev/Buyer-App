@@ -10,22 +10,13 @@ import HomeScreen from '../screens/HomeScreen';
 import SellerStorefront from '../screens/SellerStorefront';
 import ProductListing from '../screens/ProductListing';
 import MultiSellerCart from '../screens/MultiSellerCart';
+import ReorderScreen from '../screens/ReorderScreen';
+import NotificationsScreen from '../screens/NotificationsScreen';
+import ProfileScreen from '../screens/ProfileScreen';
 import type { MainTabParamList, RootStackParamList } from './types';
 
 const Tab = createBottomTabNavigator<MainTabParamList>();
 const RootStack = createNativeStackNavigator<RootStackParamList>();
-
-function Placeholder({ title }: { title: string }) {
-  return (
-    <View style={styles.placeholder}>
-      <Text style={styles.placeholderTitle}>{title}</Text>
-      <Text style={styles.placeholderSub}>Screen port in progress</Text>
-    </View>
-  );
-}
-
-const ReorderScreen = () => <Placeholder title="Reorder" />;
-const ProfileScreen = () => <Placeholder title="My account" />;
 
 function MainTabs() {
   return (
@@ -74,6 +65,7 @@ export default function Navigation() {
         <RootStack.Screen name="Storefront" component={SellerStorefront} />
         <RootStack.Screen name="ProductListing" component={ProductListing} />
         <RootStack.Screen name="Cart" component={MultiSellerCart} />
+        <RootStack.Screen name="Notifications" component={NotificationsScreen} />
       </RootStack.Navigator>
     </NavigationContainer>
   );
