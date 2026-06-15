@@ -1,7 +1,7 @@
 import { Icon, StatusBar } from '../components/Icons';
 import { initialCart, userProfile } from '../data/mockData';
 
-export default function OrderSummaryScreen({ onBack, onPlaceOrder }: any) {
+export default function OrderSummaryScreen({ onBack, onPlaceOrder, onOpenCoupons, appliedCoupon }: any) {
   const sellerData = initialCart.sellers.map((s) => {
     let subtotal = 0;
     let savings = 0;
@@ -66,6 +66,21 @@ export default function OrderSummaryScreen({ onBack, onPlaceOrder }: any) {
               </div>
             );
           })}
+
+          {/* Apply coupon row */}
+          <button className="os-coupon-row" onClick={onOpenCoupons}>
+            <span className="os-coupon-icon">🎟️</span>
+            <span className="os-coupon-text">
+              {appliedCoupon ? (
+                <>
+                  <strong style={{ color: '#16a34a' }}>{appliedCoupon.code}</strong> applied
+                </>
+              ) : (
+                <>Apply offers & coupons</>
+              )}
+            </span>
+            <Icon.ChevronRight />
+          </button>
 
           {/* Bill details */}
           <div className="os-bill">

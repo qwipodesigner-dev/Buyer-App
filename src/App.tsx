@@ -16,6 +16,11 @@ import MyOrdersScreen from './screens/MyOrdersScreen';
 import DistributorsListScreen from './screens/DistributorsListScreen';
 import AllBrandsScreen from './screens/AllBrandsScreen';
 import WholesalersCategoriesScreen from './screens/WholesalersCategoriesScreen';
+import GlobalSearchScreen from './screens/GlobalSearchScreen';
+import CategoriesBrandsScreen from './screens/CategoriesBrandsScreen';
+import WholesalerProductListScreen from './screens/WholesalerProductListScreen';
+import CouponsScreen from './screens/CouponsScreen';
+import CartValidationSheet from './components/CartValidationSheet';
 import OrdersScreen from './screens/sub/OrdersScreen';
 import AddressesScreen from './screens/sub/AddressesScreen';
 import PaymentScreen from './screens/sub/PaymentScreen';
@@ -41,6 +46,8 @@ export default function App() {
   const [listingFilters, setListingFilters] = useState<any>(filtersDefault);
   const [authPhone, setAuthPhone] = useState<string>('');
   const [wholesalerCategoryVariant, setWholesalerCategoryVariant] = useState<'groceries' | 'fmcg'>('groceries');
+  const [cartValidationOpen, setCartValidationOpen] = useState<boolean>(false);
+  const [appliedCoupon, setAppliedCoupon] = useState<any>(null);
   const [cart, setCart] = useState(initialCart);
   const [listingCart, setListingCart] = useState({});
   const [toast, setToast] = useState('');
@@ -286,6 +293,7 @@ export default function App() {
                   setWholesalerCategoryVariant(id === 'groceries' ? 'groceries' : 'fmcg');
                   setScreen('wholesaler-categories');
                 }}
+                onOpenSearch={() => setScreen('global-search')}
               />
             )}
             {screen === 'reorder' && (
@@ -335,6 +343,8 @@ export default function App() {
                   setToast('Order placed successfully');
                   setScreen('my-orders');
                 }}
+                onOpenCoupons={() => setScreen('coupons')}
+                appliedCoupon={appliedCoupon}
               />
             )}
             {screen === 'my-orders' && (
@@ -366,7 +376,57 @@ export default function App() {
                 onBack={() => setScreen('home')}
                 onSelectCategory={(cat: any) => {
                   setSelectedCategory({ id: cat.id, name: cat.name });
+                  setScreen('wholesaler-products');
+                }}
+              />
+            )}
+            {screen === 'global-search' && (
+              <GlobalSearchScreen
+                onBack={() => setScreen('home')}
+                onSelectProduct={(p: any) => {
+                  setSelectedCategory({ id: p.category, name: 'Search' });
                   setScreen('listing');
+                }}
+              />
+            )}
+            {screen === 'categories-brands' && (
+              <CategoriesBrandsScreen
+                distributor={selectedDistributor}
+                category={selectedCategory}
+                onBack={() => setScreen('storefront')}
+                onSelectBrand={(brand: any) => {
+                  setSelectedCategory({ id: brand.id, name: brand.name, isBrand: true });
+                  setScreen('listing');
+                }}
+                onSelectProduct={handleSelectProduct}
+              />
+            )}
+            {screen === 'wholesaler-products' && (
+              <WholesalerProductListScreen
+                category={selectedCategory}
+                onBack={() => setScreen('wholesaler-categories')}
+                onSelectProduct={handleSelectProduct}
+              />
+            )}
+            {screen === 'coupons' && (
+              <CouponsScreen
+                cartTotal={cartTotal}
+                onBack={() => setScreen('order-summary')}
+                onApply={(coupon: any) => {
+                  setAppliedCoupon(coupon);
+                  setToast(`Coupon ${coupon.code} applied`);
+                  setScreen('order-summary');
+                }}
+              />
+            )}
+
+            {cartValidationOpen && (
+              <CartValidationSheet
+                cart={cart}
+                onClose={() => setCartValidationOpen(false)}
+                onProceed={() => {
+                  setCartValidationOpen(false);
+                  setScreen('order-summary');
                 }}
               />
             )}
@@ -403,7 +463,10 @@ export default function App() {
                 distributor={selectedDistributor}
                 onBack={() => setScreen('home')}
                 onNavigate={handleNavigate}
-                onSelectCategory={handleSelectCategory}
+                onSelectCategory={(cat: any) => {
+                  setSelectedCategory(cat);
+                  setScreen('categories-brands');
+                }}
                 onSelectProduct={handleSelectProduct}
               />
             )}
@@ -429,7 +492,7 @@ export default function App() {
                 onUpdateItemQty={handleUpdateItemQty}
                 onAddSuggestion={handleAddSuggestion}
                 onContinueShopping={() => setScreen('storefront')}
-                onCheckout={() => setScreen('order-summary')}
+                onCheckout={() => setCartValidationOpen(true)}
               />
             )}
 

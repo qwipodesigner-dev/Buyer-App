@@ -20,6 +20,7 @@ export default function HomeScreen({
   onSeeAllDistributors,
   onSeeAllBrands,
   onOpenWholesalerCategory,
+  onOpenSearch,
 }: any) {
   const [tab, setTab] = useState('distributors');
 
@@ -63,10 +64,23 @@ export default function HomeScreen({
 
         {/* Search */}
         <div className="search-bar-wrap" style={{ paddingTop: 0 }}>
-          <div className="search-bar">
+          <button
+            className="search-bar"
+            onClick={onOpenSearch}
+            style={{ width: '100%', textAlign: 'left' }}
+          >
             <Icon.Search />
-            <input placeholder="Search for products, brands…" />
-          </div>
+            <span
+              style={{
+                color: '#9ca3af',
+                fontSize: 14,
+                fontWeight: 500,
+                marginLeft: 2,
+              }}
+            >
+              Search for products, brands…
+            </span>
+          </button>
         </div>
 
         {/* Tab segmented control */}
