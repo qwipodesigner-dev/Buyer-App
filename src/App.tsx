@@ -481,8 +481,10 @@ export default function App() {
                 onBack={() => setScreen('home')}
                 onNavigate={handleNavigate}
                 onSelectCategory={(cat: any) => {
+                  // Direct to ProductListing — the brands+products drill-in
+                  // (CategoriesBrandsScreen) is reserved for explicit "browse by brand" flows.
                   setSelectedCategory(cat);
-                  setScreen('categories-brands');
+                  setScreen('listing');
                 }}
                 onSelectProduct={handleSelectProduct}
               />

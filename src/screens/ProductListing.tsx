@@ -124,7 +124,7 @@ export default function ProductListing({
         {/* Breadcrumb */}
         <div className="breadcrumb">
           <button className="crumb" onClick={onBack}>
-            Storefront
+            Distributor
           </button>
           <span className="crumb-sep">›</span>
           <span className="crumb last">{category?.name || 'Catalog'}</span>

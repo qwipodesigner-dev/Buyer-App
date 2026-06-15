@@ -142,7 +142,6 @@ export default function SellerStorefront({ cartCount, distributor, onBack, onNav
                     <img
                       src={brand.logo}
                       alt={brand.name}
-                      style={{ width: '88%', height: '88%', objectFit: 'contain' }}
                       onError={(e) => {
                         e.currentTarget.style.display = 'none';
                         e.currentTarget.parentElement.style.background = brand.color;
@@ -159,41 +158,78 @@ export default function SellerStorefront({ cartCount, distributor, onBack, onNav
           </div>
         </div>
 
-        {/* Featured */}
+        {/* Featured — Best sellers use the same .product-card pattern as ProductListing */}
         <div className="section" style={{ paddingBottom: '90px' }}>
           <div className="section-head">
             <div className="section-title">Best sellers</div>
             <button className="section-link">View catalog</button>
           </div>
-          <div className="rail">
-            {featured.map((product) => (
-              <button
-                key={product.id}
-                className="product-rail-card"
-                onClick={() => onSelectProduct(product)}
-              >
-                <div className="product-rail-img" style={{ background: product.bgColor, padding: 8 }}>
-                  {product.images?.[0] ? (
-                    <img
-                      src={product.images[0]}
-                      alt={product.name}
-                      style={{ width: '100%', height: '100%', objectFit: 'contain' }}
-                      onError={(e) => {
-                        e.currentTarget.style.display = 'none';
-                        e.currentTarget.parentElement.innerHTML = `<span style="font-size:44px">${product.image}</span>`;
-                      }}
-                    />
-                  ) : (
-                    product.image
-                  )}
+          <div className="rail product-rail">
+            {featured.map((product) => {
+              const variant = product.variants[0];
+              const stockLabel: Record<string, string> = {
+                available: 'In Stock',
+                limited: 'Limited',
+                out: 'Out of Stock',
+              };
+              return (
+                <div key={product.id} className="product-card product-card-rail">
+                  <div className="product-card-top">
+                    <button
+                      className="product-img"
+                      style={{ background: product.bgColor }}
+                      onClick={() => onSelectProduct(product)}
+                      aria-label={`View ${product.name}`}
+                    >
+                      {product.images?.[0] ? (
+                        <img
+                          src={product.images[0]}
+                          alt={product.name}
+                          onError={(e) => {
+                            e.currentTarget.style.display = 'none';
+                            e.currentTarget.parentElement!.innerHTML = `<span style="font-size:30px">${product.image}</span>`;
+                          }}
+                        />
+                      ) : (
+                        <span style={{ fontSize: 30 }}>{product.image}</span>
+                      )}
+                    </button>
+                    <div className="product-info">
+                      <div className="product-meta-row">
+                        <span className="product-brand-tag">{product.brand}</span>
+                        <span className={`stock-chip stock-${variant.stock}`}>
+                          <span className="stock-dot"></span>
+                          {stockLabel[variant.stock]}
+                        </span>
+                      </div>
+                      <div className="product-name">{product.name}</div>
+                    </div>
+                  </div>
+
+                  <div className="product-price-row">
+                    <div className="price-block">
+                      <div className="price-main">
+                        <span className="price-current">₹{variant.sellingPrice}</span>
+                        <span className="price-mrp">₹{variant.mrp}</span>
+                      </div>
+                      <div className="price-meta">{variant.size}</div>
+                    </div>
+                    <div className="margin-badge">{variant.margin}%</div>
+                  </div>
+
+                  <div className="product-actions">
+                    <button
+                      className="add-btn compact"
+                      onClick={() => onSelectProduct(product)}
+                      disabled={variant.stock === 'out'}
+                      style={{ width: '100%' }}
+                    >
+                      <Icon.Plus /> Add
+                    </button>
+                  </div>
                 </div>
-                <div className="product-rail-name">{product.name}</div>
-                <div className="product-rail-price">
-                  ₹{product.variants[0].sellingPrice}
-                  <span className="product-rail-mrp">₹{product.variants[0].mrp}</span>
-                </div>
-              </button>
-            ))}
+              );
+            })}
           </div>
         </div>
       </div>

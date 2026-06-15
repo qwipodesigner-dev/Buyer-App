@@ -217,12 +217,14 @@ export const wholesalerCategories: WholesalerCategory[] = [
     name: 'Groceries',
     bg: 'linear-gradient(135deg, #D1FAE5 0%, #A7F3D0 100%)',
     emoji: '🛒',
+    image: '/home-category-cards/groceries.png',
   },
   {
     id: 'fmcg',
     name: 'FMCG',
     bg: 'linear-gradient(135deg, #FED7AA 0%, #FDBA74 100%)',
     emoji: '🧴',
+    image: '/home-category-cards/fmcg.png',
   },
 ];
 

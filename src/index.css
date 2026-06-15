@@ -2230,31 +2230,48 @@ input {
 }
 
 .wholesale-category-card {
-  aspect-ratio: 1.05 / 1;
-  border-radius: 8px;
-  padding: 12px;
+  border-radius: 12px;
   display: flex;
   flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  gap: 8px;
+  align-items: stretch;
+  overflow: hidden;
   cursor: pointer;
   transition: all 0.15s;
-  border: none;
+  border: 1px solid var(--border);
+  background: #ffffff;
 }
 
 .wholesale-category-card:active {
   transform: scale(0.97);
 }
 
+.wholesale-category-img {
+  width: 100%;
+  aspect-ratio: 2 / 1;
+  object-fit: cover;
+  display: block;
+}
+
 .wholesale-category-emoji {
-  font-size: 48px;
+  font-size: 40px;
+  text-align: center;
+  padding: 16px 0 4px;
 }
 
 .wholesale-category-name {
-  font-size: 14px;
-  font-weight: 500;
+  font-size: 13px;
+  font-weight: 600;
   color: var(--foreground);
+  text-align: center;
+  padding-bottom: 12px;
+}
+
+.wholesale-category-label {
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--foreground);
+  padding: 8px 12px 10px;
+  text-align: center;
 }
 
 /* Exclusive offer cards */
@@ -2703,9 +2720,12 @@ input {
 
 .brand-tile {
   flex-shrink: 0;
-  width: 72px;
+  width: 80px;
   text-align: center;
   cursor: pointer;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
 }
 
 .brand-circle {
@@ -2715,18 +2735,34 @@ input {
   display: flex;
   align-items: center;
   justify-content: center;
-  font-size: 18px;
+  font-size: 16px;
   font-weight: 500;
   color: #ffffff;
   margin: 0 auto 6px;
   border: 2px solid #ffffff;
   box-shadow: 0 2px 8px rgba(0, 0, 0, 0.06);
+  overflow: hidden;
+  flex-shrink: 0;
+}
+
+.brand-circle img {
+  width: 88%;
+  height: 88%;
+  object-fit: contain;
 }
 
 .brand-name {
   font-size: 11px;
   font-weight: 500;
   color: #4b5563;
+  line-height: 1.25;
+  width: 100%;
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  min-height: 28px;
 }
 
 /* Promo card */
@@ -6944,4 +6980,33 @@ input {
   font-size: 11px;
   color: var(--muted-fg);
   font-weight: 500;
+}
+
+/* Product card inside a horizontal rail — same shape, fixed width */
+.product-rail.rail {
+  align-items: stretch;
+}
+
+.product-card-rail {
+  flex-shrink: 0;
+  width: 240px;
+  display: flex;
+  flex-direction: column;
+}
+
+.product-card-rail .product-img {
+  width: 60px;
+  height: 60px;
+}
+
+.product-card-rail .product-name {
+  font-size: 13px;
+}
+
+.product-card-rail .product-price-row {
+  margin-top: 12px;
+}
+
+.product-card-rail .product-actions {
+  margin-top: 8px;
 }

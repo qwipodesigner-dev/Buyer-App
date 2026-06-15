@@ -258,18 +258,38 @@ function WholesalersView({ onSelectBrand, onOpenWholesalerCategory, onSeeAllBran
         )}
       />
 
-      {/* Groceries + FMCG */}
+      {/* Categories — Groceries + FMCG (2:1 banner cards) */}
       <div className="section">
+        <div className="section-head">
+          <div className="section-title">Categories</div>
+        </div>
         <div className="wholesale-categories">
-          {wholesalerCategories.map((c) => (
+          {wholesalerCategories.map((c: any) => (
             <button
               key={c.id}
               className="wholesale-category-card"
               style={{ background: c.bg }}
               onClick={() => onOpenWholesalerCategory?.(c.id)}
             >
-              <div className="wholesale-category-emoji">{c.emoji}</div>
-              <div className="wholesale-category-name">{c.name}</div>
+              {c.image ? (
+                <img
+                  className="wholesale-category-img"
+                  src={c.image}
+                  alt={c.name}
+                  onError={(e) => {
+                    const el = e.currentTarget as HTMLImageElement;
+                    el.style.display = 'none';
+                    const parent = el.parentElement!;
+                    parent.innerHTML = `<div class="wholesale-category-emoji">${c.emoji}</div><div class="wholesale-category-name">${c.name}</div>`;
+                  }}
+                />
+              ) : (
+                <>
+                  <div className="wholesale-category-emoji">{c.emoji}</div>
+                  <div className="wholesale-category-name">{c.name}</div>
+                </>
+              )}
+              <div className="wholesale-category-label">{c.name}</div>
             </button>
           ))}
         </div>
