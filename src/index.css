@@ -5177,3 +5177,173 @@ input {
 .tracking-label.done {
   color: #111827;
 }
+
+/* ============================================================
+   DISTRIBUTORS LIST PAGE
+   ============================================================ */
+.dl-body {
+  padding: 14px 16px 30px;
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+}
+
+.dl-card {
+  background: #ffffff;
+  border: 1px solid var(--border);
+  border-radius: 14px;
+  padding: 14px;
+}
+
+.dl-card-title {
+  font-size: 14px;
+  font-weight: 700;
+  color: var(--foreground);
+  margin-bottom: 12px;
+  letter-spacing: -0.01em;
+}
+
+.dl-brand-grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 10px;
+}
+
+.dl-brand-tile {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  background: #ffffff;
+  border: 1px solid #f3f4f6;
+  border-radius: 10px;
+  padding: 10px 6px;
+  cursor: pointer;
+  transition: all 0.15s;
+}
+
+.dl-brand-tile:active {
+  transform: scale(0.97);
+}
+
+.dl-brand-circle {
+  width: 44px;
+  height: 44px;
+  border-radius: 8px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-bottom: 6px;
+}
+
+.dl-brand-circle span {
+  font-size: 13px;
+  font-weight: 700;
+  color: var(--foreground);
+  letter-spacing: -0.02em;
+}
+
+.dl-brand-name {
+  font-size: 10px;
+  font-weight: 600;
+  color: var(--neutral);
+  text-align: center;
+  letter-spacing: -0.01em;
+}
+
+/* ============================================================
+   ALL BRANDS SCREEN
+   ============================================================ */
+.ab-body {
+  padding: 18px 16px 30px;
+}
+
+.ab-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 16px;
+}
+
+.ab-tile {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  cursor: pointer;
+}
+
+.ab-tile:active {
+  transform: scale(0.95);
+}
+
+.ab-circle {
+  width: 72px;
+  height: 72px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-bottom: 8px;
+  border: 2px solid #ffffff;
+  box-shadow: 0 1px 4px rgba(0, 0, 0, 0.08);
+  font-size: 16px;
+  font-weight: 700;
+  color: #ffffff;
+  overflow: hidden;
+}
+
+.ab-circle img {
+  width: 70%;
+  height: 70%;
+  object-fit: contain;
+}
+
+.ab-name {
+  font-size: 12px;
+  font-weight: 600;
+  color: var(--neutral);
+  text-align: center;
+}
+
+/* ============================================================
+   WHOLESALER CATEGORIES (Groceries / FMCG drill-in)
+   ============================================================ */
+.wc-grid {
+  padding: 14px 16px 30px;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 12px;
+}
+
+.wc-tile {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  cursor: pointer;
+  border: none;
+  background: transparent;
+}
+
+.wc-tile:active {
+  transform: scale(0.97);
+}
+
+.wc-img {
+  width: 100%;
+  aspect-ratio: 1.1 / 1;
+  border-radius: 12px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-bottom: 6px;
+}
+
+.wc-emoji {
+  font-size: 54px;
+}
+
+.wc-name {
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--foreground);
+  text-align: center;
+  letter-spacing: -0.01em;
+}

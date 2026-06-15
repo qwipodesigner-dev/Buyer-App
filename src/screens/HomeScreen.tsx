@@ -11,7 +11,16 @@ import {
   exclusiveOffers,
 } from '../data/mockData';
 
-export default function HomeScreen({ cartCount, onNavigate, onSelectDistributor, onSelectBrand, onOpenNotifications }: any) {
+export default function HomeScreen({
+  cartCount,
+  onNavigate,
+  onSelectDistributor,
+  onSelectBrand,
+  onOpenNotifications,
+  onSeeAllDistributors,
+  onSeeAllBrands,
+  onOpenWholesalerCategory,
+}: any) {
   const [tab, setTab] = useState('distributors');
 
   const visibleDistributors = distributors.filter((d) =>
@@ -83,10 +92,14 @@ export default function HomeScreen({ cartCount, onNavigate, onSelectDistributor,
             visibleDistributors={visibleDistributors}
             onSelectDistributor={onSelectDistributor}
             onSelectBrand={onSelectBrand}
+            onSeeAllDistributors={onSeeAllDistributors}
+            onSeeAllBrands={onSeeAllBrands}
           />
         ) : (
           <WholesalersView
             onSelectBrand={onSelectBrand}
+            onOpenWholesalerCategory={onOpenWholesalerCategory}
+            onSeeAllBrands={onSeeAllBrands}
           />
         )}
       </div>
@@ -96,7 +109,13 @@ export default function HomeScreen({ cartCount, onNavigate, onSelectDistributor,
   );
 }
 
-function DistributorsView({ visibleDistributors, onSelectDistributor, onSelectBrand }: any) {
+function DistributorsView({
+  visibleDistributors,
+  onSelectDistributor,
+  onSelectBrand,
+  onSeeAllDistributors,
+  onSeeAllBrands,
+}: any) {
   return (
     <>
       {/* Hero banner carousel — auto-scrolls every 5s */}
@@ -124,7 +143,9 @@ function DistributorsView({ visibleDistributors, onSelectDistributor, onSelectBr
       <div className="section">
         <div className="section-head">
           <div className="section-title">Distributors</div>
-          <button className="section-link">See all</button>
+          <button className="section-link" onClick={onSeeAllDistributors}>
+            See all
+          </button>
         </div>
         <div className="rail">
           {visibleDistributors.map((d) => (
@@ -150,7 +171,9 @@ function DistributorsView({ visibleDistributors, onSelectDistributor, onSelectBr
       <div className="section" style={{ paddingBottom: 110 }}>
         <div className="section-head">
           <div className="section-title">All brands</div>
-          <button className="section-link">See all</button>
+          <button className="section-link" onClick={onSeeAllBrands}>
+            See all
+          </button>
         </div>
         <div className="brand-grid">
           {brands.map((b) => (
@@ -187,7 +210,7 @@ function DistributorsView({ visibleDistributors, onSelectDistributor, onSelectBr
   );
 }
 
-function WholesalersView({ onSelectBrand }: any) {
+function WholesalersView({ onSelectBrand, onOpenWholesalerCategory, onSeeAllBrands }: any) {
   return (
     <>
       {/* Snack banner carousel — auto-scrolls every 5s */}
@@ -210,7 +233,12 @@ function WholesalersView({ onSelectBrand }: any) {
       <div className="section">
         <div className="wholesale-categories">
           {wholesalerCategories.map((c) => (
-            <button key={c.id} className="wholesale-category-card" style={{ background: c.bg }}>
+            <button
+              key={c.id}
+              className="wholesale-category-card"
+              style={{ background: c.bg }}
+              onClick={() => onOpenWholesalerCategory?.(c.id)}
+            >
               <div className="wholesale-category-emoji">{c.emoji}</div>
               <div className="wholesale-category-name">{c.name}</div>
             </button>
@@ -245,7 +273,7 @@ function WholesalersView({ onSelectBrand }: any) {
       <div className="section" style={{ paddingBottom: 110 }}>
         <div className="section-head">
           <div className="section-title">Top categories</div>
-          <button className="section-link">See all</button>
+          <button className="section-link" onClick={onSeeAllBrands}>See all</button>
         </div>
         <div className="brand-grid">
           {brands.slice(0, 6).map((b) => (

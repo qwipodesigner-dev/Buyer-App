@@ -1207,6 +1207,68 @@ export const userProfile: UserProfile = {
   creditUsed: 12500,
 };
 
+// Distributors list page — distributors grouped with the brands each one carries
+export const distributorsList = [
+  {
+    id: 'sskt',
+    name: 'Shri Sai Krishna Traders',
+    brands: [
+      { id: 'freedom', name: 'Freedo...', short: 'Freedom', bg: '#FEF3C7', initials: 'F' },
+      { id: 'ruchi-gold', name: 'Ruchi G...', short: 'Ruchi Gold', bg: '#FEE2E2', initials: 'RG' },
+      { id: 'fortune', name: 'Fortun...', short: 'Fortune', bg: '#DBEAFE', initials: 'Fo' },
+      { id: 'gold-drop', name: 'Gold Dr...', short: 'Gold Drop', bg: '#FEF3C7', initials: 'GD' },
+      { id: 'sri-lalitha', name: 'Sri Lalit...', short: 'Sri Lalitha', bg: '#FCE7F3', initials: 'SL' },
+      { id: 'priya-foods', name: 'Priya F...', short: 'Priya Foods', bg: '#FED7AA', initials: 'PF' },
+      { id: 'parrys', name: 'Parry S...', short: 'Parry Sugar', bg: '#FEF3C7', initials: 'PS' },
+      { id: 'madhur', name: 'Madhur...', short: 'Madhur', bg: '#D1FAE5', initials: 'M' },
+    ],
+  },
+  {
+    id: 'ssrm',
+    name: 'Sri Sairam Enterprises',
+    brands: [
+      { id: 'ajay-care', name: 'Ajay Care', short: 'Ajay Care', bg: '#E0E7FF', initials: 'AC' },
+      { id: 'cycle', name: 'Cycle', short: 'Cycle', bg: '#FEF3C7', initials: 'C' },
+      { id: 'grb', name: 'GRB', short: 'GRB', bg: '#D1FAE5', initials: 'GR' },
+      { id: 'priya-gold', name: 'Priya G...', short: 'Priya Gold', bg: '#FEE2E2', initials: 'PG' },
+      { id: 'nippo', name: 'Nippo', short: 'Nippo', bg: '#DBEAFE', initials: 'N' },
+    ],
+  },
+  {
+    id: 'sre',
+    name: 'SR Enterprises',
+    brands: [
+      { id: 'mysore-sandal', name: 'Mysore...', short: 'Mysore Sandal', bg: '#FCE7F3', initials: 'MS' },
+      { id: 'vicco', name: 'Vicco', short: 'Vicco', bg: '#FEE2E2', initials: 'V' },
+      { id: 'black-rose', name: 'Black R...', short: 'Black Rose', bg: '#F3F4F6', initials: 'BR' },
+      { id: 'dwibhashi', name: 'Dwibha...', short: 'Dwibhashi', bg: '#D1FAE5', initials: 'D' },
+    ],
+  },
+];
+
+// Wholesalers Groceries categories (from the reference)
+export const wholesalersGroceries = [
+  { id: 'rice', name: 'Rice & Rice Products', emoji: '🌾', bg: 'linear-gradient(135deg, #FEF3C7 0%, #FDE68A 100%)' },
+  { id: 'dals', name: 'Dals & Pulses', emoji: '🫘', bg: 'linear-gradient(135deg, #FFEDD5 0%, #FED7AA 100%)' },
+  { id: 'atta', name: 'Atta, Flours & Sooji', emoji: '🥖', bg: 'linear-gradient(135deg, #FEE2E2 0%, #FECACA 100%)' },
+  { id: 'oils', name: 'Cooking Oils & Ghee', emoji: '🛢️', bg: 'linear-gradient(135deg, #FEF9C3 0%, #FDE68A 100%)' },
+  { id: 'sugar', name: 'Sugar & Spices', emoji: '🌶️', bg: 'linear-gradient(135deg, #FED7AA 0%, #FDBA74 100%)' },
+  { id: 'pickles', name: 'Pickles & Podis', emoji: '🥒', bg: 'linear-gradient(135deg, #FBCFE8 0%, #F9A8D4 100%)' },
+  { id: 'dry-fruits', name: 'Dry Fruits', emoji: '🥜', bg: 'linear-gradient(135deg, #FDE68A 0%, #FCD34D 100%)' },
+];
+
+// Wholesalers FMCG categories
+export const wholesalersFMCG = [
+  { id: 'oats', name: 'Oats & Noodles', emoji: '🍜', bg: 'linear-gradient(135deg, #FEF3C7 0%, #FDE68A 100%)' },
+  { id: 'personal', name: 'Personal Care', emoji: '🧴', bg: 'linear-gradient(135deg, #DBEAFE 0%, #BFDBFE 100%)' },
+  { id: 'pooja', name: 'Pooja Needs', emoji: '🕉️', bg: 'linear-gradient(135deg, #FED7AA 0%, #FDBA74 100%)' },
+  { id: 'ready', name: 'Ready-To-Cook', emoji: '🍱', bg: 'linear-gradient(135deg, #FEE2E2 0%, #FECACA 100%)' },
+  { id: 'sauces', name: 'Spreads, Sauces & Ketchups', emoji: '🍅', bg: 'linear-gradient(135deg, #FECACA 0%, #FCA5A5 100%)' },
+  { id: 'biscuits', name: 'Biscuits, Snacks & Namkeen', emoji: '🍪', bg: 'linear-gradient(135deg, #FED7AA 0%, #FDBA74 100%)' },
+  { id: 'cleaning', name: 'Cleaning & Household', emoji: '🧼', bg: 'linear-gradient(135deg, #E0E7FF 0%, #C7D2FE 100%)' },
+  { id: 'stationery', name: 'Stationery', emoji: '✏️', bg: 'linear-gradient(135deg, #D1FAE5 0%, #A7F3D0 100%)' },
+];
+
 // MOV suggestions — realistic add-ons
 export const movSuggestions: MovSuggestion[] = [
   {

@@ -13,6 +13,9 @@ import OTPScreen from './screens/OTPScreen';
 import OnboardingScreen from './screens/OnboardingScreen';
 import OrderSummaryScreen from './screens/OrderSummaryScreen';
 import MyOrdersScreen from './screens/MyOrdersScreen';
+import DistributorsListScreen from './screens/DistributorsListScreen';
+import AllBrandsScreen from './screens/AllBrandsScreen';
+import WholesalersCategoriesScreen from './screens/WholesalersCategoriesScreen';
 import OrdersScreen from './screens/sub/OrdersScreen';
 import AddressesScreen from './screens/sub/AddressesScreen';
 import PaymentScreen from './screens/sub/PaymentScreen';
@@ -37,6 +40,7 @@ export default function App() {
   const [filtersOpen, setFiltersOpen] = useState<boolean>(false);
   const [listingFilters, setListingFilters] = useState<any>(filtersDefault);
   const [authPhone, setAuthPhone] = useState<string>('');
+  const [wholesalerCategoryVariant, setWholesalerCategoryVariant] = useState<'groceries' | 'fmcg'>('groceries');
   const [cart, setCart] = useState(initialCart);
   const [listingCart, setListingCart] = useState({});
   const [toast, setToast] = useState('');
@@ -276,6 +280,12 @@ export default function App() {
                 onSelectDistributor={handleSelectDistributor}
                 onSelectBrand={handleSelectBrand}
                 onOpenNotifications={() => setScreen('notifications')}
+                onSeeAllDistributors={() => setScreen('distributors-list')}
+                onSeeAllBrands={() => setScreen('all-brands')}
+                onOpenWholesalerCategory={(id: string) => {
+                  setWholesalerCategoryVariant(id === 'groceries' ? 'groceries' : 'fmcg');
+                  setScreen('wholesaler-categories');
+                }}
               />
             )}
             {screen === 'reorder' && (
@@ -330,11 +340,45 @@ export default function App() {
             {screen === 'my-orders' && (
               <MyOrdersScreen onBack={() => setScreen('profile')} />
             )}
+
+            {/* See-all listing screens */}
+            {screen === 'distributors-list' && (
+              <DistributorsListScreen
+                onBack={() => setScreen('home')}
+                onSelectBrand={(brand: any) => {
+                  setSelectedCategory({ id: brand.id, name: brand.short || brand.name, isBrand: true });
+                  setScreen('listing');
+                }}
+              />
+            )}
+            {screen === 'all-brands' && (
+              <AllBrandsScreen
+                onBack={() => setScreen('home')}
+                onSelectBrand={(brand: any) => {
+                  setSelectedCategory({ id: brand.id, name: brand.name, isBrand: true });
+                  setScreen('listing');
+                }}
+              />
+            )}
+            {screen === 'wholesaler-categories' && (
+              <WholesalersCategoriesScreen
+                variant={wholesalerCategoryVariant}
+                onBack={() => setScreen('home')}
+                onSelectCategory={(cat: any) => {
+                  setSelectedCategory({ id: cat.id, name: cat.name });
+                  setScreen('listing');
+                }}
+              />
+            )}
             {screen === 'profile' && (
               <ProfileScreen
                 cartCount={cartCount}
                 onNavigate={handleNavigate}
-                onOpenSubPage={(p) => setScreen(`sub:${p}`)}
+                onOpenSubPage={(p: string) => {
+                  if (p === 'my-orders') setScreen('my-orders');
+                  else setScreen(`sub:${p}`);
+                }}
+                onSignOut={() => setScreen('splash')}
               />
             )}
             {screen === 'sub:orders' && <OrdersScreen onBack={() => setScreen('profile')} />}
@@ -385,6 +429,7 @@ export default function App() {
                 onUpdateItemQty={handleUpdateItemQty}
                 onAddSuggestion={handleAddSuggestion}
                 onContinueShopping={() => setScreen('storefront')}
+                onCheckout={() => setScreen('order-summary')}
               />
             )}
 
