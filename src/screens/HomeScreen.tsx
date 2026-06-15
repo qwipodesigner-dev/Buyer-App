@@ -58,7 +58,7 @@ export default function HomeScreen({
           <button className="location-bar-inner" aria-label="Change delivery address">
             <span className="location-pin">📍</span>
             <span className="location-prefix">Deliver to</span>
-            <span className="location-value">Lit Box, Rai Durg</span>
+            <span className="location-value">Lit Box, Rai Durg, Hitech City</span>
             <Icon.ChevronDown />
           </button>
         </div>
