@@ -7,6 +7,12 @@ import MultiSellerCart from './screens/MultiSellerCart';
 import ReorderScreen from './screens/ReorderScreen';
 import NotificationsScreen from './screens/NotificationsScreen';
 import ProfileScreen from './screens/ProfileScreen';
+import SplashScreen from './screens/SplashScreen';
+import LoginScreen from './screens/LoginScreen';
+import OTPScreen from './screens/OTPScreen';
+import OnboardingScreen from './screens/OnboardingScreen';
+import OrderSummaryScreen from './screens/OrderSummaryScreen';
+import MyOrdersScreen from './screens/MyOrdersScreen';
 import OrdersScreen from './screens/sub/OrdersScreen';
 import AddressesScreen from './screens/sub/AddressesScreen';
 import PaymentScreen from './screens/sub/PaymentScreen';
@@ -30,6 +36,7 @@ export default function App() {
   const [discountsSheet, setDiscountsSheet] = useState<any>(null); // {product, variant}
   const [filtersOpen, setFiltersOpen] = useState<boolean>(false);
   const [listingFilters, setListingFilters] = useState<any>(filtersDefault);
+  const [authPhone, setAuthPhone] = useState<string>('');
   const [cart, setCart] = useState(initialCart);
   const [listingCart, setListingCart] = useState({});
   const [toast, setToast] = useState('');
@@ -235,6 +242,27 @@ export default function App() {
               <span className="screen-pill-num">4</span>
               Multi-Seller Cart
             </button>
+            <button
+              className={`screen-pill ${screen === 'splash' ? 'active' : ''}`}
+              onClick={() => setScreen('splash')}
+            >
+              <span className="screen-pill-num">5</span>
+              Splash · Login · OTP · Onboarding
+            </button>
+            <button
+              className={`screen-pill ${screen === 'order-summary' ? 'active' : ''}`}
+              onClick={() => setScreen('order-summary')}
+            >
+              <span className="screen-pill-num">6</span>
+              Order Summary
+            </button>
+            <button
+              className={`screen-pill ${screen === 'my-orders' ? 'active' : ''}`}
+              onClick={() => setScreen('my-orders')}
+            >
+              <span className="screen-pill-num">7</span>
+              My Orders + Tracking
+            </button>
           </div>
         </div>
 
@@ -260,6 +288,47 @@ export default function App() {
             )}
             {screen === 'notifications' && (
               <NotificationsScreen onBack={() => setScreen('home')} />
+            )}
+
+            {/* Auth flow */}
+            {screen === 'splash' && (
+              <SplashScreen onContinue={() => setScreen('login')} />
+            )}
+            {screen === 'login' && (
+              <LoginScreen
+                onBack={() => setScreen('home')}
+                onSubmit={(phone: string) => {
+                  setAuthPhone(phone);
+                  setScreen('otp');
+                }}
+              />
+            )}
+            {screen === 'otp' && (
+              <OTPScreen
+                phone={authPhone}
+                onBack={() => setScreen('login')}
+                onVerify={() => setScreen('onboarding')}
+              />
+            )}
+            {screen === 'onboarding' && (
+              <OnboardingScreen
+                onBack={() => setScreen('otp')}
+                onProceed={() => setScreen('home')}
+              />
+            )}
+
+            {/* Order completion */}
+            {screen === 'order-summary' && (
+              <OrderSummaryScreen
+                onBack={() => setScreen('cart')}
+                onPlaceOrder={() => {
+                  setToast('Order placed successfully');
+                  setScreen('my-orders');
+                }}
+              />
+            )}
+            {screen === 'my-orders' && (
+              <MyOrdersScreen onBack={() => setScreen('profile')} />
             )}
             {screen === 'profile' && (
               <ProfileScreen
