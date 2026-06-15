@@ -131,22 +131,35 @@ function DistributorsView({
       {/* Hero banner carousel — auto-scrolls every 5s */}
       <BannerCarousel
         banners={heroBanners}
-        renderBanner={(b) => (
-          <div key={b.id} className="hero-banner" style={{ background: b.bg }}>
-            <div className="hero-banner-text">
-              <div className="hero-banner-tag">{b.tag}</div>
-              <div className="hero-banner-title">{b.title}</div>
-              <div className="hero-banner-sub">{b.subtitle}</div>
-              <ul className="hero-banner-bullets">
-                {b.bullets.map((bl, i) => (
-                  <li key={i}>{bl}</li>
-                ))}
-              </ul>
-              <button className="hero-banner-cta">{b.cta} →</button>
+        renderBanner={(b: any) =>
+          b.image ? (
+            <div key={b.id} className="hero-banner hero-banner-image">
+              <img
+                src={b.image}
+                alt={b.title}
+                onError={(e) => {
+                  const el = e.currentTarget as HTMLImageElement;
+                  el.style.display = 'none';
+                }}
+              />
             </div>
-            <div className="hero-banner-art">{b.emoji}</div>
-          </div>
-        )}
+          ) : (
+            <div key={b.id} className="hero-banner" style={{ background: b.bg }}>
+              <div className="hero-banner-text">
+                <div className="hero-banner-tag">{b.tag}</div>
+                <div className="hero-banner-title">{b.title}</div>
+                <div className="hero-banner-sub">{b.subtitle}</div>
+                <ul className="hero-banner-bullets">
+                  {b.bullets.map((bl: string, i: number) => (
+                    <li key={i}>{bl}</li>
+                  ))}
+                </ul>
+                <button className="hero-banner-cta">{b.cta} →</button>
+              </div>
+              <div className="hero-banner-art">{b.emoji}</div>
+            </div>
+          )
+        }
       />
 
       {/* Distributors section */}

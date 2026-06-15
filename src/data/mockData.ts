@@ -156,6 +156,9 @@ export const distributors: Distributor[] = [
 ];
 
 // Hero banners for Home screen
+// Hero banners on the Distributors home view — use the attached marketing PNGs.
+// Text/bullets kept for accessibility (alt-text fallback) but the UI renders the
+// PNG full-bleed inside a 2:1 frame so the banner art reads as designed.
 export const heroBanners: HeroBanner[] = [
   {
     id: 'b1',
@@ -166,26 +169,40 @@ export const heroBanners: HeroBanner[] = [
     cta: 'Explore DigiDukaan',
     bg: 'linear-gradient(135deg, #FBCFE8 0%, #FCE7F3 50%, #FEF3C7 100%)',
     emoji: '🏪',
+    image: '/distributor-banners/Banner1.png',
   },
   {
     id: 'b2',
     tag: 'EXCLUSIVE',
-    title: 'Your Distributor',
-    subtitle: 'Is Now Online',
+    title: 'Your Distributor Is Now Online',
+    subtitle: 'Distributor rates & full catalogue at your fingertips',
     bullets: ['Full Catalogue', 'Instant Quotes', '24×7 Support'],
-    cta: 'Start Ordering',
+    cta: 'Start Ordering Today',
     bg: 'linear-gradient(135deg, #E0E7FF 0%, #EDE9FE 50%, #FAF5FF 100%)',
     emoji: '📦',
+    image: '/distributor-banners/Banner2.png',
   },
   {
     id: 'b3',
-    tag: 'NEW ON QWIPO',
-    title: 'ONDC DigiDukaan',
-    subtitle: 'Powered by Govt. of India',
-    bullets: ['Verified Sellers', 'Standard Pricing', 'Trusted Network'],
-    cta: 'Learn More',
+    tag: '40 BRANDS · ONE APP',
+    title: '40 Brands. One App.',
+    subtitle: 'All at unbeatable prices on DigiDukaan',
+    bullets: ['Authorised Distributors', 'Unbeatable Prices', 'Favourite Brands'],
+    cta: 'Browse All Brands',
     bg: 'linear-gradient(135deg, #DBEAFE 0%, #E0F2FE 50%, #ECFEFF 100%)',
     emoji: '🛍️',
+    image: '/distributor-banners/Banner3.png',
+  },
+  {
+    id: 'b4',
+    tag: 'NEXT DAY DELIVERY',
+    title: 'Why wait 7 days when you can get it tomorrow?',
+    subtitle: 'No more weekly cycles. No more stock-outs.',
+    bullets: ['Next Day Delivery', 'No Stock-outs', 'Your Distributor'],
+    cta: 'Order Your Stock Now',
+    bg: 'linear-gradient(135deg, #312E81 0%, #5B21B6 50%, #6D28D9 100%)',
+    emoji: '🚚',
+    image: '/distributor-banners/Banner4.png',
   },
 ];
 

@@ -401,16 +401,16 @@ input {
 .home-tab {
   display: flex;
   align-items: center;
-  gap: 8px;
-  padding: 10px 12px;
+  gap: 12px;
+  padding: 12px 14px;
   background: #ffffff;
   border: 1.5px solid #e5e7eb;
-  border-radius: 12px;
-  font-size: 12px;
-  font-weight: 500;
+  border-radius: 16px;
+  font-size: 13px;
+  font-weight: 600;
   color: #2563eb;
   text-align: left;
-  line-height: 1.2;
+  line-height: 1.25;
   transition: all 0.15s;
 }
 
@@ -421,14 +421,23 @@ input {
 }
 
 .home-tab-img {
-  width: 38px;
-  height: 38px;
-  border-radius: 8px;
+  width: 56px;
+  height: 56px;
+  border-radius: 14px;
   display: flex;
   align-items: center;
   justify-content: center;
-  font-size: 18px;
+  font-size: 28px;
   flex-shrink: 0;
+  overflow: hidden;
+  border: 2px solid #ffffff;
+  box-shadow: 0 1px 4px rgba(0, 0, 0, 0.08);
+}
+
+.home-tab-img img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
 }
 
 /* Banner rail — aligned with home-tabs padding (16px both sides) */
@@ -460,6 +469,20 @@ input {
   scroll-snap-align: start;
   position: relative;
   overflow: hidden;
+}
+
+/* Image-only banner variant — full-bleed PNG locked at 2:1 */
+.hero-banner.hero-banner-image {
+  padding: 0;
+  aspect-ratio: 2 / 1;
+  background: transparent;
+}
+
+.hero-banner.hero-banner-image img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
 }
 
 .hero-banner-text {

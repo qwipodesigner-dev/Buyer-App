@@ -99,6 +99,7 @@ export interface HeroBanner {
   cta: string;
   bg: string;
   emoji: string;
+  image?: string;
 }
 
 export interface WholesalerBanner {
