@@ -401,17 +401,18 @@ input {
 .home-tab {
   display: flex;
   align-items: center;
-  gap: 12px;
-  padding: 12px 14px;
+  gap: 8px;
+  padding: 8px 10px;
   background: #ffffff;
   border: 1.5px solid #e5e7eb;
-  border-radius: 16px;
-  font-size: 13px;
-  font-weight: 600;
+  border-radius: 12px;
+  font-size: 12px;
+  font-weight: 500;
   color: #2563eb;
   text-align: left;
-  line-height: 1.25;
+  line-height: 1.2;
   transition: all 0.15s;
+  min-width: 0;
 }
 
 .home-tab.active {
@@ -420,24 +421,33 @@ input {
   color: #ffffff;
 }
 
+/* Image is larger than before (38 → 48) but the surrounding tab stays slim:
+   padding tightened to 8px so the tab footprint matches the original. */
 .home-tab-img {
-  width: 56px;
-  height: 56px;
-  border-radius: 14px;
+  width: 48px;
+  height: 48px;
+  border-radius: 12px;
   display: flex;
   align-items: center;
   justify-content: center;
-  font-size: 28px;
+  font-size: 24px;
   flex-shrink: 0;
   overflow: hidden;
-  border: 2px solid #ffffff;
-  box-shadow: 0 1px 4px rgba(0, 0, 0, 0.08);
+  border: 1.5px solid #ffffff;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.08);
 }
 
 .home-tab-img img {
   width: 100%;
   height: 100%;
   object-fit: cover;
+}
+
+.home-tab span {
+  flex: 1;
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
 }
 
 /* Banner rail — aligned with home-tabs padding (16px both sides) */
@@ -2410,6 +2420,9 @@ input {
   font-size: 12px;
   color: #6b7280;
   margin-top: 2px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
 }
 
 /* Breadcrumb */
@@ -2927,7 +2940,7 @@ input {
 }
 
 .product-list {
-  padding: 10px 16px 120px;
+  padding: 10px 16px 160px;
   display: flex;
   flex-direction: column;
   gap: 10px;
@@ -3456,6 +3469,14 @@ input {
 
 .cart-strip-info {
   flex: 1;
+  min-width: 0;
+}
+
+.cart-strip-meta,
+.cart-strip-label {
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
 }
 
 .cart-strip-label {
@@ -4452,6 +4473,14 @@ input {
     padding: 0;
     background: #f7f7f9;
   }
+  .showcase {
+    width: 100%;
+    height: 100%;
+    gap: 0;
+  }
+  .showcase-info {
+    display: none;
+  }
   .phone-frame {
     width: 100vw;
     height: 100vh;
@@ -4464,6 +4493,52 @@ input {
   }
   .phone-notch {
     display: none;
+  }
+  /* Hide the simulated status bar — real device shows the OS one */
+  .status-bar {
+    display: none;
+  }
+}
+
+/* Very small Android viewports (<= 360px) — tighten paddings + fonts */
+@media (max-width: 360px) {
+  .home-tab {
+    padding: 6px 8px;
+    font-size: 11px;
+    gap: 6px;
+  }
+  .home-tab-img {
+    width: 42px;
+    height: 42px;
+    border-radius: 10px;
+  }
+  .top-bar {
+    padding: 10px 12px;
+    gap: 8px;
+  }
+  .top-title h1 {
+    font-size: 15px;
+  }
+  .icon-btn {
+    width: 32px;
+    height: 32px;
+  }
+  .icon-btn svg {
+    width: 16px;
+    height: 16px;
+  }
+  .cart-strip {
+    padding: 10px 12px;
+  }
+  .cart-strip-btn {
+    padding: 10px 14px;
+    font-size: 12px;
+  }
+  .section {
+    padding: 0 12px;
+  }
+  .product-list {
+    padding: 8px 12px 160px;
   }
 }
 

@@ -266,7 +266,7 @@ export default function ProductListing({
           <div className="cart-strip-info">
             <div className="cart-strip-label">Total cart value</div>
             <div className="cart-strip-value">₹{cartTotal.toLocaleString('en-IN')}</div>
-            <div className="cart-strip-meta">2 sellers · Free delivery applied</div>
+            <div className="cart-strip-meta">Free delivery applied</div>
           </div>
           <button className="cart-strip-btn" onClick={onGoToCart}>
             <Icon.Cart />
