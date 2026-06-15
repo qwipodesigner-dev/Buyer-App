@@ -53,12 +53,14 @@ export default function HomeScreen({
           </div>
         </div>
 
-        {/* Location bar */}
+        {/* Location chip — compact, quiet, lives below the header */}
         <div className="location-bar">
-          <span className="location-pin">📍</span>
-          <span className="location-prefix">Deliver to</span>
-          <span className="location-value">Lit Box, Rai Durg, Hitech City</span>
-          <Icon.ChevronDown />
+          <button className="location-bar-inner" aria-label="Change delivery address">
+            <span className="location-pin">📍</span>
+            <span className="location-prefix">Deliver to</span>
+            <span className="location-value">Lit Box, Rai Durg</span>
+            <Icon.ChevronDown />
+          </button>
         </div>
 
         {/* Tab segmented control — uses the Home Screen Images set */}

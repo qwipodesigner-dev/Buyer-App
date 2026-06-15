@@ -322,6 +322,7 @@ input {
   align-items: center;
   gap: 10px;
   border-bottom: 1px solid #f3f4f6;
+  position: relative;
 }
 
 /* Brand SVG — keeps natural aspect ratio */
@@ -329,15 +330,23 @@ input {
   height: 28px;
   width: auto;
   display: block;
+  position: relative;
+  z-index: 1;
 }
 
+/* ONDC DigiDukaan logo — absolutely centered on screen so its position is
+   independent of the side elements (Qwipo logo / bell icon). */
 .ondc-badge {
-  flex: 1;
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  transform: translate(-50%, -50%);
   display: flex;
   flex-direction: column;
   align-items: center;
   line-height: 1.1;
   gap: 3px;
+  pointer-events: none;
 }
 
 .ondc-by {
@@ -356,23 +365,36 @@ input {
 .home-header-actions {
   display: flex;
   gap: 6px;
+  margin-left: auto;
+  position: relative;
+  z-index: 1;
 }
 
-/* Location bar */
+/* Location bar — compact chip below header. Quiet visual weight so it doesn't
+   compete with the brand + offers + categories below it. */
 .location-bar {
   background: #ffffff;
-  padding: 10px 16px 12px;
+  padding: 8px 16px 10px;
   display: flex;
-  align-items: center;
-  gap: 4px;
-  font-size: 13px;
-  color: #2563eb;
-  font-weight: 500;
+  justify-content: flex-start;
   border-bottom: 1px solid #f3f4f6;
 }
 
+.location-bar-inner {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  padding: 5px 10px;
+  background: #f3f4f6;
+  border-radius: 999px;
+  font-size: 11px;
+  color: #4b5563;
+  max-width: 100%;
+}
+
 .location-pin {
-  font-size: 14px;
+  font-size: 11px;
+  line-height: 1;
 }
 
 .location-prefix {
@@ -381,13 +403,20 @@ input {
 }
 
 .location-value {
-  color: #2563eb;
-  font-weight: 500;
+  color: var(--foreground);
+  font-weight: 600;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  max-width: 200px;
 }
 
 .location-bar svg {
-  color: #2563eb;
+  color: #6b7280;
+  width: 12px;
+  height: 12px;
   margin-left: 2px;
+  flex-shrink: 0;
 }
 
 /* Home tabs */
@@ -2155,12 +2184,12 @@ input {
 /* Distributor cards */
 .distributor-card {
   flex-shrink: 0;
-  width: 140px;
+  width: 92px;
   background: #ffffff;
   border: 1px solid var(--border);
-  border-radius: 8px;
-  padding: 10px;
-  text-align: left;
+  border-radius: 10px;
+  padding: 8px;
+  text-align: center;
   cursor: pointer;
   transition: all 0.15s;
 }
@@ -2172,11 +2201,11 @@ input {
 .distributor-card-img {
   width: 100%;
   aspect-ratio: 1;
-  border-radius: 10px;
+  border-radius: 8px;
   display: flex;
   align-items: center;
   justify-content: center;
-  margin-bottom: 8px;
+  margin-bottom: 6px;
   overflow: hidden;
   border: 1px solid var(--border);
 }
@@ -2188,25 +2217,30 @@ input {
 }
 
 .distributor-card-brand {
-  font-size: 14px;
-  font-weight: 500;
+  font-size: 11px;
+  font-weight: 600;
   color: var(--foreground);
-  letter-spacing: -0.02em;
-  text-shadow: 0 1px 0 rgba(255,255,255,0.5);
+  letter-spacing: -0.01em;
 }
 
 .distributor-card-title {
-  font-size: 12px;
-  font-weight: 500;
+  font-size: 11px;
+  font-weight: 600;
   color: var(--foreground);
-  line-height: 1.3;
+  line-height: 1.25;
   margin-bottom: 2px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
 }
 
 .distributor-card-sub {
-  font-size: 10px;
+  font-size: 9px;
   color: #6b7280;
   font-weight: 500;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
 }
 
 /* Brand grid */
