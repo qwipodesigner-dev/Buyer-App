@@ -69,26 +69,45 @@ export default function SellerStorefront({ cartCount, distributor, onBack, onNav
           </div>
         </div>
 
-        {/* Categories */}
+        {/* Categories — 2:1 image cards with name-sized widths */}
         <div className="section">
           <div className="section-head">
             <div className="section-title">Shop by category</div>
             <button className="section-link">See all</button>
           </div>
-          <div className="category-grid">
-            {categories.slice(0, 8).map((cat) => (
+          <div className="cat-rail">
+            {categories.map((cat) => {
+              // Width scales 140 → 220 with name length (in chars). Image stays 2:1.
+              const w = Math.min(220, Math.max(140, 110 + cat.name.length * 5));
+              return (
               <button
                 key={cat.id}
-                className="category-tile"
+                className="cat-card"
+                style={{ width: w }}
                 onClick={() => onSelectCategory(cat)}
               >
-                <div className="category-icon-wrap" style={{ background: cat.color }}>
-                  {cat.icon}
+                <div className="cat-card-img" style={{ background: cat.color }}>
+                  {cat.image ? (
+                    <img
+                      src={cat.image}
+                      alt={cat.name}
+                      onError={(e) => {
+                        (e.currentTarget as HTMLImageElement).style.display = 'none';
+                        const parent = (e.currentTarget as HTMLImageElement).parentElement!;
+                        parent.innerHTML = `<span class="cat-card-fallback">${cat.icon}</span>`;
+                      }}
+                    />
+                  ) : (
+                    <span className="cat-card-fallback">{cat.icon}</span>
+                  )}
                 </div>
-                <div className="category-name">{cat.name}</div>
-                <div className="category-count">{cat.count} items</div>
+                <div className="cat-card-body">
+                  <div className="cat-card-name">{cat.name}</div>
+                  <div className="cat-card-count">{cat.count} items</div>
+                </div>
               </button>
-            ))}
+              );
+            })}
           </div>
         </div>
 
@@ -102,7 +121,7 @@ export default function SellerStorefront({ cartCount, distributor, onBack, onNav
           <div className="promo-emoji">🎁</div>
         </div>
 
-        {/* Brands */}
+        {/* Brands — Phase-one PNG logos */}
         <div className="section">
           <div className="section-head">
             <div className="section-title">Top brands</div>
@@ -123,7 +142,7 @@ export default function SellerStorefront({ cartCount, distributor, onBack, onNav
                     <img
                       src={brand.logo}
                       alt={brand.name}
-                      style={{ width: '70%', height: '70%', objectFit: 'contain' }}
+                      style={{ width: '88%', height: '88%', objectFit: 'contain' }}
                       onError={(e) => {
                         e.currentTarget.style.display = 'none';
                         e.currentTarget.parentElement.style.background = brand.color;

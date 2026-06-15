@@ -26,17 +26,31 @@ export default function WholesalersCategoriesScreen({
           </button>
         </div>
 
-        <div className="wc-grid">
+        <div className="cat-grid">
           {cats.map((c: any) => (
             <button
               key={c.id}
-              className="wc-tile"
+              className="cat-card cat-card-grid"
               onClick={() => onSelectCategory?.(c)}
             >
-              <div className="wc-img" style={{ background: c.bg }}>
-                <span className="wc-emoji">{c.emoji}</span>
+              <div className="cat-card-img" style={{ background: c.bg }}>
+                {c.image ? (
+                  <img
+                    src={c.image}
+                    alt={c.name}
+                    onError={(e) => {
+                      (e.currentTarget as HTMLImageElement).style.display = 'none';
+                      const parent = (e.currentTarget as HTMLImageElement).parentElement!;
+                      parent.innerHTML = `<span class="cat-card-fallback">${c.emoji}</span>`;
+                    }}
+                  />
+                ) : (
+                  <span className="cat-card-fallback">{c.emoji}</span>
+                )}
               </div>
-              <div className="wc-name">{c.name}</div>
+              <div className="cat-card-body">
+                <div className="cat-card-name">{c.name}</div>
+              </div>
             </button>
           ))}
         </div>

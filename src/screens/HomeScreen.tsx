@@ -61,20 +61,38 @@ export default function HomeScreen({
           <Icon.ChevronDown />
         </div>
 
-        {/* Tab segmented control */}
+        {/* Tab segmented control — uses the Home Screen Images set */}
         <div className="home-tabs">
           <button
             className={`home-tab ${tab === 'distributors' ? 'active' : ''}`}
             onClick={() => setTab('distributors')}
           >
-            <div className="home-tab-img" style={{ background: '#FEF3C7' }}>📦</div>
+            <div className="home-tab-img" style={{ background: '#FEF3C7' }}>
+              <img
+                src="/home-category-cards/distributors.png"
+                alt="Distributors"
+                onError={(e) => {
+                  (e.currentTarget as HTMLImageElement).style.display = 'none';
+                  (e.currentTarget as HTMLImageElement).parentElement!.textContent = '📦';
+                }}
+              />
+            </div>
             <span>Authorised distributors</span>
           </button>
           <button
             className={`home-tab ${tab === 'wholesalers' ? 'active' : ''}`}
             onClick={() => setTab('wholesalers')}
           >
-            <div className="home-tab-img" style={{ background: '#FED7AA' }}>🏪</div>
+            <div className="home-tab-img" style={{ background: '#FED7AA' }}>
+              <img
+                src="/home-category-cards/wholesalers.png"
+                alt="Wholesalers"
+                onError={(e) => {
+                  (e.currentTarget as HTMLImageElement).style.display = 'none';
+                  (e.currentTarget as HTMLImageElement).parentElement!.textContent = '🏪';
+                }}
+              />
+            </div>
             <span>Wholesalers</span>
           </button>
         </div>
@@ -140,22 +158,41 @@ function DistributorsView({
           </button>
         </div>
         <div className="rail">
-          {visibleDistributors.map((d) => (
-            <button
-              key={d.id}
-              className="distributor-card"
-              onClick={() => onSelectDistributor(d)}
-            >
-              <div
-                className="distributor-card-img"
-                style={{ background: d.featuredColor }}
+          {visibleDistributors.map((d) => {
+            const featured = brands.find(
+              (b) => b.name.toLowerCase() === d.featuredBrand.toLowerCase()
+            );
+            return (
+              <button
+                key={d.id}
+                className="distributor-card"
+                onClick={() => onSelectDistributor(d)}
               >
-                <span className="distributor-card-brand">{d.featuredBrand}</span>
-              </div>
-              <div className="distributor-card-title">{d.featuredBrandTitle}</div>
-              <div className="distributor-card-sub">{d.shortName}</div>
-            </button>
-          ))}
+                <div
+                  className="distributor-card-img"
+                  style={{ background: '#ffffff' }}
+                >
+                  {featured?.logo ? (
+                    <img
+                      className="distributor-card-logo"
+                      src={featured.logo}
+                      alt={featured.name}
+                      onError={(e) => {
+                        const el = e.currentTarget as HTMLImageElement;
+                        el.style.display = 'none';
+                        el.parentElement!.style.background = d.featuredColor;
+                        el.parentElement!.innerHTML = `<span class="distributor-card-brand">${d.featuredBrand}</span>`;
+                      }}
+                    />
+                  ) : (
+                    <span className="distributor-card-brand">{d.featuredBrand}</span>
+                  )}
+                </div>
+                <div className="distributor-card-title">{d.featuredBrandTitle}</div>
+                <div className="distributor-card-sub">{d.shortName}</div>
+              </button>
+            );
+          })}
         </div>
       </div>
 
