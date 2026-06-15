@@ -5406,12 +5406,50 @@ input {
   padding: 14px;
 }
 
+/* Tappable distributor header row — name on left, arrow on right, opens
+   the seller storefront for that distributor. */
+.dl-card-head {
+  display: flex;
+  align-items: center;
+  width: 100%;
+  padding: 0 0 12px;
+  margin-bottom: 12px;
+  border: none;
+  background: none;
+  text-align: left;
+  border-bottom: 1px solid #f3f4f6;
+}
+
+.dl-card-head:active {
+  opacity: 0.7;
+}
+
 .dl-card-title {
+  flex: 1;
   font-size: 14px;
   font-weight: 700;
   color: var(--foreground);
-  margin-bottom: 12px;
   letter-spacing: -0.01em;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.dl-card-arrow {
+  width: 28px;
+  height: 28px;
+  border-radius: 999px;
+  background: #f3f4f6;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  color: var(--foreground);
+}
+
+.dl-card-arrow svg {
+  width: 14px;
+  height: 14px;
 }
 
 .dl-brand-grid {

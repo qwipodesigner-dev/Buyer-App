@@ -366,9 +366,21 @@ export default function App() {
             {screen === 'distributors-list' && (
               <DistributorsListScreen
                 onBack={() => setScreen('home')}
-                onSelectBrand={(brand: any) => {
-                  setSelectedCategory({ id: brand.id, name: brand.short || brand.name, isBrand: true });
-                  setScreen('listing');
+                onSelectDistributor={(distributor: any) => {
+                  setSelectedDistributor(distributor);
+                  setScreen('storefront');
+                }}
+                onSelectBrand={(brand: any, distributor: any) => {
+                  // Brand tap from distributors list → Companies/Brands/Categories drill-in
+                  if (distributor) setSelectedDistributor(distributor);
+                  setSelectedCategory({
+                    id: brand.id,
+                    name: brand.short || brand.name,
+                    isBrand: true,
+                    color: brand.bg,
+                    icon: brand.initials,
+                  });
+                  setScreen('categories-brands');
                 }}
               />
             )}
