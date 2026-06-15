@@ -1,9 +1,10 @@
-import { useState } from 'react';
+import { useState, useMemo } from 'react';
 import { Icon, StatusBar } from '../components/Icons';
 import { products } from '../data/mockData';
 
-// PDF page 14 — wholesaler product list. Same SKU is sold by multiple wholesalers.
-// User can switch the active seller via chips; price/MOV/delivery update accordingly.
+// Same card pattern as distributor ProductListing — keeps the UI consistent so
+// retailers don't have to learn a new layout. Difference: each SKU exposes a
+// small row of seller chips so the buyer can switch which wholesaler fulfils it.
 
 const WHOLESALERS = [
   { id: 'wh1', short: 'OE', name: 'Omkar Enterprises', logoColor: '#DC2626', mov: 3000, delivery: 'Today by 8 PM' },
@@ -12,175 +13,227 @@ const WHOLESALERS = [
   { id: 'wh4', short: 'RT', name: 'Ramesh Trading Co.', logoColor: '#7C3AED', mov: 2500, delivery: 'Today by 9 PM' },
 ];
 
-// Each product has up to 4 seller prices — generated deterministically
+// Deterministic price-variation per (productId, sellerId) — no Math.random so layout
+// is stable across re-renders. Cheaper-priced seller wins the BEST tag.
 function pricesForProduct(productId: string, basePrice: number) {
-  // Hash the productId for deterministic but varied offsets
   let hash = 0;
   for (let i = 0; i < productId.length; i++) hash = (hash * 31 + productId.charCodeAt(i)) >>> 0;
-
   return WHOLESALERS.map((w, i) => {
-    const offset = ((hash >> (i * 3)) & 0xf) - 7; // -7..+8
+    const offset = ((hash >> (i * 3)) & 0xf) - 7;
     const price = Math.max(Math.round(basePrice + offset), 1);
-    return { seller: w, price, stock: ((hash >> i) & 0x3) === 0 ? 'limited' : 'available' };
+    return { seller: w, price };
   });
 }
 
+const stockLabel: Record<string, string> = {
+  available: 'In Stock',
+  limited: 'Limited',
+  out: 'Out of Stock',
+};
+
 export default function WholesalerProductListScreen({
   category,
+  cartItems,
   onBack,
-  onSelectProduct,
+  onOpenSheet,
+  onOpenImageSheet,
+  onGoToCart,
+  onOpenSearch,
+  cartTotal = 0,
 }: any) {
-  const [activeSeller, setActiveSeller] = useState<string>('wh1');
-  const [sort, setSort] = useState<'price' | 'mov' | 'delivery'>('price');
+  const [selectedVariant, setSelectedVariant] = useState<Record<string, string>>({});
+  const [selectedSeller, setSelectedSeller] = useState<Record<string, string>>({});
 
   const cat = category || { name: 'Cooking Oils & Ghee', icon: '🛢️' };
-  const list = products.slice(0, 10);
+
+  const list = useMemo(() => products.slice(0, 10), []);
+  const getCartQty = (productId: string, variantId: string) =>
+    cartItems?.[`${productId}_${variantId}`] || 0;
 
   return (
     <>
       <StatusBar />
       <div className="screen-body">
-        {/* Top app bar */}
-        <div className="wp-top-bar">
-          <button className="icon-btn" onClick={onBack} aria-label="Back">
+        {/* Top bar — same pattern as ProductListing */}
+        <div className="top-bar">
+          <button className="icon-btn" onClick={onBack}>
             <Icon.Back />
           </button>
-          <div className="wp-top-title">{cat.name}</div>
-          <button className="icon-btn" aria-label="Search">
+          <div className="top-title">
+            <h1>{cat.name}</h1>
+            <p>Multi-seller · {list.length} products</p>
+          </div>
+          <button className="icon-btn" onClick={onOpenSearch} aria-label="Search">
             <Icon.Search />
           </button>
         </div>
 
-        {/* Multi-seller chips — defining feature for PDF page 14 */}
-        <div className="wp-seller-rail-wrap">
-          <div className="wp-seller-rail-label">Buy from</div>
-          <div className="wp-seller-rail">
-            {WHOLESALERS.map((w) => (
-              <button
-                key={w.id}
-                className={`wp-seller-chip ${activeSeller === w.id ? 'on' : ''}`}
-                onClick={() => setActiveSeller(w.id)}
-              >
-                <span
-                  className="wp-seller-chip-avatar"
-                  style={{ background: w.logoColor }}
-                >
-                  {w.short}
-                </span>
-                <span className="wp-seller-chip-text">
-                  <span className="wp-seller-chip-name">{w.name}</span>
-                  <span className="wp-seller-chip-mov">MOV ₹{w.mov.toLocaleString('en-IN')}</span>
-                </span>
-              </button>
-            ))}
-          </div>
+        {/* Breadcrumb */}
+        <div className="breadcrumb">
+          <button className="crumb" onClick={onBack}>
+            Wholesalers
+          </button>
+          <span className="crumb-sep">›</span>
+          <span className="crumb last">{cat.name}</span>
         </div>
 
-        {/* Active seller summary card */}
-        {(() => {
-          const w = WHOLESALERS.find((x) => x.id === activeSeller)!;
-          return (
-            <div className="wp-active-card">
-              <span className="wp-active-avatar" style={{ background: w.logoColor }}>
-                {w.short}
-              </span>
-              <div className="wp-active-info">
-                <div className="wp-active-name">{w.name}</div>
-                <div className="wp-active-meta">
-                  Delivery: {w.delivery} · MOV ₹{w.mov.toLocaleString('en-IN')}
-                </div>
-              </div>
-              <button className="wp-view-store">View store</button>
-            </div>
-          );
-        })()}
-
-        {/* Sort chips */}
-        <div className="wp-sort-row">
-          <div className="wp-sort-label">Sort by:</div>
-          <button
-            className={`wp-sort-chip ${sort === 'price' ? 'on' : ''}`}
-            onClick={() => setSort('price')}
-          >
-            Best price
-          </button>
-          <button
-            className={`wp-sort-chip ${sort === 'mov' ? 'on' : ''}`}
-            onClick={() => setSort('mov')}
-          >
-            Lowest MOV
-          </button>
-          <button
-            className={`wp-sort-chip ${sort === 'delivery' ? 'on' : ''}`}
-            onClick={() => setSort('delivery')}
-          >
-            Fastest
-          </button>
-        </div>
-
-        {/* Product list with per-seller pricing */}
-        <div className="wp-list">
-          {list.map((p) => {
-            const prices = pricesForProduct(p.id, p.variants[0].sellingPrice);
-            const activePrice = prices.find((x) => x.seller.id === activeSeller)!;
-            const bestPrice = Math.min(...prices.map((x) => x.price));
+        {/* Product list — distributor card pattern */}
+        <div className="product-list">
+          {list.map((product) => {
+            const activeVarId = selectedVariant[product.id] || product.variants[0].id;
+            const variant = product.variants.find((v) => v.id === activeVarId)!;
+            const prices = pricesForProduct(product.id, variant.sellingPrice);
+            const activeSellerId = selectedSeller[product.id] || prices[0].seller.id;
+            const activePrice = prices.find((p) => p.seller.id === activeSellerId)!;
+            const bestPrice = Math.min(...prices.map((p) => p.price));
             const isBest = activePrice.price === bestPrice;
+            const cartQty = getCartQty(product.id, variant.id);
 
             return (
-              <button
-                key={p.id}
-                className="wp-product"
-                onClick={() => onSelectProduct?.(p)}
-              >
-                <div className="wp-product-img" style={{ background: p.bgColor }}>
-                  {p.images?.[0] ? (
-                    <img src={p.images[0]} alt={p.name} />
+              <div key={product.id} className="product-card">
+                <div className="product-card-top">
+                  <button
+                    className="product-img"
+                    style={{ background: product.bgColor }}
+                    onClick={() => onOpenImageSheet?.(product)}
+                    aria-label={`View images for ${product.name}`}
+                  >
+                    {product.images?.[0] ? (
+                      <img src={product.images[0]} alt={product.name} />
+                    ) : (
+                      <span style={{ fontSize: 30 }}>{product.image}</span>
+                    )}
+                  </button>
+                  <div className="product-info">
+                    <div className="product-meta-row">
+                      <span className="product-brand-tag">{product.brand}</span>
+                      <span className={`stock-chip stock-${variant.stock}`}>
+                        <span className="stock-dot"></span>
+                        {stockLabel[variant.stock]}
+                      </span>
+                    </div>
+                    <div className="product-name">{product.name}</div>
+                  </div>
+                </div>
+
+                {/* Per-SKU seller chips */}
+                <div className="sku-seller-row">
+                  <div className="sku-seller-label">Buy from:</div>
+                  <div className="sku-seller-chips">
+                    {prices.map((pr) => {
+                      const isActive = pr.seller.id === activeSellerId;
+                      const isCheapest = pr.price === bestPrice;
+                      return (
+                        <button
+                          key={pr.seller.id}
+                          className={`sku-seller-chip ${isActive ? 'on' : ''}`}
+                          onClick={() =>
+                            setSelectedSeller({
+                              ...selectedSeller,
+                              [product.id]: pr.seller.id,
+                            })
+                          }
+                          aria-label={`${pr.seller.name} — ₹${pr.price}`}
+                        >
+                          <span
+                            className="sku-seller-avatar"
+                            style={{ background: pr.seller.logoColor }}
+                          >
+                            {pr.seller.short}
+                          </span>
+                          <span className="sku-seller-price">₹{pr.price}</span>
+                          {isCheapest && <span className="sku-seller-best">BEST</span>}
+                        </button>
+                      );
+                    })}
+                  </div>
+                </div>
+
+                {/* Variants */}
+                <div className="variant-pills">
+                  {product.variants.map((v) => (
+                    <button
+                      key={v.id}
+                      className={`variant-pill ${v.id === activeVarId ? 'active' : ''}`}
+                      onClick={() =>
+                        setSelectedVariant({
+                          ...selectedVariant,
+                          [product.id]: v.id,
+                        })
+                      }
+                    >
+                      {v.size}
+                    </button>
+                  ))}
+                </div>
+
+                {/* Pricing */}
+                <div className="product-price-row">
+                  <div className="price-block">
+                    <div className="price-main">
+                      <span className="price-current">₹{activePrice.price}</span>
+                      <span className="price-mrp">₹{variant.mrp}</span>
+                      {isBest && <span className="best-tag">BEST PRICE</span>}
+                    </div>
+                    <div className="price-meta">
+                      per pc · {activePrice.seller.name} · {activePrice.seller.delivery}
+                    </div>
+                  </div>
+                  <div className="margin-badge">{variant.margin}% Margin</div>
+                </div>
+
+                {/* Actions */}
+                <div className="product-actions">
+                  <div className="sku-mov-note">
+                    MOV ₹{activePrice.seller.mov.toLocaleString('en-IN')}
+                  </div>
+
+                  {cartQty > 0 ? (
+                    <div className="qty-control compact">
+                      <button
+                        className="qty-btn"
+                        onClick={() => onOpenSheet?.(product, variant)}
+                      >
+                        <Icon.Minus />
+                      </button>
+                      <div className="qty-value">{cartQty}</div>
+                      <button
+                        className="qty-btn"
+                        onClick={() => onOpenSheet?.(product, variant)}
+                      >
+                        <Icon.Plus />
+                      </button>
+                    </div>
                   ) : (
-                    <span>{p.image}</span>
+                    <button
+                      className="add-btn compact"
+                      onClick={() => onOpenSheet?.(product, variant)}
+                      disabled={variant.stock === 'out'}
+                    >
+                      <Icon.Plus /> Add
+                    </button>
                   )}
                 </div>
-                <div className="wp-product-info">
-                  <div className="wp-product-brand">{p.brand}</div>
-                  <div className="wp-product-name">{p.name}</div>
-                  <div className="wp-product-meta">
-                    {p.variants[0].size} · {p.variants[0].casePack}
-                  </div>
-                  {/* Mini seller comparison row */}
-                  <div className="wp-mini-sellers">
-                    {prices.slice(0, 4).map((pr) => (
-                      <div
-                        key={pr.seller.id}
-                        className={`wp-mini-seller ${
-                          pr.seller.id === activeSeller ? 'on' : ''
-                        }`}
-                        title={pr.seller.name}
-                      >
-                        <span
-                          className="wp-mini-avatar"
-                          style={{ background: pr.seller.logoColor }}
-                        >
-                          {pr.seller.short}
-                        </span>
-                        <span className="wp-mini-price">₹{pr.price}</span>
-                      </div>
-                    ))}
-                  </div>
-                </div>
-                <div className="wp-product-right">
-                  {isBest && <div className="wp-best-tag">BEST</div>}
-                  <div className="wp-product-current">₹{activePrice.price}</div>
-                  <div className="wp-product-mrp">₹{p.variants[0].mrp}</div>
-                  <button className="wp-add-btn">
-                    <Icon.Plus /> Add
-                  </button>
-                </div>
-              </button>
+              </div>
             );
           })}
         </div>
 
         <div style={{ paddingBottom: 30 }} />
       </div>
+
+      {cartTotal > 0 && (
+        <div className="cart-strip">
+          <div className="cart-strip-info">
+            <div className="cart-strip-label">Total cart value</div>
+            <div className="cart-strip-value">₹{cartTotal.toLocaleString('en-IN')}</div>
+          </div>
+          <button className="cart-strip-btn" onClick={onGoToCart}>
+            <Icon.Cart />
+            View cart
+          </button>
+        </div>
+      )}
     </>
   );
 }

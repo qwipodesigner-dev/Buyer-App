@@ -34,6 +34,7 @@ export default function ProductListing({
   onOpenFilters,
   onGoToCart,
   onUpdateQty,
+  onOpenSearch,
 }: any) {
   const [selectedVariant, setSelectedVariant] = useState<any>({});
 
@@ -107,7 +108,7 @@ export default function ProductListing({
               {seller.name} · {filteredProducts.length} products
             </p>
           </div>
-          <button className="icon-btn">
+          <button className="icon-btn" onClick={onOpenSearch} aria-label="Search">
             <Icon.Search />
           </button>
           <button

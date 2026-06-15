@@ -35,7 +35,15 @@ import { filtersDefault } from './screens/ProductListing';
 import { initialCart, categories } from './data/mockData';
 
 export default function App() {
-  const [screen, setScreen] = useState<string>('home');
+  const [screen, setScreenRaw] = useState<string>('home');
+  const [prevScreen, setPrevScreen] = useState<string>('home');
+  const setScreen = (next: string) => {
+    if (next === 'global-search') {
+      // Remember where we came from so back returns there
+      setPrevScreen((current) => (screen === 'global-search' ? current : screen));
+    }
+    setScreenRaw(next);
+  };
   const [selectedCategory, setSelectedCategory] = useState<any>(categories[0]);
   const [selectedDistributor, setSelectedDistributor] = useState<any>(null);
   const [sheetProduct, setSheetProduct] = useState<any>(null);
@@ -198,6 +206,10 @@ export default function App() {
       setScreen('reorder');
       return;
     }
+    if (target === 'search') {
+      setScreen('global-search');
+      return;
+    }
     setScreen(target);
   };
 
@@ -293,7 +305,6 @@ export default function App() {
                   setWholesalerCategoryVariant(id === 'groceries' ? 'groceries' : 'fmcg');
                   setScreen('wholesaler-categories');
                 }}
-                onOpenSearch={() => setScreen('global-search')}
               />
             )}
             {screen === 'reorder' && (
@@ -382,7 +393,7 @@ export default function App() {
             )}
             {screen === 'global-search' && (
               <GlobalSearchScreen
-                onBack={() => setScreen('home')}
+                onBack={() => setScreen(prevScreen || 'home')}
                 onSelectProduct={(p: any) => {
                   setSelectedCategory({ id: p.category, name: 'Search' });
                   setScreen('listing');
@@ -399,13 +410,19 @@ export default function App() {
                   setScreen('listing');
                 }}
                 onSelectProduct={handleSelectProduct}
+                onOpenSearch={() => setScreen('global-search')}
               />
             )}
             {screen === 'wholesaler-products' && (
               <WholesalerProductListScreen
                 category={selectedCategory}
+                cartItems={listingCart}
+                cartTotal={cartTotal}
                 onBack={() => setScreen('wholesaler-categories')}
-                onSelectProduct={handleSelectProduct}
+                onOpenSheet={handleOpenSheet}
+                onOpenImageSheet={(p: any) => setImageSheetProduct(p)}
+                onGoToCart={() => setScreen('cart')}
+                onOpenSearch={() => setScreen('global-search')}
               />
             )}
             {screen === 'coupons' && (
@@ -483,6 +500,7 @@ export default function App() {
                 onOpenFilters={() => setFiltersOpen(true)}
                 onGoToCart={() => setScreen('cart')}
                 onUpdateQty={handleUpdateListingQty}
+                onOpenSearch={() => setScreen('global-search')}
               />
             )}
             {screen === 'cart' && (

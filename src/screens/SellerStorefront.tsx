@@ -33,14 +33,14 @@ export default function SellerStorefront({ cartCount, distributor, onBack, onNav
             <Icon.Back />
           </button>
           <div className="top-title">
-            <h1>Storefront</h1>
+            <h1>Authorised Distributor</h1>
           </div>
           <button className="icon-btn">
             <Icon.Bell />
           </button>
         </div>
 
-        {/* Hero — seller info */}
+        {/* Hero — seller info (location/SKU removed for retailer clarity) */}
         <div className="storefront-hero">
           <div className="seller-header">
             <div className="seller-logo">{initials}</div>
@@ -53,12 +53,10 @@ export default function SellerStorefront({ cartCount, distributor, onBack, onNav
               </div>
               <div className="seller-meta">
                 <span className="seller-meta-tag">Authorised</span>
-                <span className="seller-meta-dot"></span>
-                <span>{activeSeller.location}</span>
               </div>
             </div>
           </div>
-          <div className="seller-stats">
+          <div className="seller-stats two-cell">
             <div className="stat-cell">
               <div className="stat-label">MIN ORDER</div>
               <div className="stat-value">₹{activeSeller.mov.toLocaleString('en-IN')}</div>
@@ -68,23 +66,6 @@ export default function SellerStorefront({ cartCount, distributor, onBack, onNav
               <div className="stat-value">Tomorrow</div>
               <div className="stat-value-sub">by 11 AM</div>
             </div>
-            <div className="stat-cell">
-              <div className="stat-label">CATALOG</div>
-              <div className="stat-value">{activeSeller.totalSKUs}</div>
-              <div className="stat-value-sub">SKUs</div>
-            </div>
-          </div>
-        </div>
-
-        {/* Search */}
-        <div className="search-bar-wrap">
-          <div className="search-bar">
-            <Icon.Search />
-            <input placeholder="Search products, brands, SKUs..." />
-            <div className="search-bar-divider"></div>
-            <button className="scan-btn">
-              <Icon.Scan />
-            </button>
           </div>
         </div>
 

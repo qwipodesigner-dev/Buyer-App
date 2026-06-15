@@ -2518,12 +2518,16 @@ input {
   backdrop-filter: blur(10px);
   border: 1px solid rgba(255, 255, 255, 0.15);
   border-radius: 8px;
-  padding: 12px;
+  padding: 14px 12px;
   display: grid;
   grid-template-columns: 1fr 1fr 1fr;
   gap: 8px;
   position: relative;
   z-index: 1;
+}
+
+.seller-stats.two-cell {
+  grid-template-columns: 1fr 1fr;
 }
 
 .stat-cell {
@@ -4253,20 +4257,51 @@ input {
   right: 0;
   background: #ffffff;
   border-top: 1px solid #f3f4f6;
-  padding: 8px 16px 24px;
+  padding: 8px 12px 24px;
   display: flex;
   justify-content: space-around;
+  align-items: flex-end;
   z-index: 5;
 }
 
 .nav-item {
+  flex: 1;
   display: flex;
   flex-direction: column;
   align-items: center;
   gap: 2px;
-  padding: 6px 10px;
+  padding: 6px 4px;
   color: #9ca3af;
   position: relative;
+}
+
+/* Center elevated Search FAB */
+.nav-search-fab {
+  flex: 0 0 auto;
+  width: 56px;
+  height: 56px;
+  margin: 0 6px;
+  margin-top: -22px; /* lifts above the nav bar */
+  border-radius: 50%;
+  background: var(--brand-purple);
+  color: #ffffff;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0 6px 18px rgba(188, 119, 255, 0.45),
+              0 2px 4px rgba(0, 0, 0, 0.06);
+  border: 4px solid #ffffff;
+  transition: transform 150ms ease;
+}
+
+.nav-search-fab:active {
+  transform: scale(0.94);
+}
+
+.nav-search-fab svg {
+  width: 22px;
+  height: 22px;
+  stroke-width: 2.5;
 }
 
 .nav-item.active {
@@ -6644,4 +6679,159 @@ input {
   height: 16px;
   color: var(--muted-fg);
   flex-shrink: 0;
+}
+
+/* Quiet hint shown in GlobalSearch before any query is typed */
+.gs-hint {
+  padding: 56px 24px 20px;
+  text-align: center;
+}
+
+.gs-hint-emoji {
+  font-size: 56px;
+  line-height: 1;
+  margin-bottom: 16px;
+}
+
+.gs-hint-title {
+  font-size: 18px;
+  font-weight: 700;
+  color: var(--foreground);
+  margin-bottom: 6px;
+}
+
+.gs-hint-sub {
+  font-size: 13px;
+  color: var(--muted-fg);
+  line-height: 1.5;
+  margin-bottom: 24px;
+  max-width: 280px;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+.gs-suggest-row {
+  display: flex;
+  gap: 8px;
+  justify-content: center;
+  flex-wrap: wrap;
+}
+
+.gs-suggest {
+  padding: 8px 14px;
+  background: var(--muted);
+  border-radius: 999px;
+  font-size: 12px;
+  font-weight: 600;
+  color: var(--foreground);
+}
+
+.gs-suggest:active {
+  background: #ddd6fe;
+}
+
+/* ============================================================
+   PER-SKU SELLER CHIPS — used inside .product-card on the
+   wholesaler product list so each SKU can switch its supplier
+   independently. Consistent with .variant-pills row below it.
+   ============================================================ */
+.sku-seller-row {
+  margin: 10px 0 8px;
+  padding: 10px 12px;
+  background: #fafbff;
+  border: 1px solid #eef2ff;
+  border-radius: 10px;
+}
+
+.sku-seller-label {
+  font-size: 10px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  color: var(--muted-fg);
+  margin-bottom: 8px;
+}
+
+.sku-seller-chips {
+  display: flex;
+  gap: 6px;
+  overflow-x: auto;
+  scrollbar-width: none;
+}
+
+.sku-seller-chips::-webkit-scrollbar {
+  display: none;
+}
+
+.sku-seller-chip {
+  flex-shrink: 0;
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 4px 10px 4px 4px;
+  background: #ffffff;
+  border: 1.5px solid var(--border);
+  border-radius: 999px;
+  position: relative;
+  transition: all 150ms ease;
+}
+
+.sku-seller-chip.on {
+  border-color: var(--brand-purple);
+  background: #faf5ff;
+}
+
+.sku-seller-avatar {
+  width: 22px;
+  height: 22px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #ffffff;
+  font-size: 9px;
+  font-weight: 700;
+  flex-shrink: 0;
+}
+
+.sku-seller-price {
+  font-size: 12px;
+  font-weight: 700;
+  color: var(--foreground);
+}
+
+.sku-seller-best {
+  position: absolute;
+  top: -8px;
+  right: 4px;
+  background: #16A34A;
+  color: #ffffff;
+  font-size: 7px;
+  font-weight: 700;
+  padding: 1px 4px;
+  border-radius: 3px;
+  letter-spacing: 0.04em;
+}
+
+/* BEST PRICE inline tag next to price (wholesaler card) */
+.best-tag {
+  display: inline-block;
+  background: #16A34A;
+  color: #ffffff;
+  font-size: 9px;
+  font-weight: 700;
+  padding: 2px 6px;
+  border-radius: 4px;
+  letter-spacing: 0.04em;
+  margin-left: 8px;
+  vertical-align: middle;
+}
+
+.sku-mov-note {
+  font-size: 11px;
+  font-weight: 600;
+  color: var(--muted-fg);
+  padding: 6px 10px;
+  background: var(--muted);
+  border-radius: 8px;
 }

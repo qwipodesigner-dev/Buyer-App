@@ -11,6 +11,7 @@ export default function CategoriesBrandsScreen({
   onBack,
   onSelectProduct,
   onSelectBrand,
+  onOpenSearch,
 }: any) {
   const [activeBrand, setActiveBrand] = useState<string>('all');
 
@@ -38,7 +39,7 @@ export default function CategoriesBrandsScreen({
             <div className="cb-top-title">{cat.name}</div>
             <div className="cb-top-sub">{dist.name}</div>
           </div>
-          <button className="icon-btn" aria-label="Search">
+          <button className="icon-btn" aria-label="Search" onClick={onOpenSearch}>
             <Icon.Search />
           </button>
         </div>
@@ -113,7 +114,8 @@ export default function CategoriesBrandsScreen({
                 </div>
                 <div className="cb-brand-tile-name">{b.name}</div>
                 <div className="cb-brand-tile-skus">
-                  {Math.floor(Math.random() * 30) + 8} SKUs
+                  {/* Deterministic: char-code sum % 30 + 8 → stable across renders */}
+                  {(b.id.split('').reduce((a, c) => a + c.charCodeAt(0), 0) % 30) + 8} SKUs
                 </div>
               </button>
             ))}
