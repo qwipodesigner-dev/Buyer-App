@@ -1155,6 +1155,19 @@ export const savedAddresses: SavedAddress[] = [
 // Order history
 export const orderHistoryList: OrderHistoryEntry[] = [
   {
+    id: 'QW2402',
+    placedAt: '2026-06-16',
+    seller: 'Nestle - Omkar Enterprise',
+    sellerLogo: 'NE',
+    sellerColor: '#DC2626',
+    itemCount: 3,
+    total: 4200,
+    status: 'placed',
+    statusLabel: 'Order placed',
+    eta: '2026-06-18',
+    items: ['Maggi Family Pack × 8', 'Nescafé Classic 200g × 4', 'KitKat 4-Finger × 12'],
+  },
+  {
     id: 'QW2401',
     placedAt: '2026-06-05',
     seller: 'Sri Sai Krishna Traders',

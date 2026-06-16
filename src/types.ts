@@ -226,7 +226,7 @@ export interface SavedAddress {
   icon: string;
 }
 
-export type OrderStatus = 'in_transit' | 'processing' | 'delivered';
+export type OrderStatus = 'placed' | 'in_transit' | 'processing' | 'delivered' | 'cancelled';
 
 export interface OrderHistoryEntry {
   id: string;

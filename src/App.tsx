@@ -13,6 +13,7 @@ import OTPScreen from './screens/OTPScreen';
 import OnboardingScreen from './screens/OnboardingScreen';
 import OrderSummaryScreen from './screens/OrderSummaryScreen';
 import MyOrdersScreen from './screens/MyOrdersScreen';
+import OrderDetailsScreen from './screens/OrderDetailsScreen';
 import DistributorsListScreen from './screens/DistributorsListScreen';
 import AllBrandsScreen from './screens/AllBrandsScreen';
 import WholesalersCategoriesScreen from './screens/WholesalersCategoriesScreen';
@@ -54,6 +55,7 @@ export default function App() {
   const [listingFilters, setListingFilters] = useState<any>(filtersDefault);
   const [authPhone, setAuthPhone] = useState<string>('');
   const [wholesalerCategoryVariant, setWholesalerCategoryVariant] = useState<'groceries' | 'fmcg'>('groceries');
+  const [activeOrder, setActiveOrder] = useState<any>(null);
   const [cartValidationOpen, setCartValidationOpen] = useState<boolean>(false);
   const [appliedCoupon, setAppliedCoupon] = useState<any>(null);
   const [cart, setCart] = useState(initialCart);
@@ -359,7 +361,21 @@ export default function App() {
               />
             )}
             {screen === 'my-orders' && (
-              <MyOrdersScreen onBack={() => setScreen('profile')} />
+              <MyOrdersScreen
+                onBack={() => setScreen('profile')}
+                onOpenDetails={(o: any) => {
+                  setActiveOrder(o);
+                  setScreen('order-details');
+                }}
+              />
+            )}
+            {screen === 'order-details' && (
+              <OrderDetailsScreen
+                order={activeOrder}
+                onBack={() => setScreen('my-orders')}
+                onTrack={() => setScreen('my-orders')}
+                onCancel={() => setScreen('my-orders')}
+              />
             )}
 
             {/* See-all listing screens */}
