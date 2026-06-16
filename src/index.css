@@ -8148,3 +8148,69 @@ body {
   border-radius: 50%;
   background: var(--brand-purple);
 }
+
+/* ============================================================
+   WHOLESALER SELLER OPTIONS — 2-column boxes under the variant
+   pills, per the reference image. Visual weight matches the
+   variant-pill row so the card flow reads as one unit.
+   ============================================================ */
+.seller-options {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 8px;
+  margin: 8px 0 10px;
+}
+
+.seller-option {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  padding: 6px 10px 7px;
+  background: #ffffff;
+  border: 1.5px solid var(--border);
+  border-radius: 8px;
+  text-align: left;
+  transition: background 150ms ease, border-color 150ms ease;
+  min-width: 0;
+}
+
+.seller-option.active {
+  background: #2563EB;
+  border-color: #2563EB;
+  color: #ffffff;
+}
+
+.seller-option-price {
+  font-size: 13px;
+  font-weight: 700;
+  color: inherit;
+  letter-spacing: -0.01em;
+  line-height: 1.2;
+}
+
+.seller-option-name {
+  font-size: 11px;
+  font-weight: 600;
+  color: inherit;
+  opacity: 0.95;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  line-height: 1.25;
+}
+
+.seller-option-fee {
+  display: inline-flex;
+  align-items: center;
+  gap: 3px;
+  font-size: 10px;
+  font-weight: 500;
+  color: inherit;
+  opacity: 0.85;
+  line-height: 1.2;
+}
+
+.seller-option-fee svg {
+  width: 10px;
+  height: 10px;
+}

@@ -398,6 +398,9 @@ export default function App() {
                 onBack={() => setScreen('wholesaler-categories')}
                 onOpenSheet={handleOpenSheet}
                 onOpenImageSheet={(p: any) => setImageSheetProduct(p)}
+                onOpenDiscounts={(product: any, variant: any) =>
+                  setDiscountsSheet({ product, variant })
+                }
                 onGoToCart={() => setScreen('cart')}
                 onOpenSearch={() => setScreen('global-search')}
               />
