@@ -2,6 +2,7 @@ import { useState } from 'react';
 import { Icon, StatusBar } from '../components/Icons';
 import BottomNav from '../components/BottomNav';
 import BannerCarousel from '../components/BannerCarousel';
+import { useI18n } from '../i18n';
 import {
   distributors,
   brands,
@@ -20,7 +21,9 @@ export default function HomeScreen({
   onSeeAllDistributors,
   onSeeAllBrands,
   onOpenWholesalerCategory,
+  onOpenAddresses,
 }: any) {
+  const { t } = useI18n();
   const [tab, setTab] = useState('distributors');
 
   const visibleDistributors = distributors.filter((d) =>
@@ -53,11 +56,15 @@ export default function HomeScreen({
           </div>
         </div>
 
-        {/* Location chip — compact, quiet, lives below the header */}
+        {/* Delivery address chip — blue tint per reference, taps to Addresses */}
         <div className="location-bar">
-          <button className="location-bar-inner" aria-label="Change delivery address">
-            <span className="location-pin">📍</span>
-            <span className="location-prefix">Deliver to</span>
+          <button
+            className="location-bar-inner"
+            aria-label="Change delivery address"
+            onClick={onOpenAddresses}
+          >
+            <span className="location-pin"><Icon.MapPin /></span>
+            <span className="location-prefix">{t('common.deliver_to')}</span>
             <span className="location-value">Lit Box, Rai Durg, Hitech City</span>
             <Icon.ChevronDown />
           </button>
@@ -79,7 +86,7 @@ export default function HomeScreen({
                 }}
               />
             </div>
-            <span>Authorised distributors</span>
+            <span>{t('home.authorised_distributors')}</span>
           </button>
           <button
             className={`home-tab ${tab === 'wholesalers' ? 'active' : ''}`}
@@ -95,7 +102,7 @@ export default function HomeScreen({
                 }}
               />
             </div>
-            <span>Wholesalers</span>
+            <span>{t('home.wholesalers')}</span>
           </button>
         </div>
 
@@ -128,6 +135,7 @@ function DistributorsView({
   onSeeAllDistributors,
   onSeeAllBrands,
 }: any) {
+  const { t } = useI18n();
   return (
     <>
       {/* Hero banner carousel — auto-scrolls every 5s */}
@@ -167,9 +175,9 @@ function DistributorsView({
       {/* Distributors section */}
       <div className="section">
         <div className="section-head">
-          <div className="section-title">Distributors</div>
+          <div className="section-title">{t('home.distributors')}</div>
           <button className="section-link" onClick={onSeeAllDistributors}>
-            See all
+            {t('common.see_all')}
           </button>
         </div>
         <div className="rail">
@@ -214,9 +222,9 @@ function DistributorsView({
       {/* All brands grid */}
       <div className="section" style={{ paddingBottom: 110 }}>
         <div className="section-head">
-          <div className="section-title">All brands</div>
+          <div className="section-title">{t('home.all_brands')}</div>
           <button className="section-link" onClick={onSeeAllBrands}>
-            See all
+            {t('common.see_all')}
           </button>
         </div>
         <div className="brand-grid">
@@ -255,6 +263,7 @@ function DistributorsView({
 }
 
 function WholesalersView({ onSelectBrand, onOpenWholesalerCategory, onSeeAllBrands }: any) {
+  const { t } = useI18n();
   return (
     <>
       {/* Snack banner carousel — auto-scrolls every 5s */}
@@ -276,7 +285,7 @@ function WholesalersView({ onSelectBrand, onOpenWholesalerCategory, onSeeAllBran
       {/* Categories — Groceries + FMCG (2:1 banner cards) */}
       <div className="section">
         <div className="section-head">
-          <div className="section-title">Categories</div>
+          <div className="section-title">{t('home.categories')}</div>
         </div>
         <div className="wholesale-categories">
           {wholesalerCategories.map((c: any) => (
@@ -313,8 +322,8 @@ function WholesalersView({ onSelectBrand, onOpenWholesalerCategory, onSeeAllBran
       {/* Exclusive offers */}
       <div className="section">
         <div className="section-head">
-          <div className="section-title">Exclusive offers</div>
-          <button className="section-link">See all</button>
+          <div className="section-title">{t('home.exclusive_offers')}</div>
+          <button className="section-link">{t('common.see_all')}</button>
         </div>
         <div className="rail">
           {exclusiveOffers.map((o) => (
@@ -336,8 +345,8 @@ function WholesalersView({ onSelectBrand, onOpenWholesalerCategory, onSeeAllBran
       {/* Top categories */}
       <div className="section" style={{ paddingBottom: 110 }}>
         <div className="section-head">
-          <div className="section-title">Top categories</div>
-          <button className="section-link" onClick={onSeeAllBrands}>See all</button>
+          <div className="section-title">{t('home.top_categories')}</div>
+          <button className="section-link" onClick={onSeeAllBrands}>{t('common.see_all')}</button>
         </div>
         <div className="brand-grid">
           {brands.slice(0, 6).map((b) => (

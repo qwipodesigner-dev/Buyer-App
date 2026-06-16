@@ -2,6 +2,7 @@ import { useMemo, useState } from 'react';
 import { Icon, StatusBar } from '../components/Icons';
 import { SheetHeader, useSheetSwipe } from '../components/SheetBase';
 import { orderHistoryList } from '../data/mockData';
+import { useI18n } from '../i18n';
 import CancelOrderDialog from '../components/CancelOrderDialog';
 import CopyText from '../components/CopyText';
 
@@ -14,6 +15,17 @@ const TRACKING_STEPS: { id: string; label: string }[] = [
   { id: 'out', label: 'Out for Delivery' },
   { id: 'delivered', label: 'Delivered' },
 ];
+
+// "2026-06-16" → "16 Jun"; pass-through anything else (e.g. "Tomorrow 11 AM")
+const MONTH_ABBR = ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
+function formatShortDate(input?: string): string {
+  if (!input) return '—';
+  const m = /^(\d{4})-(\d{2})-(\d{2})$/.exec(input);
+  if (!m) return input;
+  const day = parseInt(m[3], 10);
+  const month = MONTH_ABBR[parseInt(m[2], 10) - 1];
+  return `${day} ${month}`;
+}
 
 function statusToIdx(status: string): number {
   if (status === 'delivered') return 5;
@@ -29,6 +41,7 @@ function isWholesalerOrder(o: any) {
 }
 
 export default function MyOrdersScreen({ onBack, onOpenDetails }: any) {
+  const { t } = useI18n();
   const [tab, setTab] = useState<TabKind>('distributors');
   const [tracking, setTracking] = useState<any>(null);
   const [cancelTarget, setCancelTarget] = useState<any>(null);
@@ -54,7 +67,7 @@ export default function MyOrdersScreen({ onBack, onOpenDetails }: any) {
             <Icon.Back />
           </button>
           <div className="top-title">
-            <h1>My Orders</h1>
+            <h1>{t('orders.my_orders')}</h1>
           </div>
         </div>
 
@@ -64,13 +77,13 @@ export default function MyOrdersScreen({ onBack, onOpenDetails }: any) {
             className={`orders-tab ${tab === 'wholesalers' ? 'on' : ''}`}
             onClick={() => setTab('wholesalers')}
           >
-            Wholesalers
+            {t('home.wholesalers')}
           </button>
           <button
             className={`orders-tab ${tab === 'distributors' ? 'on' : ''}`}
             onClick={() => setTab('distributors')}
           >
-            Distributors
+            {t('home.distributors')}
           </button>
         </div>
 
@@ -88,87 +101,95 @@ export default function MyOrdersScreen({ onBack, onOpenDetails }: any) {
           {visible.map((o: any) => {
             const isPlaced = o.status === 'placed';
             const isCancelled = o.status === 'cancelled';
-            const itemsTotal = o.total - 200;
+            const orderId = `QWIP${o.id.replace('QW', '')}204`;
+            const placedDate = formatShortDate(o.placedAt);
+            const eta = isPlaced ? formatShortDate(o.eta) : 'Tomorrow';
 
             return (
-              <div key={o.id} className="orders-card">
-                <button
-                  className="orders-card-head"
-                  onClick={() => onOpenDetails?.(o)}
-                  aria-label="Open order details"
-                >
-                  <span className="orders-card-title">Order Details</span>
-                  <Icon.ChevronRight />
-                </button>
-
-                <div className="orders-row">
-                  <span className="orders-label">Seller Name</span>
-                  <span className="orders-value">{o.seller}</span>
-                </div>
-                <div className="orders-row">
-                  <span className="orders-label">Order ID</span>
-                  <span className="orders-value">
-                    <CopyText value={`QWIP${o.id.replace('QW', '')}204`} />
-                  </span>
-                </div>
-                <div className="orders-row">
-                  <span className="orders-label">Order Date</span>
-                  <span className="orders-value">{o.placedAt}</span>
-                </div>
-                <div className="orders-row">
-                  <span className="orders-label">Expected Delivery Date</span>
-                  <span className="orders-value">
-                    {isPlaced ? o.eta : '2026-04-16'}
-                  </span>
-                </div>
-                <div className="orders-row">
-                  <span className="orders-label">Order Status</span>
+              <button
+                key={o.id}
+                className="orders-card"
+                onClick={() => onOpenDetails?.(o)}
+                aria-label={`Open order ${orderId}`}
+              >
+                {/* Row 1: seller avatar + name + status badge */}
+                <div className="orders-card-row1">
                   <span
-                    className={`orders-value status-tag status-${o.status}`}
+                    className="orders-card-avatar"
+                    style={{ background: o.sellerColor }}
                   >
+                    {o.sellerLogo}
+                  </span>
+                  <div className="orders-card-seller">
+                    <div className="orders-card-seller-name">{o.seller}</div>
+                    <div className="orders-card-meta">
+                      {o.itemCount} {o.itemCount === 1 ? 'item' : 'items'} · Placed{' '}
+                      {placedDate}
+                    </div>
+                  </div>
+                  <span className={`orders-status-pill status-${o.status}`}>
                     {o.statusLabel}
                   </span>
                 </div>
-                <div className="orders-row">
-                  <span className="orders-label">Items Total</span>
-                  <span className="orders-value">
-                    ₹{itemsTotal.toLocaleString('en-IN')}.00
-                  </span>
-                </div>
-                <div className="orders-row">
-                  <span className="orders-label">Delivery Fee</span>
-                  <span className="orders-value">₹200.00</span>
-                </div>
-                <div className="orders-row">
-                  <span className="orders-label">Total Amount</span>
-                  <span className="orders-value">
-                    ₹{o.total.toLocaleString('en-IN')}.00
-                  </span>
+
+                {/* Row 2: total + delivery */}
+                <div className="orders-card-row2">
+                  <div className="orders-card-total">
+                    <div className="orders-card-total-label">Total</div>
+                    <div className="orders-card-total-value">
+                      ₹{o.total.toLocaleString('en-IN')}
+                    </div>
+                  </div>
+                  <div className="orders-card-eta">
+                    <div className="orders-card-eta-label">
+                      {isCancelled ? 'Cancelled' : 'Delivery by'}
+                    </div>
+                    <div className="orders-card-eta-value">
+                      {isCancelled ? '—' : eta}
+                    </div>
+                  </div>
                 </div>
 
-                <div className="orders-actions">
+                {/* Row 3: copyable ID */}
+                <div
+                  className="orders-card-id"
+                  onClick={(e) => e.stopPropagation()}
+                >
+                  <CopyText value={orderId} />
+                </div>
+
+                {/* Row 4: actions */}
+                <div
+                  className="orders-actions compact"
+                  onClick={(e) => e.stopPropagation()}
+                >
                   {isPlaced ? (
                     <button
                       className="orders-action danger"
                       onClick={() => setCancelTarget(o)}
                     >
-                      Cancel Order
+                      {t('orders.cancel')}
                     </button>
-                  ) : (
+                  ) : !isCancelled ? (
                     <button className="orders-action ghost">
-                      <Icon.Image /> Invoice
+                      <Icon.Image /> {t('orders.invoice')}
                     </button>
-                  )}
+                  ) : null}
                   {!isCancelled && (
                     <button
                       className="orders-action primary"
                       onClick={() => setTracking(o)}
                     >
-                      Track Order
+                      {t('orders.track_order')}
+                    </button>
+                  )}
+                  {isCancelled && (
+                    <button className="orders-action ghost">
+                      <Icon.Reorder /> Reorder
                     </button>
                   )}
                 </div>
-              </div>
+              </button>
             );
           })}
         </div>

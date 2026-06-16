@@ -283,7 +283,6 @@ export type ScreenName =
   | 'reorder'
   | 'notifications'
   | 'profile'
-  | 'sub:orders'
   | 'sub:addresses'
   | 'sub:payment'
   | 'sub:credit'

@@ -23,12 +23,12 @@ import CategoriesBrandsScreen from './screens/CategoriesBrandsScreen';
 import WholesalerProductListScreen from './screens/WholesalerProductListScreen';
 import CouponsScreen from './screens/CouponsScreen';
 import CartValidationSheet from './components/CartValidationSheet';
-import OrdersScreen from './screens/sub/OrdersScreen';
 import AddressesScreen from './screens/sub/AddressesScreen';
 import PaymentScreen from './screens/sub/PaymentScreen';
 import CreditScreen from './screens/sub/CreditScreen';
 import HelpScreen from './screens/sub/HelpScreen';
 import SettingsScreen from './screens/sub/SettingsScreen';
+import LanguageScreen from './screens/sub/LanguageScreen';
 import AddToCartSheet from './components/AddToCartSheet';
 import ProductImageSheet from './components/ProductImageSheet';
 import DiscountsSheet from './components/DiscountsSheet';
@@ -255,6 +255,7 @@ export default function App() {
                   setWholesalerCategoryVariant(id === 'groceries' ? 'groceries' : 'fmcg');
                   setScreen('wholesaler-categories');
                 }}
+                onOpenAddresses={() => setScreen('sub:addresses')}
               />
             )}
             {screen === 'reorder' && (
@@ -428,20 +429,22 @@ export default function App() {
                 cartCount={cartCount}
                 onNavigate={handleNavigate}
                 onOpenSubPage={(p: string) => {
-                  if (p === 'my-orders') setScreen('my-orders');
+                  // Orders sub-page is the same canonical My Orders + Tracking screen.
+                  if (p === 'my-orders' || p === 'orders') setScreen('my-orders');
                   else setScreen(`sub:${p}`);
                 }}
                 onSignOut={() => setScreen('splash')}
               />
             )}
-            {screen === 'sub:orders' && <OrdersScreen onBack={() => setScreen('profile')} />}
             {screen === 'sub:addresses' && <AddressesScreen onBack={() => setScreen('profile')} />}
             {screen === 'sub:payment' && <PaymentScreen onBack={() => setScreen('profile')} />}
             {screen === 'sub:credit' && <CreditScreen onBack={() => setScreen('profile')} />}
             {screen === 'sub:help' && <HelpScreen onBack={() => setScreen('profile')} />}
+            {screen === 'sub:language' && (
+              <LanguageScreen onBack={() => setScreen('profile')} />
+            )}
             {(screen === 'sub:settings' ||
               screen === 'sub:notif-prefs' ||
-              screen === 'sub:language' ||
               screen === 'sub:terms' ||
               screen === 'sub:invoices' ||
               screen === 'sub:refer') && (
@@ -593,7 +596,6 @@ const SCREEN_GROUPS: { title: string; items: { id: string; label: string }[] }[]
     items: [
       { id: 'profile', label: 'My Account' },
       { id: 'notifications', label: 'Notifications' },
-      { id: 'sub:orders', label: 'Account · Orders' },
       { id: 'sub:addresses', label: 'Account · Addresses' },
       { id: 'sub:payment', label: 'Account · Payment Methods' },
       { id: 'sub:credit', label: 'Account · Qwipo Credit' },

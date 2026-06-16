@@ -1,12 +1,26 @@
 import { useState } from 'react';
 import { Icon, StatusBar } from '../../components/Icons';
 import { savedAddresses as initialAddresses } from '../../data/mockData';
+import AddAddressSheet from '../../components/AddAddressSheet';
 
 export default function AddressesScreen({ onBack }: any) {
   const [addresses, setAddresses] = useState(initialAddresses);
+  const [addOpen, setAddOpen] = useState(false);
 
-  const setDefault = (id) => {
+  const setDefault = (id: string) => {
     setAddresses(addresses.map((a) => ({ ...a, isDefault: a.id === id })));
+  };
+
+  const handleSave = (next: any) => {
+    setAddresses((prev) => [
+      {
+        ...next,
+        id: `addr${prev.length + 1}`,
+        isDefault: prev.length === 0,
+      },
+      ...prev,
+    ]);
+    setAddOpen(false);
   };
 
   return (
@@ -24,6 +38,12 @@ export default function AddressesScreen({ onBack }: any) {
         </div>
 
         <div className="addr-list">
+          {/* Add new address — primary CTA at the top */}
+          <button className="addr-add-btn primary" onClick={() => setAddOpen(true)}>
+            <Icon.Plus />
+            Add new address
+          </button>
+
           {addresses.map((a) => (
             <div key={a.id} className={`addr-card ${a.isDefault ? 'is-default' : ''}`}>
               <div className="addr-card-head">
@@ -46,20 +66,22 @@ export default function AddressesScreen({ onBack }: any) {
               <div className="addr-card-actions">
                 <button className="order-action-btn ghost">Edit</button>
                 {!a.isDefault && (
-                  <button className="order-action-btn primary" onClick={() => setDefault(a.id)}>
+                  <button
+                    className="order-action-btn primary"
+                    onClick={() => setDefault(a.id)}
+                  >
                     Set default
                   </button>
                 )}
               </div>
             </div>
           ))}
-
-          <button className="addr-add-btn">
-            <span style={{ fontSize: 18 }}>+</span>
-            Add new address
-          </button>
         </div>
       </div>
+
+      {addOpen && (
+        <AddAddressSheet onClose={() => setAddOpen(false)} onSave={handleSave} />
+      )}
     </>
   );
 }
