@@ -28,6 +28,7 @@ import PaymentScreen from './screens/sub/PaymentScreen';
 import CreditScreen from './screens/sub/CreditScreen';
 import HelpScreen from './screens/sub/HelpScreen';
 import SettingsScreen from './screens/sub/SettingsScreen';
+import LanguageScreen from './screens/sub/LanguageScreen';
 import AddToCartSheet from './components/AddToCartSheet';
 import ProductImageSheet from './components/ProductImageSheet';
 import DiscountsSheet from './components/DiscountsSheet';
@@ -254,6 +255,7 @@ export default function App() {
                   setWholesalerCategoryVariant(id === 'groceries' ? 'groceries' : 'fmcg');
                   setScreen('wholesaler-categories');
                 }}
+                onOpenAddresses={() => setScreen('sub:addresses')}
               />
             )}
             {screen === 'reorder' && (
@@ -438,9 +440,11 @@ export default function App() {
             {screen === 'sub:payment' && <PaymentScreen onBack={() => setScreen('profile')} />}
             {screen === 'sub:credit' && <CreditScreen onBack={() => setScreen('profile')} />}
             {screen === 'sub:help' && <HelpScreen onBack={() => setScreen('profile')} />}
+            {screen === 'sub:language' && (
+              <LanguageScreen onBack={() => setScreen('profile')} />
+            )}
             {(screen === 'sub:settings' ||
               screen === 'sub:notif-prefs' ||
-              screen === 'sub:language' ||
               screen === 'sub:terms' ||
               screen === 'sub:invoices' ||
               screen === 'sub:refer') && (

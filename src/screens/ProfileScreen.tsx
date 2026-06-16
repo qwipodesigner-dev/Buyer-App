@@ -3,6 +3,7 @@ import { Icon, StatusBar } from '../components/Icons';
 import BottomNav from '../components/BottomNav';
 import { SheetHeader, useSheetSwipe } from '../components/SheetBase';
 import { userProfile } from '../data/mockData';
+import { useI18n, LANGUAGES } from '../i18n';
 
 const SignOutIcon = () => (
   <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
@@ -13,6 +14,8 @@ const SignOutIcon = () => (
 );
 
 export default function ProfileScreen({ cartCount, onNavigate, onOpenSubPage, onSignOut }: any) {
+  const { lang, t } = useI18n();
+  const currentLang = LANGUAGES.find((l) => l.code === lang)?.nativeName ?? 'English';
   const [signOutOpen, setSignOutOpen] = useState(false);
 
   const initials = userProfile.name
@@ -31,7 +34,7 @@ export default function ProfileScreen({ cartCount, onNavigate, onOpenSubPage, on
         {/* Top bar */}
         <div className="top-bar">
           <div className="top-title" style={{ paddingLeft: 4 }}>
-            <h1>My Account</h1>
+            <h1>{t('account.my_account')}</h1>
           </div>
           <button className="icon-btn" onClick={() => onOpenSubPage('settings')}>
             <Icon.Settings />
@@ -99,7 +102,7 @@ export default function ProfileScreen({ cartCount, onNavigate, onOpenSubPage, on
 
         {/* Business details */}
         <div className="profile-section">
-          <div className="profile-section-title">Business Details</div>
+          <div className="profile-section-title">{t('account.business_details')}</div>
           <div className="profile-card">
             <ProfileRow label="Phone" value={userProfile.phone} />
             <ProfileRow label="Email" value={userProfile.email} />
@@ -112,11 +115,11 @@ export default function ProfileScreen({ cartCount, onNavigate, onOpenSubPage, on
         <div className="profile-section">
           <div className="profile-section-title">Quick Actions</div>
           <div className="profile-card">
-            <ProfileMenuItem icon="📍" label="Saved addresses" detail="3 addresses" onClick={() => onOpenSubPage('addresses')} />
-            <ProfileMenuItem icon="🚚" label="Track orders" detail="2 in transit" onClick={() => onOpenSubPage('my-orders')} />
-            <ProfileMenuItem icon="💳" label="Payment methods" detail="UPI, Card, Credit" onClick={() => onOpenSubPage('payment')} />
-            <ProfileMenuItem icon="📄" label="Tax invoices" detail="Download GST reports" onClick={() => onOpenSubPage('invoices')} />
-            <ProfileMenuItem icon="🎁" label="Refer & earn" detail="Earn ₹500 per referral" onClick={() => onOpenSubPage('refer')} last />
+            <ProfileMenuItem icon="📍" label={t('account.saved_addresses')} detail="3 addresses" onClick={() => onOpenSubPage('addresses')} />
+            <ProfileMenuItem icon="🚚" label={t('account.track_orders')} detail="2 in transit" onClick={() => onOpenSubPage('my-orders')} />
+            <ProfileMenuItem icon="💳" label={t('account.payment_methods')} detail="UPI, Card, Credit" onClick={() => onOpenSubPage('payment')} />
+            <ProfileMenuItem icon="📄" label={t('account.tax_invoices')} detail="GST" onClick={() => onOpenSubPage('invoices')} />
+            <ProfileMenuItem icon="🎁" label={t('account.refer_earn')} detail="₹500 / referral" onClick={() => onOpenSubPage('refer')} last />
           </div>
         </div>
 
@@ -124,11 +127,11 @@ export default function ProfileScreen({ cartCount, onNavigate, onOpenSubPage, on
         <div className="profile-section" style={{ paddingBottom: 110 }}>
           <div className="profile-section-title">Settings & Support</div>
           <div className="profile-card">
-            <ProfileMenuItem icon="🔔" label="Notification preferences" onClick={() => onOpenSubPage('notif-prefs')} />
-            <ProfileMenuItem icon="🌐" label="Language" detail="English" onClick={() => onOpenSubPage('language')} />
+            <ProfileMenuItem icon="🔔" label={t('account.notification_preferences')} onClick={() => onOpenSubPage('notif-prefs')} />
+            <ProfileMenuItem icon="🌐" label={t('account.language')} detail={currentLang} onClick={() => onOpenSubPage('language')} />
             <ProfileMenuItem icon="🆘" label="Help & support" onClick={() => onOpenSubPage('help')} />
             <ProfileMenuItem icon="📜" label="Terms & privacy" onClick={() => onOpenSubPage('terms')} />
-            <ProfileMenuItem icon="🚪" label="Sign out" danger last onClick={() => setSignOutOpen(true)} />
+            <ProfileMenuItem icon="🚪" label={t('account.sign_out')} danger last onClick={() => setSignOutOpen(true)} />
           </div>
         </div>
       </div>

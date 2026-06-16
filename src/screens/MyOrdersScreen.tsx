@@ -2,6 +2,7 @@ import { useMemo, useState } from 'react';
 import { Icon, StatusBar } from '../components/Icons';
 import { SheetHeader, useSheetSwipe } from '../components/SheetBase';
 import { orderHistoryList } from '../data/mockData';
+import { useI18n } from '../i18n';
 import CancelOrderDialog from '../components/CancelOrderDialog';
 import CopyText from '../components/CopyText';
 
@@ -40,6 +41,7 @@ function isWholesalerOrder(o: any) {
 }
 
 export default function MyOrdersScreen({ onBack, onOpenDetails }: any) {
+  const { t } = useI18n();
   const [tab, setTab] = useState<TabKind>('distributors');
   const [tracking, setTracking] = useState<any>(null);
   const [cancelTarget, setCancelTarget] = useState<any>(null);
@@ -65,7 +67,7 @@ export default function MyOrdersScreen({ onBack, onOpenDetails }: any) {
             <Icon.Back />
           </button>
           <div className="top-title">
-            <h1>My Orders</h1>
+            <h1>{t('orders.my_orders')}</h1>
           </div>
         </div>
 
@@ -75,13 +77,13 @@ export default function MyOrdersScreen({ onBack, onOpenDetails }: any) {
             className={`orders-tab ${tab === 'wholesalers' ? 'on' : ''}`}
             onClick={() => setTab('wholesalers')}
           >
-            Wholesalers
+            {t('home.wholesalers')}
           </button>
           <button
             className={`orders-tab ${tab === 'distributors' ? 'on' : ''}`}
             onClick={() => setTab('distributors')}
           >
-            Distributors
+            {t('home.distributors')}
           </button>
         </div>
 
@@ -166,11 +168,11 @@ export default function MyOrdersScreen({ onBack, onOpenDetails }: any) {
                       className="orders-action danger"
                       onClick={() => setCancelTarget(o)}
                     >
-                      Cancel
+                      {t('orders.cancel')}
                     </button>
                   ) : !isCancelled ? (
                     <button className="orders-action ghost">
-                      <Icon.Image /> Invoice
+                      <Icon.Image /> {t('orders.invoice')}
                     </button>
                   ) : null}
                   {!isCancelled && (
@@ -178,7 +180,7 @@ export default function MyOrdersScreen({ onBack, onOpenDetails }: any) {
                       className="orders-action primary"
                       onClick={() => setTracking(o)}
                     >
-                      Track Order
+                      {t('orders.track_order')}
                     </button>
                   )}
                   {isCancelled && (
