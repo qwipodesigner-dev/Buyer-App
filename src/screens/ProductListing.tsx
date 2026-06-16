@@ -34,6 +34,7 @@ export default function ProductListing({
   onOpenFilters,
   onGoToCart,
   onUpdateQty,
+  onOpenSearch,
 }: any) {
   const [selectedVariant, setSelectedVariant] = useState<any>({});
 
@@ -107,7 +108,7 @@ export default function ProductListing({
               {seller.name} · {filteredProducts.length} products
             </p>
           </div>
-          <button className="icon-btn">
+          <button className="icon-btn" onClick={onOpenSearch} aria-label="Search">
             <Icon.Search />
           </button>
           <button
@@ -123,7 +124,7 @@ export default function ProductListing({
         {/* Breadcrumb */}
         <div className="breadcrumb">
           <button className="crumb" onClick={onBack}>
-            Storefront
+            Distributor
           </button>
           <span className="crumb-sep">›</span>
           <span className="crumb last">{category?.name || 'Catalog'}</span>
@@ -265,7 +266,7 @@ export default function ProductListing({
           <div className="cart-strip-info">
             <div className="cart-strip-label">Total cart value</div>
             <div className="cart-strip-value">₹{cartTotal.toLocaleString('en-IN')}</div>
-            <div className="cart-strip-meta">2 sellers · Free delivery applied</div>
+            <div className="cart-strip-meta">Free delivery applied</div>
           </div>
           <button className="cart-strip-btn" onClick={onGoToCart}>
             <Icon.Cart />

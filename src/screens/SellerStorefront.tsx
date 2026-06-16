@@ -33,14 +33,14 @@ export default function SellerStorefront({ cartCount, distributor, onBack, onNav
             <Icon.Back />
           </button>
           <div className="top-title">
-            <h1>Storefront</h1>
+            <h1>Authorised Distributor</h1>
           </div>
           <button className="icon-btn">
             <Icon.Bell />
           </button>
         </div>
 
-        {/* Hero — seller info */}
+        {/* Hero — seller info (location/SKU removed for retailer clarity) */}
         <div className="storefront-hero">
           <div className="seller-header">
             <div className="seller-logo">{initials}</div>
@@ -53,12 +53,10 @@ export default function SellerStorefront({ cartCount, distributor, onBack, onNav
               </div>
               <div className="seller-meta">
                 <span className="seller-meta-tag">Authorised</span>
-                <span className="seller-meta-dot"></span>
-                <span>{activeSeller.location}</span>
               </div>
             </div>
           </div>
-          <div className="seller-stats">
+          <div className="seller-stats two-cell">
             <div className="stat-cell">
               <div className="stat-label">MIN ORDER</div>
               <div className="stat-value">₹{activeSeller.mov.toLocaleString('en-IN')}</div>
@@ -68,46 +66,48 @@ export default function SellerStorefront({ cartCount, distributor, onBack, onNav
               <div className="stat-value">Tomorrow</div>
               <div className="stat-value-sub">by 11 AM</div>
             </div>
-            <div className="stat-cell">
-              <div className="stat-label">CATALOG</div>
-              <div className="stat-value">{activeSeller.totalSKUs}</div>
-              <div className="stat-value-sub">SKUs</div>
-            </div>
           </div>
         </div>
 
-        {/* Search */}
-        <div className="search-bar-wrap">
-          <div className="search-bar">
-            <Icon.Search />
-            <input placeholder="Search products, brands, SKUs..." />
-            <div className="search-bar-divider"></div>
-            <button className="scan-btn">
-              <Icon.Scan />
-            </button>
-          </div>
-        </div>
-
-        {/* Categories */}
+        {/* Categories — 2:1 image cards with name-sized widths */}
         <div className="section">
           <div className="section-head">
             <div className="section-title">Shop by category</div>
             <button className="section-link">See all</button>
           </div>
-          <div className="category-grid">
-            {categories.slice(0, 8).map((cat) => (
+          <div className="cat-rail">
+            {categories.map((cat) => {
+              // Width scales 140 → 220 with name length (in chars). Image stays 2:1.
+              const w = Math.min(220, Math.max(140, 110 + cat.name.length * 5));
+              return (
               <button
                 key={cat.id}
-                className="category-tile"
+                className="cat-card"
+                style={{ width: w }}
                 onClick={() => onSelectCategory(cat)}
               >
-                <div className="category-icon-wrap" style={{ background: cat.color }}>
-                  {cat.icon}
+                <div className="cat-card-img" style={{ background: cat.color }}>
+                  {cat.image ? (
+                    <img
+                      src={cat.image}
+                      alt={cat.name}
+                      onError={(e) => {
+                        (e.currentTarget as HTMLImageElement).style.display = 'none';
+                        const parent = (e.currentTarget as HTMLImageElement).parentElement!;
+                        parent.innerHTML = `<span class="cat-card-fallback">${cat.icon}</span>`;
+                      }}
+                    />
+                  ) : (
+                    <span className="cat-card-fallback">{cat.icon}</span>
+                  )}
                 </div>
-                <div className="category-name">{cat.name}</div>
-                <div className="category-count">{cat.count} items</div>
+                <div className="cat-card-body">
+                  <div className="cat-card-name">{cat.name}</div>
+                  <div className="cat-card-count">{cat.count} items</div>
+                </div>
               </button>
-            ))}
+              );
+            })}
           </div>
         </div>
 
@@ -121,7 +121,7 @@ export default function SellerStorefront({ cartCount, distributor, onBack, onNav
           <div className="promo-emoji">🎁</div>
         </div>
 
-        {/* Brands */}
+        {/* Brands — Phase-one PNG logos */}
         <div className="section">
           <div className="section-head">
             <div className="section-title">Top brands</div>
@@ -142,7 +142,6 @@ export default function SellerStorefront({ cartCount, distributor, onBack, onNav
                     <img
                       src={brand.logo}
                       alt={brand.name}
-                      style={{ width: '70%', height: '70%', objectFit: 'contain' }}
                       onError={(e) => {
                         e.currentTarget.style.display = 'none';
                         e.currentTarget.parentElement.style.background = brand.color;
@@ -159,41 +158,78 @@ export default function SellerStorefront({ cartCount, distributor, onBack, onNav
           </div>
         </div>
 
-        {/* Featured */}
+        {/* Featured — Best sellers use the same .product-card pattern as ProductListing */}
         <div className="section" style={{ paddingBottom: '90px' }}>
           <div className="section-head">
             <div className="section-title">Best sellers</div>
             <button className="section-link">View catalog</button>
           </div>
-          <div className="rail">
-            {featured.map((product) => (
-              <button
-                key={product.id}
-                className="product-rail-card"
-                onClick={() => onSelectProduct(product)}
-              >
-                <div className="product-rail-img" style={{ background: product.bgColor, padding: 8 }}>
-                  {product.images?.[0] ? (
-                    <img
-                      src={product.images[0]}
-                      alt={product.name}
-                      style={{ width: '100%', height: '100%', objectFit: 'contain' }}
-                      onError={(e) => {
-                        e.currentTarget.style.display = 'none';
-                        e.currentTarget.parentElement.innerHTML = `<span style="font-size:44px">${product.image}</span>`;
-                      }}
-                    />
-                  ) : (
-                    product.image
-                  )}
+          <div className="rail product-rail">
+            {featured.map((product) => {
+              const variant = product.variants[0];
+              const stockLabel: Record<string, string> = {
+                available: 'In Stock',
+                limited: 'Limited',
+                out: 'Out of Stock',
+              };
+              return (
+                <div key={product.id} className="product-card product-card-rail">
+                  <div className="product-card-top">
+                    <button
+                      className="product-img"
+                      style={{ background: product.bgColor }}
+                      onClick={() => onSelectProduct(product)}
+                      aria-label={`View ${product.name}`}
+                    >
+                      {product.images?.[0] ? (
+                        <img
+                          src={product.images[0]}
+                          alt={product.name}
+                          onError={(e) => {
+                            e.currentTarget.style.display = 'none';
+                            e.currentTarget.parentElement!.innerHTML = `<span style="font-size:30px">${product.image}</span>`;
+                          }}
+                        />
+                      ) : (
+                        <span style={{ fontSize: 30 }}>{product.image}</span>
+                      )}
+                    </button>
+                    <div className="product-info">
+                      <div className="product-meta-row">
+                        <span className="product-brand-tag">{product.brand}</span>
+                        <span className={`stock-chip stock-${variant.stock}`}>
+                          <span className="stock-dot"></span>
+                          {stockLabel[variant.stock]}
+                        </span>
+                      </div>
+                      <div className="product-name">{product.name}</div>
+                    </div>
+                  </div>
+
+                  <div className="product-price-row">
+                    <div className="price-block">
+                      <div className="price-main">
+                        <span className="price-current">₹{variant.sellingPrice}</span>
+                        <span className="price-mrp">₹{variant.mrp}</span>
+                      </div>
+                      <div className="price-meta">{variant.size}</div>
+                    </div>
+                    <div className="margin-badge">{variant.margin}%</div>
+                  </div>
+
+                  <div className="product-actions">
+                    <button
+                      className="add-btn compact"
+                      onClick={() => onSelectProduct(product)}
+                      disabled={variant.stock === 'out'}
+                      style={{ width: '100%' }}
+                    >
+                      <Icon.Plus /> Add
+                    </button>
+                  </div>
                 </div>
-                <div className="product-rail-name">{product.name}</div>
-                <div className="product-rail-price">
-                  ₹{product.variants[0].sellingPrice}
-                  <span className="product-rail-mrp">₹{product.variants[0].mrp}</span>
-                </div>
-              </button>
-            ))}
+              );
+            })}
           </div>
         </div>
       </div>

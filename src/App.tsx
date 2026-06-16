@@ -7,6 +7,20 @@ import MultiSellerCart from './screens/MultiSellerCart';
 import ReorderScreen from './screens/ReorderScreen';
 import NotificationsScreen from './screens/NotificationsScreen';
 import ProfileScreen from './screens/ProfileScreen';
+import SplashScreen from './screens/SplashScreen';
+import LoginScreen from './screens/LoginScreen';
+import OTPScreen from './screens/OTPScreen';
+import OnboardingScreen from './screens/OnboardingScreen';
+import OrderSummaryScreen from './screens/OrderSummaryScreen';
+import MyOrdersScreen from './screens/MyOrdersScreen';
+import DistributorsListScreen from './screens/DistributorsListScreen';
+import AllBrandsScreen from './screens/AllBrandsScreen';
+import WholesalersCategoriesScreen from './screens/WholesalersCategoriesScreen';
+import GlobalSearchScreen from './screens/GlobalSearchScreen';
+import CategoriesBrandsScreen from './screens/CategoriesBrandsScreen';
+import WholesalerProductListScreen from './screens/WholesalerProductListScreen';
+import CouponsScreen from './screens/CouponsScreen';
+import CartValidationSheet from './components/CartValidationSheet';
 import OrdersScreen from './screens/sub/OrdersScreen';
 import AddressesScreen from './screens/sub/AddressesScreen';
 import PaymentScreen from './screens/sub/PaymentScreen';
@@ -21,7 +35,15 @@ import { filtersDefault } from './screens/ProductListing';
 import { initialCart, categories } from './data/mockData';
 
 export default function App() {
-  const [screen, setScreen] = useState<string>('home');
+  const [screen, setScreenRaw] = useState<string>('home');
+  const [prevScreen, setPrevScreen] = useState<string>('home');
+  const setScreen = (next: string) => {
+    if (next === 'global-search') {
+      // Remember where we came from so back returns there
+      setPrevScreen((current) => (screen === 'global-search' ? current : screen));
+    }
+    setScreenRaw(next);
+  };
   const [selectedCategory, setSelectedCategory] = useState<any>(categories[0]);
   const [selectedDistributor, setSelectedDistributor] = useState<any>(null);
   const [sheetProduct, setSheetProduct] = useState<any>(null);
@@ -30,6 +52,10 @@ export default function App() {
   const [discountsSheet, setDiscountsSheet] = useState<any>(null); // {product, variant}
   const [filtersOpen, setFiltersOpen] = useState<boolean>(false);
   const [listingFilters, setListingFilters] = useState<any>(filtersDefault);
+  const [authPhone, setAuthPhone] = useState<string>('');
+  const [wholesalerCategoryVariant, setWholesalerCategoryVariant] = useState<'groceries' | 'fmcg'>('groceries');
+  const [cartValidationOpen, setCartValidationOpen] = useState<boolean>(false);
+  const [appliedCoupon, setAppliedCoupon] = useState<any>(null);
   const [cart, setCart] = useState(initialCart);
   const [listingCart, setListingCart] = useState({});
   const [toast, setToast] = useState('');
@@ -180,6 +206,10 @@ export default function App() {
       setScreen('reorder');
       return;
     }
+    if (target === 'search') {
+      setScreen('global-search');
+      return;
+    }
     setScreen(target);
   };
 
@@ -235,6 +265,27 @@ export default function App() {
               <span className="screen-pill-num">4</span>
               Multi-Seller Cart
             </button>
+            <button
+              className={`screen-pill ${screen === 'splash' ? 'active' : ''}`}
+              onClick={() => setScreen('splash')}
+            >
+              <span className="screen-pill-num">5</span>
+              Splash · Login · OTP · Onboarding
+            </button>
+            <button
+              className={`screen-pill ${screen === 'order-summary' ? 'active' : ''}`}
+              onClick={() => setScreen('order-summary')}
+            >
+              <span className="screen-pill-num">6</span>
+              Order Summary
+            </button>
+            <button
+              className={`screen-pill ${screen === 'my-orders' ? 'active' : ''}`}
+              onClick={() => setScreen('my-orders')}
+            >
+              <span className="screen-pill-num">7</span>
+              My Orders + Tracking
+            </button>
           </div>
         </div>
 
@@ -248,6 +299,12 @@ export default function App() {
                 onSelectDistributor={handleSelectDistributor}
                 onSelectBrand={handleSelectBrand}
                 onOpenNotifications={() => setScreen('notifications')}
+                onSeeAllDistributors={() => setScreen('distributors-list')}
+                onSeeAllBrands={() => setScreen('all-brands')}
+                onOpenWholesalerCategory={(id: string) => {
+                  setWholesalerCategoryVariant(id === 'groceries' ? 'groceries' : 'fmcg');
+                  setScreen('wholesaler-categories');
+                }}
               />
             )}
             {screen === 'reorder' && (
@@ -261,11 +318,156 @@ export default function App() {
             {screen === 'notifications' && (
               <NotificationsScreen onBack={() => setScreen('home')} />
             )}
+
+            {/* Auth flow */}
+            {screen === 'splash' && (
+              <SplashScreen onContinue={() => setScreen('login')} />
+            )}
+            {screen === 'login' && (
+              <LoginScreen
+                onBack={() => setScreen('home')}
+                onSubmit={(phone: string) => {
+                  setAuthPhone(phone);
+                  setScreen('otp');
+                }}
+              />
+            )}
+            {screen === 'otp' && (
+              <OTPScreen
+                phone={authPhone}
+                onBack={() => setScreen('login')}
+                onVerify={() => setScreen('onboarding')}
+              />
+            )}
+            {screen === 'onboarding' && (
+              <OnboardingScreen
+                onBack={() => setScreen('otp')}
+                onProceed={() => setScreen('home')}
+              />
+            )}
+
+            {/* Order completion */}
+            {screen === 'order-summary' && (
+              <OrderSummaryScreen
+                onBack={() => setScreen('cart')}
+                onPlaceOrder={() => {
+                  setToast('Order placed successfully');
+                  setScreen('my-orders');
+                }}
+                onOpenCoupons={() => setScreen('coupons')}
+                appliedCoupon={appliedCoupon}
+              />
+            )}
+            {screen === 'my-orders' && (
+              <MyOrdersScreen onBack={() => setScreen('profile')} />
+            )}
+
+            {/* See-all listing screens */}
+            {screen === 'distributors-list' && (
+              <DistributorsListScreen
+                onBack={() => setScreen('home')}
+                onSelectDistributor={(distributor: any) => {
+                  setSelectedDistributor(distributor);
+                  setScreen('storefront');
+                }}
+                onSelectBrand={(brand: any, distributor: any) => {
+                  // Brand tap from distributors list → Companies/Brands/Categories drill-in
+                  if (distributor) setSelectedDistributor(distributor);
+                  setSelectedCategory({
+                    id: brand.id,
+                    name: brand.short || brand.name,
+                    isBrand: true,
+                    color: brand.bg,
+                    icon: brand.initials,
+                  });
+                  setScreen('categories-brands');
+                }}
+              />
+            )}
+            {screen === 'all-brands' && (
+              <AllBrandsScreen
+                onBack={() => setScreen('home')}
+                onSelectBrand={(brand: any) => {
+                  setSelectedCategory({ id: brand.id, name: brand.name, isBrand: true });
+                  setScreen('listing');
+                }}
+              />
+            )}
+            {screen === 'wholesaler-categories' && (
+              <WholesalersCategoriesScreen
+                variant={wholesalerCategoryVariant}
+                onBack={() => setScreen('home')}
+                onSelectCategory={(cat: any) => {
+                  setSelectedCategory({ id: cat.id, name: cat.name });
+                  setScreen('wholesaler-products');
+                }}
+              />
+            )}
+            {screen === 'global-search' && (
+              <GlobalSearchScreen
+                onBack={() => setScreen(prevScreen || 'home')}
+                onSelectProduct={(p: any) => {
+                  setSelectedCategory({ id: p.category, name: 'Search' });
+                  setScreen('listing');
+                }}
+              />
+            )}
+            {screen === 'categories-brands' && (
+              <CategoriesBrandsScreen
+                distributor={selectedDistributor}
+                category={selectedCategory}
+                onBack={() => setScreen('storefront')}
+                onSelectBrand={(brand: any) => {
+                  setSelectedCategory({ id: brand.id, name: brand.name, isBrand: true });
+                  setScreen('listing');
+                }}
+                onSelectProduct={handleSelectProduct}
+                onOpenSearch={() => setScreen('global-search')}
+              />
+            )}
+            {screen === 'wholesaler-products' && (
+              <WholesalerProductListScreen
+                category={selectedCategory}
+                cartItems={listingCart}
+                cartTotal={cartTotal}
+                onBack={() => setScreen('wholesaler-categories')}
+                onOpenSheet={handleOpenSheet}
+                onOpenImageSheet={(p: any) => setImageSheetProduct(p)}
+                onGoToCart={() => setScreen('cart')}
+                onOpenSearch={() => setScreen('global-search')}
+              />
+            )}
+            {screen === 'coupons' && (
+              <CouponsScreen
+                cartTotal={cartTotal}
+                onBack={() => setScreen('order-summary')}
+                onApply={(coupon: any) => {
+                  setAppliedCoupon(coupon);
+                  setToast(`Coupon ${coupon.code} applied`);
+                  setScreen('order-summary');
+                }}
+              />
+            )}
+
+            {cartValidationOpen && (
+              <CartValidationSheet
+                cart={cart}
+                onClose={() => setCartValidationOpen(false)}
+                onProceed={() => {
+                  setCartValidationOpen(false);
+                  setScreen('order-summary');
+                }}
+              />
+            )}
             {screen === 'profile' && (
               <ProfileScreen
                 cartCount={cartCount}
                 onNavigate={handleNavigate}
-                onOpenSubPage={(p) => setScreen(`sub:${p}`)}
+                onOpenSubPage={(p: string) => {
+                  if (p === 'my-orders') setScreen('my-orders');
+                  else setScreen(`sub:${p}`);
+                }}
+                onSignOut={() => setScreen('splash')}
               />
             )}
             {screen === 'sub:orders' && <OrdersScreen onBack={() => setScreen('profile')} />}
@@ -290,7 +492,12 @@ export default function App() {
                 distributor={selectedDistributor}
                 onBack={() => setScreen('home')}
                 onNavigate={handleNavigate}
-                onSelectCategory={handleSelectCategory}
+                onSelectCategory={(cat: any) => {
+                  // Direct to ProductListing — the brands+products drill-in
+                  // (CategoriesBrandsScreen) is reserved for explicit "browse by brand" flows.
+                  setSelectedCategory(cat);
+                  setScreen('listing');
+                }}
                 onSelectProduct={handleSelectProduct}
               />
             )}
@@ -307,6 +514,7 @@ export default function App() {
                 onOpenFilters={() => setFiltersOpen(true)}
                 onGoToCart={() => setScreen('cart')}
                 onUpdateQty={handleUpdateListingQty}
+                onOpenSearch={() => setScreen('global-search')}
               />
             )}
             {screen === 'cart' && (
@@ -316,6 +524,7 @@ export default function App() {
                 onUpdateItemQty={handleUpdateItemQty}
                 onAddSuggestion={handleAddSuggestion}
                 onContinueShopping={() => setScreen('storefront')}
+                onCheckout={() => setCartValidationOpen(true)}
               />
             )}
 

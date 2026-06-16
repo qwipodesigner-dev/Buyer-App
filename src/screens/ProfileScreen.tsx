@@ -12,7 +12,7 @@ const SignOutIcon = () => (
   </svg>
 );
 
-export default function ProfileScreen({ cartCount, onNavigate, onOpenSubPage }: any) {
+export default function ProfileScreen({ cartCount, onNavigate, onOpenSubPage, onSignOut }: any) {
   const [signOutOpen, setSignOutOpen] = useState(false);
 
   const initials = userProfile.name
@@ -113,7 +113,7 @@ export default function ProfileScreen({ cartCount, onNavigate, onOpenSubPage }: 
           <div className="profile-section-title">Quick Actions</div>
           <div className="profile-card">
             <ProfileMenuItem icon="📍" label="Saved addresses" detail="3 addresses" onClick={() => onOpenSubPage('addresses')} />
-            <ProfileMenuItem icon="🚚" label="Track orders" detail="2 in transit" onClick={() => onOpenSubPage('orders')} />
+            <ProfileMenuItem icon="🚚" label="Track orders" detail="2 in transit" onClick={() => onOpenSubPage('my-orders')} />
             <ProfileMenuItem icon="💳" label="Payment methods" detail="UPI, Card, Credit" onClick={() => onOpenSubPage('payment')} />
             <ProfileMenuItem icon="📄" label="Tax invoices" detail="Download GST reports" onClick={() => onOpenSubPage('invoices')} />
             <ProfileMenuItem icon="🎁" label="Refer & earn" detail="Earn ₹500 per referral" onClick={() => onOpenSubPage('refer')} last />
@@ -135,7 +135,13 @@ export default function ProfileScreen({ cartCount, onNavigate, onOpenSubPage }: 
 
       {/* Sign out confirmation */}
       {signOutOpen && (
-        <SignOutSheet onClose={() => setSignOutOpen(false)} />
+        <SignOutSheet
+          onClose={() => setSignOutOpen(false)}
+          onConfirm={() => {
+            setSignOutOpen(false);
+            onSignOut?.();
+          }}
+        />
       )}
 
       <BottomNav active="profile" cartCount={cartCount} onNavigate={onNavigate} />
@@ -143,7 +149,7 @@ export default function ProfileScreen({ cartCount, onNavigate, onOpenSubPage }: 
   );
 }
 
-function SignOutSheet({ onClose }: any) {
+function SignOutSheet({ onClose, onConfirm }: any) {
   const { dragHandlers, sheetStyle } = useSheetSwipe(onClose);
   return (
     <div className="sheet-backdrop" onClick={onClose}>
@@ -175,7 +181,7 @@ function SignOutSheet({ onClose }: any) {
             Cancel
           </button>
           <button
-            onClick={onClose}
+            onClick={onConfirm}
             style={{
               flex: 1,
               height: 44,

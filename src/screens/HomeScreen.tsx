@@ -11,7 +11,16 @@ import {
   exclusiveOffers,
 } from '../data/mockData';
 
-export default function HomeScreen({ cartCount, onNavigate, onSelectDistributor, onSelectBrand, onOpenNotifications }: any) {
+export default function HomeScreen({
+  cartCount,
+  onNavigate,
+  onSelectDistributor,
+  onSelectBrand,
+  onOpenNotifications,
+  onSeeAllDistributors,
+  onSeeAllBrands,
+  onOpenWholesalerCategory,
+}: any) {
   const [tab, setTab] = useState('distributors');
 
   const visibleDistributors = distributors.filter((d) =>
@@ -44,36 +53,48 @@ export default function HomeScreen({ cartCount, onNavigate, onSelectDistributor,
           </div>
         </div>
 
-        {/* Location bar */}
+        {/* Location chip — compact, quiet, lives below the header */}
         <div className="location-bar">
-          <span className="location-pin">📍</span>
-          <span className="location-prefix">Deliver to</span>
-          <span className="location-value">Lit Box, Rai Durg, Hitech City</span>
-          <Icon.ChevronDown />
+          <button className="location-bar-inner" aria-label="Change delivery address">
+            <span className="location-pin">📍</span>
+            <span className="location-prefix">Deliver to</span>
+            <span className="location-value">Lit Box, Rai Durg, Hitech City</span>
+            <Icon.ChevronDown />
+          </button>
         </div>
 
-        {/* Search */}
-        <div className="search-bar-wrap" style={{ paddingTop: 0 }}>
-          <div className="search-bar">
-            <Icon.Search />
-            <input placeholder="Search for products, brands…" />
-          </div>
-        </div>
-
-        {/* Tab segmented control */}
+        {/* Tab segmented control — uses the Home Screen Images set */}
         <div className="home-tabs">
           <button
             className={`home-tab ${tab === 'distributors' ? 'active' : ''}`}
             onClick={() => setTab('distributors')}
           >
-            <div className="home-tab-img" style={{ background: '#FEF3C7' }}>📦</div>
+            <div className="home-tab-img" style={{ background: '#FEF3C7' }}>
+              <img
+                src="/home-category-cards/distributors.png"
+                alt="Distributors"
+                onError={(e) => {
+                  (e.currentTarget as HTMLImageElement).style.display = 'none';
+                  (e.currentTarget as HTMLImageElement).parentElement!.textContent = '📦';
+                }}
+              />
+            </div>
             <span>Authorised distributors</span>
           </button>
           <button
             className={`home-tab ${tab === 'wholesalers' ? 'active' : ''}`}
             onClick={() => setTab('wholesalers')}
           >
-            <div className="home-tab-img" style={{ background: '#FED7AA' }}>🏪</div>
+            <div className="home-tab-img" style={{ background: '#FED7AA' }}>
+              <img
+                src="/home-category-cards/wholesalers.png"
+                alt="Wholesalers"
+                onError={(e) => {
+                  (e.currentTarget as HTMLImageElement).style.display = 'none';
+                  (e.currentTarget as HTMLImageElement).parentElement!.textContent = '🏪';
+                }}
+              />
+            </div>
             <span>Wholesalers</span>
           </button>
         </div>
@@ -83,10 +104,14 @@ export default function HomeScreen({ cartCount, onNavigate, onSelectDistributor,
             visibleDistributors={visibleDistributors}
             onSelectDistributor={onSelectDistributor}
             onSelectBrand={onSelectBrand}
+            onSeeAllDistributors={onSeeAllDistributors}
+            onSeeAllBrands={onSeeAllBrands}
           />
         ) : (
           <WholesalersView
             onSelectBrand={onSelectBrand}
+            onOpenWholesalerCategory={onOpenWholesalerCategory}
+            onSeeAllBrands={onSeeAllBrands}
           />
         )}
       </div>
@@ -96,53 +121,93 @@ export default function HomeScreen({ cartCount, onNavigate, onSelectDistributor,
   );
 }
 
-function DistributorsView({ visibleDistributors, onSelectDistributor, onSelectBrand }: any) {
+function DistributorsView({
+  visibleDistributors,
+  onSelectDistributor,
+  onSelectBrand,
+  onSeeAllDistributors,
+  onSeeAllBrands,
+}: any) {
   return (
     <>
       {/* Hero banner carousel — auto-scrolls every 5s */}
       <BannerCarousel
         banners={heroBanners}
-        renderBanner={(b) => (
-          <div key={b.id} className="hero-banner" style={{ background: b.bg }}>
-            <div className="hero-banner-text">
-              <div className="hero-banner-tag">{b.tag}</div>
-              <div className="hero-banner-title">{b.title}</div>
-              <div className="hero-banner-sub">{b.subtitle}</div>
-              <ul className="hero-banner-bullets">
-                {b.bullets.map((bl, i) => (
-                  <li key={i}>{bl}</li>
-                ))}
-              </ul>
-              <button className="hero-banner-cta">{b.cta} →</button>
+        renderBanner={(b: any) =>
+          b.image ? (
+            <div key={b.id} className="hero-banner hero-banner-image">
+              <img
+                src={b.image}
+                alt={b.title}
+                onError={(e) => {
+                  const el = e.currentTarget as HTMLImageElement;
+                  el.style.display = 'none';
+                }}
+              />
             </div>
-            <div className="hero-banner-art">{b.emoji}</div>
-          </div>
-        )}
+          ) : (
+            <div key={b.id} className="hero-banner" style={{ background: b.bg }}>
+              <div className="hero-banner-text">
+                <div className="hero-banner-tag">{b.tag}</div>
+                <div className="hero-banner-title">{b.title}</div>
+                <div className="hero-banner-sub">{b.subtitle}</div>
+                <ul className="hero-banner-bullets">
+                  {b.bullets.map((bl: string, i: number) => (
+                    <li key={i}>{bl}</li>
+                  ))}
+                </ul>
+                <button className="hero-banner-cta">{b.cta} →</button>
+              </div>
+              <div className="hero-banner-art">{b.emoji}</div>
+            </div>
+          )
+        }
       />
 
       {/* Distributors section */}
       <div className="section">
         <div className="section-head">
           <div className="section-title">Distributors</div>
-          <button className="section-link">See all</button>
+          <button className="section-link" onClick={onSeeAllDistributors}>
+            See all
+          </button>
         </div>
         <div className="rail">
-          {visibleDistributors.map((d) => (
-            <button
-              key={d.id}
-              className="distributor-card"
-              onClick={() => onSelectDistributor(d)}
-            >
-              <div
-                className="distributor-card-img"
-                style={{ background: d.featuredColor }}
+          {visibleDistributors.map((d) => {
+            const featured = brands.find(
+              (b) => b.name.toLowerCase() === d.featuredBrand.toLowerCase()
+            );
+            return (
+              <button
+                key={d.id}
+                className="distributor-card"
+                onClick={() => onSelectDistributor(d)}
               >
-                <span className="distributor-card-brand">{d.featuredBrand}</span>
-              </div>
-              <div className="distributor-card-title">{d.featuredBrandTitle}</div>
-              <div className="distributor-card-sub">{d.shortName}</div>
-            </button>
-          ))}
+                <div
+                  className="distributor-card-img"
+                  style={{ background: '#ffffff' }}
+                >
+                  {featured?.logo ? (
+                    <img
+                      className="distributor-card-logo"
+                      src={featured.logo}
+                      alt={featured.name}
+                      onError={(e) => {
+                        const el = e.currentTarget as HTMLImageElement;
+                        el.style.display = 'none';
+                        el.parentElement!.style.background = d.featuredColor;
+                        el.parentElement!.innerHTML = `<span class="distributor-card-brand">${d.featuredBrand}</span>`;
+                      }}
+                    />
+                  ) : (
+                    <span className="distributor-card-brand">{d.featuredBrand}</span>
+                  )}
+                </div>
+                <div className="distributor-card-title">{d.featuredBrandTitle}</div>
+                <div className="distributor-card-sub">{d.shortName}</div>
+              </button>
+            );
+          })}
         </div>
       </div>
 
@@ -150,7 +215,9 @@ function DistributorsView({ visibleDistributors, onSelectDistributor, onSelectBr
       <div className="section" style={{ paddingBottom: 110 }}>
         <div className="section-head">
           <div className="section-title">All brands</div>
-          <button className="section-link">See all</button>
+          <button className="section-link" onClick={onSeeAllBrands}>
+            See all
+          </button>
         </div>
         <div className="brand-grid">
           {brands.map((b) => (
@@ -187,7 +254,7 @@ function DistributorsView({ visibleDistributors, onSelectDistributor, onSelectBr
   );
 }
 
-function WholesalersView({ onSelectBrand }: any) {
+function WholesalersView({ onSelectBrand, onOpenWholesalerCategory, onSeeAllBrands }: any) {
   return (
     <>
       {/* Snack banner carousel — auto-scrolls every 5s */}
@@ -206,13 +273,38 @@ function WholesalersView({ onSelectBrand }: any) {
         )}
       />
 
-      {/* Groceries + FMCG */}
+      {/* Categories — Groceries + FMCG (2:1 banner cards) */}
       <div className="section">
+        <div className="section-head">
+          <div className="section-title">Categories</div>
+        </div>
         <div className="wholesale-categories">
-          {wholesalerCategories.map((c) => (
-            <button key={c.id} className="wholesale-category-card" style={{ background: c.bg }}>
-              <div className="wholesale-category-emoji">{c.emoji}</div>
-              <div className="wholesale-category-name">{c.name}</div>
+          {wholesalerCategories.map((c: any) => (
+            <button
+              key={c.id}
+              className="wholesale-category-card"
+              style={{ background: c.bg }}
+              onClick={() => onOpenWholesalerCategory?.(c.id)}
+            >
+              {c.image ? (
+                <img
+                  className="wholesale-category-img"
+                  src={c.image}
+                  alt={c.name}
+                  onError={(e) => {
+                    const el = e.currentTarget as HTMLImageElement;
+                    el.style.display = 'none';
+                    const parent = el.parentElement!;
+                    parent.innerHTML = `<div class="wholesale-category-emoji">${c.emoji}</div><div class="wholesale-category-name">${c.name}</div>`;
+                  }}
+                />
+              ) : (
+                <>
+                  <div className="wholesale-category-emoji">{c.emoji}</div>
+                  <div className="wholesale-category-name">{c.name}</div>
+                </>
+              )}
+              <div className="wholesale-category-label">{c.name}</div>
             </button>
           ))}
         </div>
@@ -245,7 +337,7 @@ function WholesalersView({ onSelectBrand }: any) {
       <div className="section" style={{ paddingBottom: 110 }}>
         <div className="section-head">
           <div className="section-title">Top categories</div>
-          <button className="section-link">See all</button>
+          <button className="section-link" onClick={onSeeAllBrands}>See all</button>
         </div>
         <div className="brand-grid">
           {brands.slice(0, 6).map((b) => (

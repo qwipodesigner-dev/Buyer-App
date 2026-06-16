@@ -156,6 +156,9 @@ export const distributors: Distributor[] = [
 ];
 
 // Hero banners for Home screen
+// Hero banners on the Distributors home view — use the attached marketing PNGs.
+// Text/bullets kept for accessibility (alt-text fallback) but the UI renders the
+// PNG full-bleed inside a 2:1 frame so the banner art reads as designed.
 export const heroBanners: HeroBanner[] = [
   {
     id: 'b1',
@@ -166,26 +169,40 @@ export const heroBanners: HeroBanner[] = [
     cta: 'Explore DigiDukaan',
     bg: 'linear-gradient(135deg, #FBCFE8 0%, #FCE7F3 50%, #FEF3C7 100%)',
     emoji: '🏪',
+    image: '/distributor-banners/Banner1.png',
   },
   {
     id: 'b2',
     tag: 'EXCLUSIVE',
-    title: 'Your Distributor',
-    subtitle: 'Is Now Online',
+    title: 'Your Distributor Is Now Online',
+    subtitle: 'Distributor rates & full catalogue at your fingertips',
     bullets: ['Full Catalogue', 'Instant Quotes', '24×7 Support'],
-    cta: 'Start Ordering',
+    cta: 'Start Ordering Today',
     bg: 'linear-gradient(135deg, #E0E7FF 0%, #EDE9FE 50%, #FAF5FF 100%)',
     emoji: '📦',
+    image: '/distributor-banners/Banner2.png',
   },
   {
     id: 'b3',
-    tag: 'NEW ON QWIPO',
-    title: 'ONDC DigiDukaan',
-    subtitle: 'Powered by Govt. of India',
-    bullets: ['Verified Sellers', 'Standard Pricing', 'Trusted Network'],
-    cta: 'Learn More',
+    tag: '40 BRANDS · ONE APP',
+    title: '40 Brands. One App.',
+    subtitle: 'All at unbeatable prices on DigiDukaan',
+    bullets: ['Authorised Distributors', 'Unbeatable Prices', 'Favourite Brands'],
+    cta: 'Browse All Brands',
     bg: 'linear-gradient(135deg, #DBEAFE 0%, #E0F2FE 50%, #ECFEFF 100%)',
     emoji: '🛍️',
+    image: '/distributor-banners/Banner3.png',
+  },
+  {
+    id: 'b4',
+    tag: 'NEXT DAY DELIVERY',
+    title: 'Why wait 7 days when you can get it tomorrow?',
+    subtitle: 'No more weekly cycles. No more stock-outs.',
+    bullets: ['Next Day Delivery', 'No Stock-outs', 'Your Distributor'],
+    cta: 'Order Your Stock Now',
+    bg: 'linear-gradient(135deg, #312E81 0%, #5B21B6 50%, #6D28D9 100%)',
+    emoji: '🚚',
+    image: '/distributor-banners/Banner4.png',
   },
 ];
 
@@ -217,12 +234,14 @@ export const wholesalerCategories: WholesalerCategory[] = [
     name: 'Groceries',
     bg: 'linear-gradient(135deg, #D1FAE5 0%, #A7F3D0 100%)',
     emoji: '🛒',
+    image: '/home-category-cards/groceries.png',
   },
   {
     id: 'fmcg',
     name: 'FMCG',
     bg: 'linear-gradient(135deg, #FED7AA 0%, #FDBA74 100%)',
     emoji: '🧴',
+    image: '/home-category-cards/fmcg.png',
   },
 ];
 
@@ -257,6 +276,8 @@ export const exclusiveOffers: ExclusiveOffer[] = [
 ];
 
 // Brand registry — real parents, founding, logos
+// Brand registry — every logo now points to a local PNG from the attached
+// "Brands in Phase one" set so the UI never depends on a remote CDN.
 export const brandRegistry: Record<string, BrandRegistryEntry> = {
   freedom: {
     name: 'Freedom',
@@ -264,8 +285,7 @@ export const brandRegistry: Record<string, BrandRegistryEntry> = {
     founded: 2008,
     hq: 'Hyderabad, Telangana',
     color: '#E63946',
-    // Freedom brand doesn't have a Wikimedia logo — using parent brand or fallback letter
-    logo: null,
+    logo: '/brand-logos/Freedon Oil.png',
   },
   itc: {
     name: 'ITC',
@@ -273,7 +293,7 @@ export const brandRegistry: Record<string, BrandRegistryEntry> = {
     founded: 1910,
     hq: 'Kolkata, West Bengal',
     color: '#0A6E3D',
-    logo: 'https://upload.wikimedia.org/wikipedia/commons/thumb/f/ff/ITC_Limited_Logo.svg/120px-ITC_Limited_Logo.svg.png',
+    logo: '/brand-logos/Aashirvaad.png',
   },
   aashirvaad: {
     name: 'Aashirvaad',
@@ -281,7 +301,7 @@ export const brandRegistry: Record<string, BrandRegistryEntry> = {
     founded: 2002,
     hq: 'Kolkata, West Bengal',
     color: '#DC2626',
-    logo: null,
+    logo: '/brand-logos/Aashirvaad.png',
   },
   fortune: {
     name: 'Fortune',
@@ -289,7 +309,7 @@ export const brandRegistry: Record<string, BrandRegistryEntry> = {
     founded: 1999,
     hq: 'Ahmedabad, Gujarat',
     color: '#1D4ED8',
-    logo: 'https://upload.wikimedia.org/wikipedia/commons/7/77/AWL_Agri_Business.jpg',
+    logo: '/brand-logos/Forture Oil.png',
   },
   surfExcel: {
     name: 'Surf Excel',
@@ -297,6 +317,8 @@ export const brandRegistry: Record<string, BrandRegistryEntry> = {
     founded: 1959,
     hq: 'Mumbai, Maharashtra',
     color: '#1E40AF',
+    // No Phase-one logo for Surf Excel — fall back to a clean SVG so the tile
+    // still renders the right brand mark; not used in mock data right now.
     logo: 'https://upload.wikimedia.org/wikipedia/en/thumb/b/b2/Hindustan_Unilever_Logo.svg/250px-Hindustan_Unilever_Logo.svg.png',
   },
   tata: {
@@ -305,7 +327,7 @@ export const brandRegistry: Record<string, BrandRegistryEntry> = {
     founded: 1983,
     hq: 'Mumbai, Maharashtra',
     color: '#0891B2',
-    logo: 'https://upload.wikimedia.org/wikipedia/commons/thumb/9/92/TATA-CONSUMER-PRODUCTS_BLUE_LOGO_Feb_13.png/250px-TATA-CONSUMER-PRODUCTS_BLUE_LOGO_Feb_13.png',
+    logo: '/brand-logos/Tata.png',
   },
   nestle: {
     name: 'Maggi',
@@ -329,32 +351,110 @@ export const brandRegistry: Record<string, BrandRegistryEntry> = {
     founded: 1946,
     hq: 'Anand, Gujarat',
     color: '#DC2626',
-    logo: null,
+    logo: '/brand-logos/Cow.png',
+  },
+  mtr: {
+    name: 'MTR',
+    parent: 'MTR Foods Pvt Ltd',
+    founded: 1924,
+    hq: 'Bengaluru, Karnataka',
+    color: '#15803D',
+    logo: '/brand-logos/MTR.png',
+  },
+  priya: {
+    name: 'Priya Foods',
+    parent: 'Priya Foods (Usher Agro)',
+    founded: 1981,
+    hq: 'Hyderabad, Telangana',
+    color: '#B91C1C',
+    logo: '/brand-logos/Priya Foods.png',
+  },
+  eastern: {
+    name: 'Eastern',
+    parent: 'Eastern Condiments Pvt Ltd',
+    founded: 1983,
+    hq: 'Kochi, Kerala',
+    color: '#16A34A',
+    logo: '/brand-logos/Eastern.png',
+  },
+  vicco: {
+    name: 'Vicco',
+    parent: 'Vicco Laboratories',
+    founded: 1952,
+    hq: 'Mumbai, Maharashtra',
+    color: '#0E7490',
+    logo: '/brand-logos/Vicco.png',
+  },
+  mysoreSandal: {
+    name: 'Mysore Sandal',
+    parent: 'Karnataka Soaps & Detergents Ltd',
+    founded: 1916,
+    hq: 'Bengaluru, Karnataka',
+    color: '#9F1239',
+    logo: '/brand-logos/Mysore Sandal.png',
+  },
+  himalaya: {
+    name: 'Himalaya',
+    parent: 'Himalaya Wellness Company',
+    founded: 1930,
+    hq: 'Bengaluru, Karnataka',
+    color: '#16A34A',
+    logo: '/brand-logos/Himalaya.png',
+  },
+  madhur: {
+    name: 'Madhur',
+    parent: 'Bajaj Hindusthan Sugar Ltd',
+    founded: 1931,
+    hq: 'Mumbai, Maharashtra',
+    color: '#EA580C',
+    logo: '/brand-logos/Madhur.png',
+  },
+  lalKila: {
+    name: 'Lal Kila',
+    parent: 'Amar Singh Chawal Wala',
+    founded: 1955,
+    hq: 'New Delhi',
+    color: '#B91C1C',
+    logo: '/brand-logos/Lal Kila.png',
   },
 };
 
+// Categories shown on the distributor storefront — names + images match
+// the attached "Category Images" set. Image is the source of truth; emoji kept
+// as a fallback when the PNG fails to load.
 export const categories: Category[] = [
-  { id: 'cooking-oil', name: 'Cooking Oil', icon: '🛢️', count: 142, color: '#FEF3C7' },
-  { id: 'rice', name: 'Rice & Grains', icon: '🌾', count: 87, color: '#FED7AA' },
-  { id: 'flour', name: 'Atta & Flour', icon: '🥖', count: 64, color: '#FDE68A' },
-  { id: 'beverages', name: 'Beverages', icon: '🥤', count: 218, color: '#DBEAFE' },
-  { id: 'personal-care', name: 'Personal Care', icon: '🧴', count: 312, color: '#FCE7F3' },
-  { id: 'cleaning', name: 'Home Cleaning', icon: '🧼', count: 156, color: '#E0E7FF' },
-  { id: 'dairy', name: 'Dairy & Ghee', icon: '🥛', count: 94, color: '#F3F4F6' },
-  { id: 'snacks', name: 'Snacks', icon: '🍪', count: 245, color: '#FEE2E2' },
+  { id: 'cooking-oil',   name: 'Cooking Oils & Ghee',        icon: '🛢️',  count: 142, color: '#FEF3C7', image: '/category-images/Cooking Oils & Ghee.png' },
+  { id: 'rice',          name: 'Rice & Rice Products',       icon: '🌾',  count: 87,  color: '#FED7AA', image: '/category-images/Rice & Rice Products.png' },
+  { id: 'flour',         name: 'Atta, Flours & Sooji',       icon: '🥖',  count: 64,  color: '#FDE68A', image: '/category-images/Atta, Flours & Sooji.png' },
+  { id: 'beverages',     name: 'Beverages',                  icon: '🥤',  count: 218, color: '#DBEAFE', image: '/category-images/Beverages.png' },
+  { id: 'personal-care', name: 'Personal Care',              icon: '🧴',  count: 312, color: '#FCE7F3', image: '/category-images/Personal Care.png' },
+  { id: 'cleaning',      name: 'Cleaning & Household',       icon: '🧼',  count: 156, color: '#E0E7FF', image: '/category-images/Cleaning & Household.png' },
+  { id: 'snacks',        name: 'Biscuits, Snacks & Namkeen', icon: '🍪',  count: 245, color: '#FEE2E2', image: '/category-images/Biscuits, Snacks & Namkeen.png' },
+  { id: 'dals',          name: 'Dals & Pulses',              icon: '🫘',  count: 94,  color: '#FED7AA', image: '/category-images/Dals & Pulses.png' },
+  { id: 'spices',        name: 'Sugar & Spices',             icon: '🌶️',  count: 78,  color: '#FECACA', image: '/category-images/Sugar & Spices.png' },
+  { id: 'dry-fruits',    name: 'Dry Fruits',                 icon: '🥜',  count: 56,  color: '#FDE68A', image: '/category-images/Dry Fruits.png' },
+  { id: 'pickles',       name: 'Pickles & Podis',            icon: '🥒',  count: 42,  color: '#FBCFE8', image: '/category-images/Pickles & Podis.png' },
+  { id: 'pooja',         name: 'Pooja Needs',                icon: '🕉️',  count: 38,  color: '#FED7AA', image: '/category-images/Pooja Needs.png' },
 ];
 
-// Brands rail (uses registry data)
+// Brands rail (uses registry data) — Phase-one brand-logo PNGs now live in
+// /brand-logos/ and are shared by Home, Storefront, Categories drill-in, Listing.
 export const brands: Brand[] = [
-  { id: 'freedom', ...brandRegistry.freedom, logoText: 'F' },
-  { id: 'aashirvaad', ...brandRegistry.aashirvaad, logoText: 'आ' },
-  { id: 'fortune', ...brandRegistry.fortune, logoText: 'Fo' },
-  { id: 'itc', ...brandRegistry.itc, logoText: 'ITC' },
-  { id: 'surf-excel', ...brandRegistry.surfExcel, logoText: 'SE' },
-  { id: 'tata', ...brandRegistry.tata, logoText: 'Tata' },
-  { id: 'maggi', ...brandRegistry.nestle, logoText: 'M' },
-  { id: 'parle-g', ...brandRegistry.parle, logoText: 'P' },
-  { id: 'amul', ...brandRegistry.amul, logoText: 'A' },
+  { id: 'aashirvaad',  ...brandRegistry.aashirvaad,   logoText: 'आ' },
+  { id: 'freedom',     ...brandRegistry.freedom,      logoText: 'F' },
+  { id: 'fortune',     ...brandRegistry.fortune,      logoText: 'Fo' },
+  { id: 'tata',        ...brandRegistry.tata,         logoText: 'Tata' },
+  { id: 'itc',         ...brandRegistry.itc,          logoText: 'ITC' },
+  { id: 'mtr',         ...brandRegistry.mtr,          logoText: 'MTR' },
+  { id: 'priya',       ...brandRegistry.priya,        logoText: 'Pri' },
+  { id: 'eastern',     ...brandRegistry.eastern,      logoText: 'E' },
+  { id: 'himalaya',    ...brandRegistry.himalaya,     logoText: 'H' },
+  { id: 'vicco',       ...brandRegistry.vicco,        logoText: 'V' },
+  { id: 'mysore',      ...brandRegistry.mysoreSandal, logoText: 'MS' },
+  { id: 'madhur',      ...brandRegistry.madhur,       logoText: 'M' },
+  { id: 'lal-kila',    ...brandRegistry.lalKila,      logoText: 'LK' },
+  { id: 'maggi',       ...brandRegistry.nestle,       logoText: 'M' },
+  { id: 'parle-g',     ...brandRegistry.parle,        logoText: 'P' },
 ];
 
 // Products — real MRPs verified from public listings (June 2026)
@@ -1206,6 +1306,69 @@ export const userProfile: UserProfile = {
   creditLimit: 50000,
   creditUsed: 12500,
 };
+
+// Distributors list page — distributors grouped with the brands each one carries
+export const distributorsList = [
+  {
+    id: 'sskt',
+    name: 'Shri Sai Krishna Traders',
+    brands: [
+      { id: 'freedom', name: 'Freedo...', short: 'Freedom', bg: '#FEF3C7', initials: 'F' },
+      { id: 'ruchi-gold', name: 'Ruchi G...', short: 'Ruchi Gold', bg: '#FEE2E2', initials: 'RG' },
+      { id: 'fortune', name: 'Fortun...', short: 'Fortune', bg: '#DBEAFE', initials: 'Fo' },
+      { id: 'gold-drop', name: 'Gold Dr...', short: 'Gold Drop', bg: '#FEF3C7', initials: 'GD' },
+      { id: 'sri-lalitha', name: 'Sri Lalit...', short: 'Sri Lalitha', bg: '#FCE7F3', initials: 'SL' },
+      { id: 'priya-foods', name: 'Priya F...', short: 'Priya Foods', bg: '#FED7AA', initials: 'PF' },
+      { id: 'parrys', name: 'Parry S...', short: 'Parry Sugar', bg: '#FEF3C7', initials: 'PS' },
+      { id: 'madhur', name: 'Madhur...', short: 'Madhur', bg: '#D1FAE5', initials: 'M' },
+    ],
+  },
+  {
+    id: 'ssrm',
+    name: 'Sri Sairam Enterprises',
+    brands: [
+      { id: 'ajay-care', name: 'Ajay Care', short: 'Ajay Care', bg: '#E0E7FF', initials: 'AC' },
+      { id: 'cycle', name: 'Cycle', short: 'Cycle', bg: '#FEF3C7', initials: 'C' },
+      { id: 'grb', name: 'GRB', short: 'GRB', bg: '#D1FAE5', initials: 'GR' },
+      { id: 'priya-gold', name: 'Priya G...', short: 'Priya Gold', bg: '#FEE2E2', initials: 'PG' },
+      { id: 'nippo', name: 'Nippo', short: 'Nippo', bg: '#DBEAFE', initials: 'N' },
+    ],
+  },
+  {
+    id: 'sre',
+    name: 'SR Enterprises',
+    brands: [
+      { id: 'mysore-sandal', name: 'Mysore...', short: 'Mysore Sandal', bg: '#FCE7F3', initials: 'MS' },
+      { id: 'vicco', name: 'Vicco', short: 'Vicco', bg: '#FEE2E2', initials: 'V' },
+      { id: 'black-rose', name: 'Black R...', short: 'Black Rose', bg: '#F3F4F6', initials: 'BR' },
+      { id: 'dwibhashi', name: 'Dwibha...', short: 'Dwibhashi', bg: '#D1FAE5', initials: 'D' },
+    ],
+  },
+];
+
+// Wholesalers Groceries categories (from the reference)
+// Wholesalers groceries — full set with the real category photos
+export const wholesalersGroceries = [
+  { id: 'rice',       name: 'Rice & Rice Products', emoji: '🌾', bg: 'linear-gradient(135deg, #FEF3C7 0%, #FDE68A 100%)', image: '/category-images/Rice & Rice Products.png' },
+  { id: 'dals',       name: 'Dals & Pulses',        emoji: '🫘', bg: 'linear-gradient(135deg, #FFEDD5 0%, #FED7AA 100%)', image: '/category-images/Dals & Pulses.png' },
+  { id: 'atta',       name: 'Atta, Flours & Sooji', emoji: '🥖', bg: 'linear-gradient(135deg, #FEE2E2 0%, #FECACA 100%)', image: '/category-images/Atta, Flours & Sooji.png' },
+  { id: 'oils',       name: 'Cooking Oils & Ghee',  emoji: '🛢️', bg: 'linear-gradient(135deg, #FEF9C3 0%, #FDE68A 100%)', image: '/category-images/Cooking Oils & Ghee.png' },
+  { id: 'sugar',      name: 'Sugar & Spices',       emoji: '🌶️', bg: 'linear-gradient(135deg, #FED7AA 0%, #FDBA74 100%)', image: '/category-images/Sugar & Spices.png' },
+  { id: 'pickles',    name: 'Pickles & Podis',      emoji: '🥒', bg: 'linear-gradient(135deg, #FBCFE8 0%, #F9A8D4 100%)', image: '/category-images/Pickles & Podis.png' },
+  { id: 'dry-fruits', name: 'Dry Fruits',           emoji: '🥜', bg: 'linear-gradient(135deg, #FDE68A 0%, #FCD34D 100%)', image: '/category-images/Dry Fruits.png' },
+];
+
+// Wholesalers FMCG categories
+export const wholesalersFMCG = [
+  { id: 'oats',       name: 'Oats & Noodles',             emoji: '🍜', bg: 'linear-gradient(135deg, #FEF3C7 0%, #FDE68A 100%)', image: '/category-images/Oats & Noodles.png' },
+  { id: 'personal',   name: 'Personal Care',              emoji: '🧴', bg: 'linear-gradient(135deg, #DBEAFE 0%, #BFDBFE 100%)', image: '/category-images/Personal Care.png' },
+  { id: 'pooja',      name: 'Pooja Needs',                emoji: '🕉️', bg: 'linear-gradient(135deg, #FED7AA 0%, #FDBA74 100%)', image: '/category-images/Pooja Needs.png' },
+  { id: 'ready',      name: 'Ready to cook',              emoji: '🍱', bg: 'linear-gradient(135deg, #FEE2E2 0%, #FECACA 100%)', image: '/category-images/Ready to cook.png' },
+  { id: 'sauces',     name: 'Spreads, Sauces & Ketchups', emoji: '🍅', bg: 'linear-gradient(135deg, #FECACA 0%, #FCA5A5 100%)', image: '/category-images/Spreads, Sauces & Ketchups.png' },
+  { id: 'biscuits',   name: 'Biscuits, Snacks & Namkeen', emoji: '🍪', bg: 'linear-gradient(135deg, #FED7AA 0%, #FDBA74 100%)', image: '/category-images/Biscuits, Snacks & Namkeen.png' },
+  { id: 'cleaning',   name: 'Cleaning & Household',       emoji: '🧼', bg: 'linear-gradient(135deg, #E0E7FF 0%, #C7D2FE 100%)', image: '/category-images/Cleaning & Household.png' },
+  { id: 'stationery', name: 'Stationery',                 emoji: '✏️', bg: 'linear-gradient(135deg, #D1FAE5 0%, #A7F3D0 100%)', image: '/category-images/Stationery.png' },
+];
 
 // MOV suggestions — realistic add-ons
 export const movSuggestions: MovSuggestion[] = [

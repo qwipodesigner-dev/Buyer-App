@@ -87,6 +87,7 @@ export interface Category {
   icon: string;
   count: number;
   color: string;
+  image?: string;
 }
 
 export interface HeroBanner {
@@ -98,6 +99,7 @@ export interface HeroBanner {
   cta: string;
   bg: string;
   emoji: string;
+  image?: string;
 }
 
 export interface WholesalerBanner {
@@ -115,6 +117,7 @@ export interface WholesalerCategory {
   name: string;
   bg: string;
   emoji: string;
+  image?: string;
 }
 
 export interface ExclusiveOffer {

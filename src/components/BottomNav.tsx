@@ -1,5 +1,8 @@
 import { Icon } from './Icons';
 
+// Center search FAB is the most-used action — kept large and elevated above the bar
+// so retailers who scan icons quickly don't miss it.
+
 export default function BottomNav({ active, cartCount, onNavigate }: any) {
   return (
     <div className="bottom-nav">
@@ -17,6 +20,16 @@ export default function BottomNav({ active, cartCount, onNavigate }: any) {
         <Icon.Reorder />
         <span>Reorder</span>
       </button>
+
+      {/* Center elevated Search FAB */}
+      <button
+        className="nav-search-fab"
+        onClick={() => onNavigate('search')}
+        aria-label="Search products"
+      >
+        <Icon.Search />
+      </button>
+
       <button
         className={`nav-item ${active === 'cart' ? 'active' : ''}`}
         onClick={() => onNavigate('cart')}
