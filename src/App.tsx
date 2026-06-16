@@ -233,11 +233,7 @@ export default function App() {
             <span className="dot"></span>
             Qwipo · B2B Commerce
           </div>
-          <h2 className="showcase-title">A cleaner cart for the kirana retailer</h2>
-          <p className="showcase-subtitle">
-            Three connected mobile screens that help retailers discover, evaluate, and
-            order from multiple distributors — with margin, schemes, and MOV always visible.
-          </p>
+          <h2 className="showcase-title">Qwipo Buyer App</h2>
           <ScreenPills active={screen} onPick={setScreen} />
         </div>
 

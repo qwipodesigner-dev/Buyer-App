@@ -198,10 +198,11 @@ body {
   display: flex;
   flex-direction: column;
   gap: 14px;
-  max-height: 720px;
+  max-height: 760px;
   overflow-y: auto;
   scrollbar-width: thin;
   padding-right: 6px;
+  margin-top: 8px;
   mask-image: linear-gradient(
     to bottom,
     transparent 0,
