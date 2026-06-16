@@ -233,62 +233,8 @@ export default function App() {
             <span className="dot"></span>
             Qwipo · B2B Commerce
           </div>
-          <h2 className="showcase-title">A cleaner cart for the kirana retailer</h2>
-          <p className="showcase-subtitle">
-            Three connected mobile screens that help retailers discover, evaluate, and
-            order from multiple distributors — with margin, schemes, and MOV always visible.
-          </p>
-          <div className="screen-pills">
-            <button
-              className={`screen-pill ${screen === 'home' ? 'active' : ''}`}
-              onClick={() => setScreen('home')}
-            >
-              <span className="screen-pill-num">1</span>
-              Home · Distributors & Wholesalers
-            </button>
-            <button
-              className={`screen-pill ${screen === 'storefront' ? 'active' : ''}`}
-              onClick={() => setScreen('storefront')}
-            >
-              <span className="screen-pill-num">2</span>
-              Seller Storefront
-            </button>
-            <button
-              className={`screen-pill ${screen === 'listing' ? 'active' : ''}`}
-              onClick={() => setScreen('listing')}
-            >
-              <span className="screen-pill-num">3</span>
-              Product Listing
-            </button>
-            <button
-              className={`screen-pill ${screen === 'cart' ? 'active' : ''}`}
-              onClick={() => setScreen('cart')}
-            >
-              <span className="screen-pill-num">4</span>
-              Multi-Seller Cart
-            </button>
-            <button
-              className={`screen-pill ${screen === 'splash' ? 'active' : ''}`}
-              onClick={() => setScreen('splash')}
-            >
-              <span className="screen-pill-num">5</span>
-              Splash · Login · OTP · Onboarding
-            </button>
-            <button
-              className={`screen-pill ${screen === 'order-summary' ? 'active' : ''}`}
-              onClick={() => setScreen('order-summary')}
-            >
-              <span className="screen-pill-num">6</span>
-              Order Summary
-            </button>
-            <button
-              className={`screen-pill ${screen === 'my-orders' ? 'active' : ''}`}
-              onClick={() => setScreen('my-orders')}
-            >
-              <span className="screen-pill-num">7</span>
-              My Orders + Tracking
-            </button>
-          </div>
+          <h2 className="showcase-title">Qwipo Buyer App</h2>
+          <ScreenPills active={screen} onPick={setScreen} />
         </div>
 
         <div className="phone-frame">
@@ -589,6 +535,100 @@ export default function App() {
           </div>
         </div>
       </div>
+    </div>
+  );
+}
+
+// Showcase pill list — every route in the app, grouped for navigation
+// from the desktop showcase chrome on the left of the phone frame.
+const SCREEN_GROUPS: { title: string; items: { id: string; label: string }[] }[] = [
+  {
+    title: 'Auth',
+    items: [
+      { id: 'splash', label: 'Splash' },
+      { id: 'login', label: 'Login' },
+      { id: 'otp', label: 'OTP Verification' },
+      { id: 'onboarding', label: 'Onboarding' },
+    ],
+  },
+  {
+    title: 'Browse',
+    items: [
+      { id: 'home', label: 'Home · Distributors & Wholesalers' },
+      { id: 'distributors-list', label: 'All Authorised Distributors' },
+      { id: 'all-brands', label: 'All Brands' },
+      { id: 'wholesaler-categories', label: 'Wholesaler · Groceries / FMCG' },
+      { id: 'global-search', label: 'Global Search' },
+    ],
+  },
+  {
+    title: 'Shop',
+    items: [
+      { id: 'storefront', label: 'Authorised Distributor Storefront' },
+      { id: 'categories-brands', label: 'Categories & Brands drill-in' },
+      { id: 'listing', label: 'Product Listing' },
+      { id: 'wholesaler-products', label: 'Wholesaler Products (multi-seller)' },
+      { id: 'reorder', label: 'Reorder' },
+    ],
+  },
+  {
+    title: 'Cart & Checkout',
+    items: [
+      { id: 'cart', label: 'Multi-Seller Cart' },
+      { id: 'order-summary', label: 'Order Summary' },
+      { id: 'coupons', label: 'Apply Offers & Coupons' },
+    ],
+  },
+  {
+    title: 'Orders',
+    items: [
+      { id: 'my-orders', label: 'My Orders + Tracking' },
+      { id: 'order-details', label: 'Order Details' },
+    ],
+  },
+  {
+    title: 'Account',
+    items: [
+      { id: 'profile', label: 'My Account' },
+      { id: 'notifications', label: 'Notifications' },
+      { id: 'sub:orders', label: 'Account · Orders' },
+      { id: 'sub:addresses', label: 'Account · Addresses' },
+      { id: 'sub:payment', label: 'Account · Payment Methods' },
+      { id: 'sub:credit', label: 'Account · Qwipo Credit' },
+      { id: 'sub:help', label: 'Account · Help & Support' },
+      { id: 'sub:settings', label: 'Account · Settings' },
+      { id: 'sub:notif-prefs', label: 'Account · Notification Prefs' },
+      { id: 'sub:language', label: 'Account · Language' },
+      { id: 'sub:terms', label: 'Account · Terms & Privacy' },
+      { id: 'sub:invoices', label: 'Account · Invoices' },
+      { id: 'sub:refer', label: 'Account · Refer & Earn' },
+    ],
+  },
+];
+
+function ScreenPills({ active, onPick }: { active: string; onPick: (id: string) => void }) {
+  let counter = 0;
+  return (
+    <div className="screen-pills">
+      {SCREEN_GROUPS.map((group) => (
+        <div key={group.title} className="screen-pills-group">
+          <div className="screen-pills-heading">{group.title}</div>
+          {group.items.map((item) => {
+            counter += 1;
+            const isActive = active === item.id;
+            return (
+              <button
+                key={item.id}
+                className={`screen-pill ${isActive ? 'active' : ''}`}
+                onClick={() => onPick(item.id)}
+              >
+                <span className="screen-pill-num">{counter}</span>
+                {item.label}
+              </button>
+            );
+          })}
+        </div>
+      ))}
     </div>
   );
 }
