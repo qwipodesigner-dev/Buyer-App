@@ -183,10 +183,39 @@ input {
   margin-bottom: 24px;
 }
 
+/* Scrollable showcase nav — caps height at the phone-frame height so
+   long lists scroll inline. Hidden scrollbar; fades at top/bottom hint. */
 .screen-pills {
   display: flex;
   flex-direction: column;
-  gap: 10px;
+  gap: 14px;
+  max-height: 720px;
+  overflow-y: auto;
+  scrollbar-width: thin;
+  padding-right: 6px;
+  mask-image: linear-gradient(
+    to bottom,
+    transparent 0,
+    black 12px,
+    black calc(100% - 12px),
+    transparent 100%
+  );
+}
+
+.screen-pills-group {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.screen-pills-heading {
+  font-size: 10px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  color: #9ca3af;
+  padding-left: 4px;
+  margin-bottom: 2px;
 }
 
 .screen-pill {
