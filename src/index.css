@@ -7603,3 +7603,40 @@ input {
   width: 14px;
   height: 14px;
 }
+
+/* Inline copyable text (Order IDs) */
+.copy-text {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 2px 4px;
+  border-radius: 6px;
+  background: none;
+  color: var(--foreground);
+  font-size: 13px;
+  font-weight: 500;
+  transition: background 150ms ease;
+}
+
+.copy-text:hover,
+.copy-text:active {
+  background: #f3f4f6;
+}
+
+.copy-text-icon {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 16px;
+  height: 16px;
+  color: var(--muted-fg);
+}
+
+.copy-text-icon svg {
+  width: 14px;
+  height: 14px;
+}
+
+.copy-text-value {
+  letter-spacing: 0.01em;
+}

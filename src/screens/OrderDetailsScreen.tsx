@@ -1,5 +1,6 @@
 import { Icon, StatusBar } from '../components/Icons';
 import { products } from '../data/mockData';
+import CopyText from '../components/CopyText';
 
 // Lookup an actual product record by fuzzy name so the line item shows the
 // real image, brand chip, and price layout — keeps card style consistent
@@ -55,7 +56,9 @@ export default function OrderDetailsScreen({ order, onBack, onTrack, onCancel }:
           <div className="od-card">
             <div className="orders-row">
               <span className="orders-label">Order ID</span>
-              <span className="orders-value mono">{niceOrderId}</span>
+              <span className="orders-value">
+                <CopyText value={niceOrderId} />
+              </span>
             </div>
             <div className="orders-row">
               <span className="orders-label">Order Date</span>

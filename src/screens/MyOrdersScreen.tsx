@@ -3,6 +3,7 @@ import { Icon, StatusBar } from '../components/Icons';
 import { SheetHeader, useSheetSwipe } from '../components/SheetBase';
 import { orderHistoryList } from '../data/mockData';
 import CancelOrderDialog from '../components/CancelOrderDialog';
+import CopyText from '../components/CopyText';
 
 type TabKind = 'wholesalers' | 'distributors';
 
@@ -106,8 +107,8 @@ export default function MyOrdersScreen({ onBack, onOpenDetails }: any) {
                 </div>
                 <div className="orders-row">
                   <span className="orders-label">Order ID</span>
-                  <span className="orders-value mono">
-                    <Icon.Image /> QWIP{o.id.replace('QW', '')}204
+                  <span className="orders-value">
+                    <CopyText value={`QWIP${o.id.replace('QW', '')}204`} />
                   </span>
                 </div>
                 <div className="orders-row">

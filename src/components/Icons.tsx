@@ -30,6 +30,7 @@ import {
   Wifi,
   Signal,
   Battery,
+  Copy,
 } from 'lucide-react';
 
 import type { ReactElement } from 'react';
@@ -71,6 +72,7 @@ export const Icon: Record<string, IconCmp> = {
   Settings: wrap(Settings),
   Star: wrap(Star),
   Image: wrap(ImageIcon),
+  Copy: wrap(Copy),
   Phone: wrap(Phone),
   Scan: wrap(ScanLine),
   Wifi: wrap(Wifi),
