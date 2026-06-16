@@ -7701,3 +7701,167 @@ body {
 .copy-text-value {
   letter-spacing: 0.01em;
 }
+
+/* ============================================================
+   COMPACT ORDER CARD — replaces the 8-row label/value layout.
+   Single tap target opens Order Details; inner action buttons
+   stopPropagation so they don't re-trigger the card click.
+   ============================================================ */
+.orders-card {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  background: #ffffff;
+  border: 1px solid var(--border);
+  border-radius: 14px;
+  padding: 14px;
+  text-align: left;
+  transition: transform 120ms ease, box-shadow 120ms ease;
+}
+
+.orders-card:active {
+  transform: scale(0.995);
+}
+
+/* Row 1: seller avatar + name/meta + status pill */
+.orders-card-row1 {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.orders-card-avatar {
+  width: 38px;
+  height: 38px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #ffffff;
+  font-size: 12px;
+  font-weight: 700;
+  flex-shrink: 0;
+}
+
+.orders-card-seller {
+  flex: 1;
+  min-width: 0;
+}
+
+.orders-card-seller-name {
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--foreground);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.orders-card-meta {
+  font-size: 11px;
+  color: var(--muted-fg);
+  margin-top: 2px;
+}
+
+.orders-status-pill {
+  flex-shrink: 0;
+  padding: 4px 10px;
+  border-radius: 999px;
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: 0.02em;
+  background: #e0f2fe;
+  color: #0369a1;
+}
+
+.orders-status-pill.status-placed {
+  background: #fff7ed;
+  color: #c2410c;
+}
+
+.orders-status-pill.status-in_transit {
+  background: #fef3c7;
+  color: #92400e;
+}
+
+.orders-status-pill.status-processing {
+  background: #ede9fe;
+  color: #6d28d9;
+}
+
+.orders-status-pill.status-delivered {
+  background: #ecfdf5;
+  color: #047857;
+}
+
+.orders-status-pill.status-cancelled {
+  background: #fef2f2;
+  color: #b91c1c;
+}
+
+/* Row 2: total + delivery in a 50/50 split */
+.orders-card-row2 {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 8px;
+  padding: 10px 12px;
+  background: #f9fafb;
+  border-radius: 10px;
+}
+
+.orders-card-eta {
+  text-align: right;
+}
+
+.orders-card-total-label,
+.orders-card-eta-label {
+  font-size: 10px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  color: var(--muted-fg);
+  margin-bottom: 2px;
+}
+
+.orders-card-total-value {
+  font-size: 16px;
+  font-weight: 700;
+  color: var(--foreground);
+  letter-spacing: -0.01em;
+}
+
+.orders-card-eta-value {
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--foreground);
+}
+
+/* Row 3: compact copyable ID */
+.orders-card-id {
+  display: flex;
+}
+
+.orders-card-id .copy-text {
+  background: #f3f4f6;
+}
+
+.orders-card-id .copy-text-value {
+  font-size: 11px;
+  color: var(--muted-fg);
+}
+
+/* Row 4: actions — tighter than the old full-width footer */
+.orders-actions.compact {
+  display: flex;
+  gap: 8px;
+  margin-top: 2px;
+}
+
+.orders-actions.compact .orders-action {
+  flex: 1;
+  height: 36px;
+  border-radius: 8px;
+  font-size: 12px;
+  padding: 0 12px;
+}

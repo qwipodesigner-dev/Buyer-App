@@ -23,7 +23,6 @@ import CategoriesBrandsScreen from './screens/CategoriesBrandsScreen';
 import WholesalerProductListScreen from './screens/WholesalerProductListScreen';
 import CouponsScreen from './screens/CouponsScreen';
 import CartValidationSheet from './components/CartValidationSheet';
-import OrdersScreen from './screens/sub/OrdersScreen';
 import AddressesScreen from './screens/sub/AddressesScreen';
 import PaymentScreen from './screens/sub/PaymentScreen';
 import CreditScreen from './screens/sub/CreditScreen';
@@ -428,13 +427,13 @@ export default function App() {
                 cartCount={cartCount}
                 onNavigate={handleNavigate}
                 onOpenSubPage={(p: string) => {
-                  if (p === 'my-orders') setScreen('my-orders');
+                  // Orders sub-page is the same canonical My Orders + Tracking screen.
+                  if (p === 'my-orders' || p === 'orders') setScreen('my-orders');
                   else setScreen(`sub:${p}`);
                 }}
                 onSignOut={() => setScreen('splash')}
               />
             )}
-            {screen === 'sub:orders' && <OrdersScreen onBack={() => setScreen('profile')} />}
             {screen === 'sub:addresses' && <AddressesScreen onBack={() => setScreen('profile')} />}
             {screen === 'sub:payment' && <PaymentScreen onBack={() => setScreen('profile')} />}
             {screen === 'sub:credit' && <CreditScreen onBack={() => setScreen('profile')} />}
@@ -593,7 +592,6 @@ const SCREEN_GROUPS: { title: string; items: { id: string; label: string }[] }[]
     items: [
       { id: 'profile', label: 'My Account' },
       { id: 'notifications', label: 'Notifications' },
-      { id: 'sub:orders', label: 'Account · Orders' },
       { id: 'sub:addresses', label: 'Account · Addresses' },
       { id: 'sub:payment', label: 'Account · Payment Methods' },
       { id: 'sub:credit', label: 'Account · Qwipo Credit' },
