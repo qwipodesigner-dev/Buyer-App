@@ -37,6 +37,7 @@ export default function WholesalerProductListScreen({
   onBack,
   onOpenSheet,
   onOpenImageSheet,
+  onOpenDiscounts,
   onGoToCart,
   onOpenSearch,
   cartTotal = 0,
@@ -116,40 +117,7 @@ export default function WholesalerProductListScreen({
                   </div>
                 </div>
 
-                {/* Per-SKU seller chips */}
-                <div className="sku-seller-row">
-                  <div className="sku-seller-label">Buy from:</div>
-                  <div className="sku-seller-chips">
-                    {prices.map((pr) => {
-                      const isActive = pr.seller.id === activeSellerId;
-                      const isCheapest = pr.price === bestPrice;
-                      return (
-                        <button
-                          key={pr.seller.id}
-                          className={`sku-seller-chip ${isActive ? 'on' : ''}`}
-                          onClick={() =>
-                            setSelectedSeller({
-                              ...selectedSeller,
-                              [product.id]: pr.seller.id,
-                            })
-                          }
-                          aria-label={`${pr.seller.name} — ₹${pr.price}`}
-                        >
-                          <span
-                            className="sku-seller-avatar"
-                            style={{ background: pr.seller.logoColor }}
-                          >
-                            {pr.seller.short}
-                          </span>
-                          <span className="sku-seller-price">₹{pr.price}</span>
-                          {isCheapest && <span className="sku-seller-best">BEST</span>}
-                        </button>
-                      );
-                    })}
-                  </div>
-                </div>
-
-                {/* Variants */}
+                {/* Variants (weight) */}
                 <div className="variant-pills">
                   {product.variants.map((v) => (
                     <button
@@ -167,7 +135,32 @@ export default function WholesalerProductListScreen({
                   ))}
                 </div>
 
-                {/* Pricing */}
+                {/* Seller options — 2-column grid below variants, per reference */}
+                <div className="seller-options">
+                  {prices.slice(0, 2).map((pr) => {
+                    const isActive = pr.seller.id === activeSellerId;
+                    return (
+                      <button
+                        key={pr.seller.id}
+                        className={`seller-option ${isActive ? 'active' : ''}`}
+                        onClick={() =>
+                          setSelectedSeller({
+                            ...selectedSeller,
+                            [product.id]: pr.seller.id,
+                          })
+                        }
+                      >
+                        <div className="seller-option-price">₹{pr.price.toLocaleString('en-IN')}</div>
+                        <div className="seller-option-name">{pr.seller.name}</div>
+                        <div className="seller-option-fee">
+                          <Icon.Image /> Fee: ₹{isActive ? 2 : 1}/kg
+                        </div>
+                      </button>
+                    );
+                  })}
+                </div>
+
+                {/* Pricing — same shape as distributor card */}
                 <div className="product-price-row">
                   <div className="price-block">
                     <div className="price-main">
@@ -176,17 +169,20 @@ export default function WholesalerProductListScreen({
                       {isBest && <span className="best-tag">BEST PRICE</span>}
                     </div>
                     <div className="price-meta">
-                      per pc · {activePrice.seller.name} · {activePrice.seller.delivery}
+                      per pc · {activePrice.seller.name}
                     </div>
                   </div>
                   <div className="margin-badge">{variant.margin}% Margin</div>
                 </div>
 
-                {/* Actions */}
+                {/* Actions — Discounts + Add, exactly like distributor */}
                 <div className="product-actions">
-                  <div className="sku-mov-note">
-                    MOV ₹{activePrice.seller.mov.toLocaleString('en-IN')}
-                  </div>
+                  <button
+                    className="discounts-btn-filled"
+                    onClick={() => onOpenDiscounts?.(product, variant)}
+                  >
+                    Discounts <Icon.ChevronDown />
+                  </button>
 
                   {cartQty > 0 ? (
                     <div className="qty-control compact">
