@@ -1,14 +1,21 @@
 import { useState } from 'react';
 import { Icon, StatusBar } from '../../components/Icons';
 import { useI18n, LANGUAGES, type LangCode } from '../../i18n';
+import ConfirmChangesDialog from '../../components/ConfirmChangesDialog';
 
 export default function LanguageScreen({ onBack }: any) {
   const { lang, setLang, t } = useI18n();
   const [toast, setToast] = useState<string>('');
+  // The user picks a language → we stage it in `pending` → ConfirmChangesDialog
+  // opens. Only on Apply does the change reach the i18n context.
+  const [pending, setPending] = useState<LangCode | null>(null);
 
-  const handlePick = (code: LangCode) => {
-    setLang(code);
+  const pendingLang = pending && LANGUAGES.find((l) => l.code === pending);
+
+  const handleApply = () => {
+    if (pending) setLang(pending);
     setToast(t('lang.applied'));
+    setPending(null);
     setTimeout(() => setToast(''), 1600);
   };
 
@@ -37,7 +44,10 @@ export default function LanguageScreen({ onBack }: any) {
               <button
                 key={l.code}
                 className={`lang-item ${isActive ? 'on' : ''}`}
-                onClick={() => handlePick(l.code)}
+                onClick={() => {
+                  if (isActive) return;
+                  setPending(l.code);
+                }}
                 aria-pressed={isActive}
               >
                 <div className="lang-item-text">
@@ -52,6 +62,17 @@ export default function LanguageScreen({ onBack }: any) {
           })}
         </div>
       </div>
+
+      {pending && pendingLang && (
+        <ConfirmChangesDialog
+          title={`Switch to ${pendingLang.nativeName}?`}
+          body={`The whole app will switch to ${pendingLang.name}. You can change it back from here any time.`}
+          applyLabel="Apply"
+          cancelLabel="Cancel"
+          onCancel={() => setPending(null)}
+          onApply={handleApply}
+        />
+      )}
 
       {toast && (
         <div className="toast" role="status">
