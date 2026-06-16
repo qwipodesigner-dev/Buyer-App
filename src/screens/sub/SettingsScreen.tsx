@@ -1,7 +1,15 @@
 import { useState } from 'react';
 import { Icon, StatusBar } from '../../components/Icons';
+import { useTheme } from '../../theme';
+import ConfirmChangesDialog from '../../components/ConfirmChangesDialog';
 
 export default function SettingsScreen({ onBack, page = 'settings' }: any) {
+  // Theme — Dark mode toggle gated by a confirmation dialog so the
+  // colour-mode swap is never a stray tap.
+  const { setTheme, isDark } = useTheme();
+  const [themeConfirmOpen, setThemeConfirmOpen] = useState(false);
+  const pendingTheme: 'light' | 'dark' = isDark ? 'light' : 'dark';
+
   // Notification preferences
   const [notifPrefs, setNotifPrefs] = useState({
     orderUpdates: true,
@@ -161,13 +169,40 @@ export default function SettingsScreen({ onBack, page = 'settings' }: any) {
           <div className="profile-section" style={{ paddingBottom: 30 }}>
             <div className="profile-section-title">General</div>
             <div className="profile-card">
-              <Toggle label="Dark mode" detail="Use dark theme" value={false} onToggle={() => {}} />
+              <Toggle
+                label="Dark mode"
+                detail={isDark ? 'Currently using dark theme' : 'Use dark theme'}
+                value={isDark}
+                onToggle={() => setThemeConfirmOpen(true)}
+              />
               <Toggle label="Biometric login" detail="Use fingerprint or face unlock" value={true} onToggle={() => {}} />
               <Toggle label="Sound effects" detail="Tap and success tones" value={true} onToggle={() => {}} last />
             </div>
           </div>
         )}
       </div>
+
+      {themeConfirmOpen && (
+        <ConfirmChangesDialog
+          title={
+            pendingTheme === 'dark'
+              ? 'Switch to dark mode?'
+              : 'Switch to light mode?'
+          }
+          body={
+            pendingTheme === 'dark'
+              ? 'Surfaces and text across the app will change to a dark palette.'
+              : 'Surfaces and text across the app will change back to the light palette.'
+          }
+          applyLabel="Apply"
+          cancelLabel="Cancel"
+          onCancel={() => setThemeConfirmOpen(false)}
+          onApply={() => {
+            setTheme(pendingTheme);
+            setThemeConfirmOpen(false);
+          }}
+        />
+      )}
     </>
   );
 }

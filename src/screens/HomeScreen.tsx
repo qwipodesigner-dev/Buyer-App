@@ -3,6 +3,7 @@ import { Icon, StatusBar } from '../components/Icons';
 import BottomNav from '../components/BottomNav';
 import BannerCarousel from '../components/BannerCarousel';
 import { useI18n } from '../i18n';
+import { useTheme } from '../theme';
 import {
   distributors,
   brands,
@@ -24,6 +25,7 @@ export default function HomeScreen({
   onOpenAddresses,
 }: any) {
   const { t } = useI18n();
+  const { isDark } = useTheme();
   const [tab, setTab] = useState('distributors');
 
   const visibleDistributors = distributors.filter((d) =>
@@ -38,12 +40,12 @@ export default function HomeScreen({
         <div className="home-header">
           <img
             className="home-brand-logo"
-            src="/brand/qwipo-logo.svg"
+            src={isDark ? '/brand/qwipo-logo-dark.svg' : '/brand/qwipo-logo.svg'}
             alt="Qwipo"
           />
           <div className="ondc-badge">
             <img
-              className="ondc-logo-img"
+              className={`ondc-logo-img ${isDark ? 'is-dark' : ''}`}
               src="/brand/digidukaan-logo.svg"
               alt="Powered by ONDC DigiDukaan"
             />
