@@ -1,4 +1,5 @@
 import { useState, useEffect } from 'react';
+import { Analytics } from '@vercel/analytics/react';
 import { Icon, PhoneNotch } from './components/Icons';
 import HomeScreen from './screens/HomeScreen';
 import SellerStorefront from './screens/SellerStorefront';
@@ -227,6 +228,7 @@ export default function App() {
 
   return (
     <div className="app-shell">
+      <Analytics />
       <div className="showcase">
         <div className="showcase-info">
           <div className="brand-tag">
