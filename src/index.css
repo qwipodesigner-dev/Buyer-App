@@ -126,12 +126,21 @@ input {
    APP LAYOUT — desktop showcase with phone frame in middle
    ============================================================ */
 .app-shell {
-  min-height: 100vh;
+  /* Locked-height shell so the showcase text + phone frame never scroll;
+     only the .screen-pills list scrolls inside its own container. */
+  height: 100vh;
+  height: 100dvh;
   display: flex;
   align-items: center;
   justify-content: center;
   padding: 32px 16px;
   background: linear-gradient(135deg, #eef2ff 0%, #fdf2f8 100%);
+  overflow: hidden;
+}
+
+html,
+body {
+  overflow: hidden;
 }
 
 .showcase {
