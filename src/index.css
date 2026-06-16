@@ -4377,18 +4377,23 @@ input {
 /* ============================================================
    BOTTOM NAV
    ============================================================ */
+/* Bottom navigation — refined per attached reference.
+   Rounded top corners + soft top shadow, FAB sits in a clear halo so it
+   reads as the most prominent action on the bar without floating away. */
 .bottom-nav {
   position: absolute;
   bottom: 0;
   left: 0;
   right: 0;
   background: #ffffff;
-  border-top: 1px solid #f3f4f6;
-  padding: 8px 12px 24px;
+  border-top-left-radius: 20px;
+  border-top-right-radius: 20px;
+  padding: 10px 16px calc(20px + env(safe-area-inset-bottom, 0px));
   display: flex;
   justify-content: space-around;
   align-items: flex-end;
-  z-index: 5;
+  z-index: 20;
+  box-shadow: 0 -4px 18px rgba(15, 23, 42, 0.08);
 }
 
 .nav-item {
@@ -4396,47 +4401,20 @@ input {
   display: flex;
   flex-direction: column;
   align-items: center;
-  gap: 2px;
+  gap: 4px;
   padding: 6px 4px;
   color: #9ca3af;
   position: relative;
-}
-
-/* Center Search FAB — sits inside the bar with a gentle lift so it reads as
-   part of the navigation, not a floating button. Small shadow + tight border. */
-.nav-search-fab {
-  flex: 0 0 auto;
-  width: 48px;
-  height: 48px;
-  margin: 0 8px;
-  margin-top: -10px; /* small lift, still anchored to the bar */
-  margin-bottom: 2px;
-  border-radius: 50%;
-  background: var(--brand-purple);
-  color: #ffffff;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  box-shadow: 0 2px 6px rgba(188, 119, 255, 0.30);
-  border: 2px solid #ffffff;
-  transition: transform 150ms ease, box-shadow 150ms ease;
-  position: relative;
-  z-index: 2;
-}
-
-.nav-search-fab:active {
-  transform: scale(0.94);
-  box-shadow: 0 1px 3px rgba(188, 119, 255, 0.30);
-}
-
-.nav-search-fab svg {
-  width: 20px;
-  height: 20px;
-  stroke-width: 2.5;
+  transition: color 150ms ease;
 }
 
 .nav-item.active {
-  color: #2563eb;
+  color: var(--brand-purple);
+}
+
+.nav-item.active svg {
+  fill: rgba(188, 119, 255, 0.12);
+  stroke: var(--brand-purple);
 }
 
 .nav-item svg {
@@ -4445,8 +4423,42 @@ input {
 }
 
 .nav-item span {
-  font-size: 10px;
-  font-weight: 500;
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: 0.01em;
+}
+
+/* Center Search FAB — sits in a white "cradle" ring like the reference.
+   Lifted so ~⅔ of the button is above the bar edge; bigger size makes it
+   the dominant action without the cartoonish drop-shadow glow. */
+.nav-search-fab {
+  flex: 0 0 auto;
+  width: 64px;
+  height: 64px;
+  margin: 0 12px;
+  margin-top: -38px;
+  border-radius: 50%;
+  background: var(--brand-purple);
+  color: #ffffff;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border: 6px solid #ffffff;
+  /* Soft neutral shadow under the bottom edge; no coloured glow. */
+  box-shadow: 0 3px 6px rgba(0, 0, 0, 0.10);
+  transition: transform 150ms ease;
+  position: relative;
+  z-index: 25;
+}
+
+.nav-search-fab:active {
+  transform: scale(0.94);
+}
+
+.nav-search-fab svg {
+  width: 28px;
+  height: 28px;
+  stroke-width: 2.5;
 }
 
 .nav-badge {
@@ -4526,7 +4538,11 @@ input {
   }
   .phone-frame {
     width: 100vw;
+    /* 100dvh adapts to mobile browser chrome (address bar show/hide)
+       so the bottom-nav stays sticky at the visible bottom on iOS Safari /
+       Chrome instead of getting pushed off-screen. Fallback to 100vh. */
     height: 100vh;
+    height: 100dvh;
     border-radius: 0;
     padding: 0;
     box-shadow: none;
@@ -4540,6 +4556,11 @@ input {
   /* Hide the simulated status bar — real device shows the OS one */
   .status-bar {
     display: none;
+  }
+  /* Pin the bottom-nav to the visible viewport edge on real mobile,
+     even when the inner scroll bounces. */
+  .bottom-nav {
+    position: fixed;
   }
 }
 
