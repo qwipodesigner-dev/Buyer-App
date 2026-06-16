@@ -1038,6 +1038,9 @@ input {
 }
 
 .credit-card {
+  display: block;
+  width: 100%;
+  text-align: left;
   background: linear-gradient(135deg, #f0fdf4 0%, #d1fae5 100%);
   border: 1px solid #a7f3d0;
   border-radius: 8px;
