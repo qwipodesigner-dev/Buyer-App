@@ -58,13 +58,15 @@ export default function SellerStorefront({ cartCount, distributor, onBack, onNav
           </div>
           <div className="seller-stats two-cell">
             <div className="stat-cell">
-              <div className="stat-label">MIN ORDER</div>
+              <div className="stat-label">Minimum Order Value</div>
               <div className="stat-value">₹{activeSeller.mov.toLocaleString('en-IN')}</div>
             </div>
             <div className="stat-cell">
-              <div className="stat-label">DELIVERY</div>
-              <div className="stat-value">Tomorrow</div>
-              <div className="stat-value-sub">by 11 AM</div>
+              <div className="stat-label">Delivery by</div>
+              <div className="stat-value">
+                {/* deliveryTime is "Tomorrow by 11 AM" / "Wednesday by 4 PM" etc — strip the time portion */}
+                {(activeSeller.deliveryTime || 'Tomorrow').replace(/\s+by\s+.*$/i, '')}
+              </div>
             </div>
           </div>
         </div>
@@ -77,13 +79,10 @@ export default function SellerStorefront({ cartCount, distributor, onBack, onNav
           </div>
           <div className="cat-rail">
             {categories.map((cat) => {
-              // Width scales 140 → 220 with name length (in chars). Image stays 2:1.
-              const w = Math.min(220, Math.max(140, 110 + cat.name.length * 5));
               return (
               <button
                 key={cat.id}
                 className="cat-card"
-                style={{ width: w }}
                 onClick={() => onSelectCategory(cat)}
               >
                 <div className="cat-card-img" style={{ background: cat.color }}>
