@@ -1,7 +1,8 @@
-import { useState } from 'react';
+import { useMemo, useState } from 'react';
 import { Icon, StatusBar } from '../components/Icons';
 import { SheetHeader, useSheetSwipe } from '../components/SheetBase';
 import { orderHistoryList } from '../data/mockData';
+import CancelOrderDialog from '../components/CancelOrderDialog';
 
 type TabKind = 'wholesalers' | 'distributors';
 
@@ -16,14 +17,32 @@ const TRACKING_STEPS: { id: string; label: string }[] = [
 function statusToIdx(status: string): number {
   if (status === 'delivered') return 5;
   if (status === 'in_transit') return 4;
+  if (status === 'placed') return 1;
   return 3; // processing
 }
 
-export default function MyOrdersScreen({ onBack }: any) {
+// Sellers backed by the wholesaler network (any "wholesale" / "mart" name);
+// the rest fall under the Distributors tab.
+function isWholesalerOrder(o: any) {
+  return /wholesale|mart/i.test(o.seller);
+}
+
+export default function MyOrdersScreen({ onBack, onOpenDetails }: any) {
   const [tab, setTab] = useState<TabKind>('distributors');
   const [tracking, setTracking] = useState<any>(null);
+  const [cancelTarget, setCancelTarget] = useState<any>(null);
+  const [cancelledIds, setCancelledIds] = useState<Set<string>>(new Set());
 
-  const visible = orderHistoryList; // demo: same list across both tabs
+  const visible = useMemo(() => {
+    const list = orderHistoryList.map((o) =>
+      cancelledIds.has(o.id)
+        ? { ...o, status: 'cancelled', statusLabel: 'Cancelled' }
+        : o
+    );
+    return list.filter((o: any) =>
+      tab === 'wholesalers' ? isWholesalerOrder(o) : !isWholesalerOrder(o)
+    );
+  }, [tab, cancelledIds]);
 
   return (
     <>
@@ -55,62 +74,118 @@ export default function MyOrdersScreen({ onBack }: any) {
         </div>
 
         <div className="orders-list">
-          {visible.map((o) => (
-            <div key={o.id} className="orders-card">
-              <div className="orders-card-head">
-                <span className="orders-card-title">Order Details</span>
-                <Icon.ChevronRight />
-              </div>
-              <div className="orders-row">
-                <span className="orders-label">Seller Name</span>
-                <span className="orders-value">{o.seller}</span>
-              </div>
-              <div className="orders-row">
-                <span className="orders-label">Order ID</span>
-                <span className="orders-value mono">QWIP{o.id.replace('QW', '')}204</span>
-              </div>
-              <div className="orders-row">
-                <span className="orders-label">Order Date</span>
-                <span className="orders-value">{o.placedAt}</span>
-              </div>
-              <div className="orders-row">
-                <span className="orders-label">Expected Delivery Date</span>
-                <span className="orders-value">2026-04-16</span>
-              </div>
-              <div className="orders-row">
-                <span className="orders-label">Order Status</span>
-                <span className="orders-value">{o.statusLabel}</span>
-              </div>
-              <div className="orders-row">
-                <span className="orders-label">Items Total</span>
-                <span className="orders-value">₹{(o.total - 200).toLocaleString('en-IN')}</span>
-              </div>
-              <div className="orders-row">
-                <span className="orders-label">Delivery Fee</span>
-                <span className="orders-value">₹200</span>
-              </div>
-              <div className="orders-row">
-                <span className="orders-label">Total Amount</span>
-                <span className="orders-value">₹{o.total.toLocaleString('en-IN')}</span>
-              </div>
-              <div className="orders-actions">
-                <button className="orders-action ghost">
-                  <Icon.Image /> Invoice
-                </button>
-                <button
-                  className="orders-action primary"
-                  onClick={() => setTracking(o)}
-                >
-                  Track Order
-                </button>
+          {visible.length === 0 && (
+            <div className="reorder-empty">
+              <div className="reorder-empty-emoji">📭</div>
+              <div className="reorder-empty-title">No orders yet</div>
+              <div className="reorder-empty-sub">
+                Orders from {tab} will appear here.
               </div>
             </div>
-          ))}
+          )}
+
+          {visible.map((o: any) => {
+            const isPlaced = o.status === 'placed';
+            const isCancelled = o.status === 'cancelled';
+            const itemsTotal = o.total - 200;
+
+            return (
+              <div key={o.id} className="orders-card">
+                <button
+                  className="orders-card-head"
+                  onClick={() => onOpenDetails?.(o)}
+                  aria-label="Open order details"
+                >
+                  <span className="orders-card-title">Order Details</span>
+                  <Icon.ChevronRight />
+                </button>
+
+                <div className="orders-row">
+                  <span className="orders-label">Seller Name</span>
+                  <span className="orders-value">{o.seller}</span>
+                </div>
+                <div className="orders-row">
+                  <span className="orders-label">Order ID</span>
+                  <span className="orders-value mono">
+                    <Icon.Image /> QWIP{o.id.replace('QW', '')}204
+                  </span>
+                </div>
+                <div className="orders-row">
+                  <span className="orders-label">Order Date</span>
+                  <span className="orders-value">{o.placedAt}</span>
+                </div>
+                <div className="orders-row">
+                  <span className="orders-label">Expected Delivery Date</span>
+                  <span className="orders-value">
+                    {isPlaced ? o.eta : '2026-04-16'}
+                  </span>
+                </div>
+                <div className="orders-row">
+                  <span className="orders-label">Order Status</span>
+                  <span
+                    className={`orders-value status-tag status-${o.status}`}
+                  >
+                    {o.statusLabel}
+                  </span>
+                </div>
+                <div className="orders-row">
+                  <span className="orders-label">Items Total</span>
+                  <span className="orders-value">
+                    ₹{itemsTotal.toLocaleString('en-IN')}.00
+                  </span>
+                </div>
+                <div className="orders-row">
+                  <span className="orders-label">Delivery Fee</span>
+                  <span className="orders-value">₹200.00</span>
+                </div>
+                <div className="orders-row">
+                  <span className="orders-label">Total Amount</span>
+                  <span className="orders-value">
+                    ₹{o.total.toLocaleString('en-IN')}.00
+                  </span>
+                </div>
+
+                <div className="orders-actions">
+                  {isPlaced ? (
+                    <button
+                      className="orders-action danger"
+                      onClick={() => setCancelTarget(o)}
+                    >
+                      Cancel Order
+                    </button>
+                  ) : (
+                    <button className="orders-action ghost">
+                      <Icon.Image /> Invoice
+                    </button>
+                  )}
+                  {!isCancelled && (
+                    <button
+                      className="orders-action primary"
+                      onClick={() => setTracking(o)}
+                    >
+                      Track Order
+                    </button>
+                  )}
+                </div>
+              </div>
+            );
+          })}
         </div>
       </div>
 
       {tracking && (
         <TrackingSheet order={tracking} onClose={() => setTracking(null)} />
+      )}
+
+      {cancelTarget && (
+        <CancelOrderDialog
+          orderId={cancelTarget.id}
+          onClose={() => setCancelTarget(null)}
+          onConfirm={({ orderId }: { orderId: string }) => {
+            setCancelledIds((prev) => new Set(prev).add(orderId));
+            setCancelTarget(null);
+          }}
+        />
       )}
     </>
   );
