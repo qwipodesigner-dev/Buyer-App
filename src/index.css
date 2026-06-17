@@ -4818,7 +4818,7 @@ body {
 }
 
 .splash-powered img {
-  height: 22px;
+  height: 30px;
   width: auto;
 }
 
@@ -4829,11 +4829,11 @@ body {
 
 .auth-brand {
   flex: 0 0 auto;
-  padding: 80px 16px 28px;
+  padding: 78px 16px 24px;
   display: flex;
   flex-direction: column;
   align-items: center;
-  gap: 10px;
+  gap: 16px;
 }
 
 .auth-sheet {
@@ -4848,17 +4848,19 @@ body {
 }
 
 .auth-title {
-  font-size: 26px;
-  font-weight: 700;
+  font-size: 22px;
+  font-weight: 500;        /* DS rule: only 400 / 500 */
   color: var(--foreground);
-  letter-spacing: -0.02em;
-  margin-bottom: 4px;
+  letter-spacing: -0.015em;
+  margin-bottom: 6px;
 }
 
 .auth-sub {
   font-size: 13px;
+  font-weight: 400;
   color: var(--text-muted);
   margin-bottom: 18px;
+  line-height: 1.5;
 }
 
 .auth-phone-input {
@@ -8462,61 +8464,52 @@ body {
   animation: splash-bg 2400ms ease-in-out forwards;
 }
 
+/* Stage — fixed footprint, sized to fit the SVG viewBox aspect (735.55 × 985.52). */
 .splash-stage {
   position: relative;
-  width: 220px;
-  height: 220px;
+  width: 200px;
+  height: 268px;  /* 200 × (985.52 / 735.55) */
 }
 
 .splash-logo {
   position: absolute;
-  top: 50%;
-  left: 50%;
-  transform: translate(-50%, -50%);
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
   user-select: none;
   pointer-events: none;
-  /* image-rendering smoothing for high-res PNGs */
   -webkit-user-drag: none;
 }
 
-/* Stage 1 — white icon-only logo. Visible 0–60% then fades out. */
+/* Stage 1 — white version of the primary brand SVG. */
 .splash-logo-white {
-  width: 60%;
-  height: auto;
   opacity: 0;
   animation: splash-white 2400ms ease-out forwards;
 }
 
-/* Stage 2 — primary lavender logo. Hidden until bg starts fading,
-   then settles in centred on the white background. */
+/* Stage 2 — colored primary brand SVG (same viewBox → seamless morph). */
 .splash-logo-primary {
-  width: 70%;
-  height: auto;
   opacity: 0;
   animation: splash-primary 2400ms ease-out forwards;
 }
 
+/* Background — lavender for the first half, white for the second. */
 @keyframes splash-bg {
   0%, 55%   { background: var(--brand-purple); }
-  /* Bg cross-fades to white during the logo morph window */
-  85%       { background: #ffffff; }
-  100%      { background: #ffffff; }
+  85%, 100% { background: #ffffff; }
 }
 
 @keyframes splash-white {
-  0%        { opacity: 0; transform: translate(-50%, -50%) scale(1.6); }
-  18%       { opacity: 1; transform: translate(-50%, -50%) scale(1.05); }
-  /* Hold full size + opacity through the lavender stage */
-  55%       { opacity: 1; transform: translate(-50%, -50%) scale(1); }
-  /* Cross-fade out as the primary fades in */
-  80%, 100% { opacity: 0; transform: translate(-50%, -50%) scale(0.9); }
+  0%        { opacity: 0; transform: scale(1.25); }
+  20%       { opacity: 1; transform: scale(1.02); }
+  30%, 60%  { opacity: 1; transform: scale(1); }
+  82%, 100% { opacity: 0; transform: scale(1); }
 }
 
 @keyframes splash-primary {
-  0%, 55%   { opacity: 0; transform: translate(-50%, -50%) scale(0.95); }
-  /* Cross-fade with the white logo */
-  80%       { opacity: 1; transform: translate(-50%, -50%) scale(1); }
-  100%      { opacity: 1; transform: translate(-50%, -50%) scale(1); }
+  0%, 60%   { opacity: 0; transform: scale(1); }
+  82%, 100% { opacity: 1; transform: scale(1); }
 }
 
 @media (prefers-reduced-motion: reduce) {
@@ -8530,9 +8523,9 @@ body {
 /* Primary Qwipo wordmark on Login / OTP screens */
 .auth-brand-logo {
   display: block;
-  height: 92px;
+  height: 130px;
   width: auto;
-  margin: 0 auto 16px;
+  margin: 0 auto 4px;
   user-select: none;
   -webkit-user-drag: none;
 }
