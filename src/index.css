@@ -4731,7 +4731,7 @@ body {
 
 .auth-back {
   position: absolute;
-  top: 14px;
+  top: 52px;
   left: 16px;
   z-index: 10;
 }
@@ -5119,12 +5119,24 @@ body {
 }
 
 .ob-illustration {
-  margin-top: 8px;
+  margin-top: 16px;
   display: flex;
   align-items: center;
   justify-content: center;
-  font-size: 80px;
-  gap: 8px;
+  max-height: 220px;
+  pointer-events: none;
+}
+
+.ob-illustration img,
+.ob-illustration-fallback {
+  width: 78%;
+  max-width: 280px;
+  height: auto;
+  max-height: 220px;
+  object-fit: contain;
+  display: block;
+  user-select: none;
+  -webkit-user-drag: none;
 }
 
 .ob-footer {

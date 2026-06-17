@@ -38,14 +38,36 @@ import { initialCart, categories } from './data/mockData';
 
 export default function App() {
   const [screen, setScreenRaw] = useState<string>('home');
-  const [prevScreen, setPrevScreen] = useState<string>('home');
+  // History stack — every screen change pushes the current screen so goBack
+  // always returns to the previous screen rather than a hard-coded target.
+  const [history, setHistory] = useState<string[]>([]);
   const setScreen = (next: string) => {
-    if (next === 'global-search') {
-      // Remember where we came from so back returns there
-      setPrevScreen((current) => (screen === 'global-search' ? current : screen));
-    }
+    // Capture current screen via the latest closure value — DO NOT trigger
+    // a sibling setState from inside the functional updater, because Strict
+    // Mode runs that updater twice and would double-push to history.
+    if (next === screen) return;
+    setHistory((h) => [...h, screen]);
     setScreenRaw(next);
   };
+  // Used as the onBack handler everywhere. Pops the history; falls back to a
+  // sensible default ('home') when the stack is empty (deep-link / fresh load).
+  const goBack = (fallback: string = 'home') => {
+    if (history.length === 0) {
+      setScreenRaw(fallback);
+      return;
+    }
+    const prev = history[history.length - 1];
+    setHistory((h) => h.slice(0, -1));
+    setScreenRaw(prev);
+  };
+  // Resets the stack — useful when entering a brand new flow (e.g. sign out
+  // returns to splash; sign in back to home) so back doesn't leak.
+  const resetTo = (next: string) => {
+    setHistory([]);
+    setScreenRaw(next);
+  };
+  // Back compat with the prevScreen reference inside the global-search route.
+  const prevScreen = history[history.length - 1] || 'home';
   const [selectedCategory, setSelectedCategory] = useState<any>(categories[0]);
   const [selectedDistributor, setSelectedDistributor] = useState<any>(null);
   const [sheetProduct, setSheetProduct] = useState<any>(null);
@@ -267,16 +289,16 @@ export default function App() {
               />
             )}
             {screen === 'notifications' && (
-              <NotificationsScreen onBack={() => setScreen('home')} />
+              <NotificationsScreen onBack={() => goBack('home')} />
             )}
 
             {/* Auth flow */}
             {screen === 'splash' && (
-              <SplashScreen onContinue={() => setScreen('login')} />
+              <SplashScreen onContinue={() => resetTo('login')} />
             )}
             {screen === 'login' && (
               <LoginScreen
-                onBack={() => setScreen('home')}
+                onBack={() => goBack('home')}
                 onSubmit={(phone: string) => {
                   setAuthPhone(phone);
                   setScreen('otp');
@@ -286,21 +308,21 @@ export default function App() {
             {screen === 'otp' && (
               <OTPScreen
                 phone={authPhone}
-                onBack={() => setScreen('login')}
+                onBack={() => goBack('login')}
                 onVerify={() => setScreen('onboarding')}
               />
             )}
             {screen === 'onboarding' && (
               <OnboardingScreen
-                onBack={() => setScreen('otp')}
-                onProceed={() => setScreen('home')}
+                onBack={() => goBack('otp')}
+                onProceed={() => resetTo('home')}
               />
             )}
 
             {/* Order completion */}
             {screen === 'order-summary' && (
               <OrderSummaryScreen
-                onBack={() => setScreen('cart')}
+                onBack={() => goBack('cart')}
                 onPlaceOrder={() => {
                   setToast('Order placed successfully');
                   setScreen('my-orders');
@@ -311,7 +333,7 @@ export default function App() {
             )}
             {screen === 'my-orders' && (
               <MyOrdersScreen
-                onBack={() => setScreen('profile')}
+                onBack={() => goBack('profile')}
                 onOpenDetails={(o: any) => {
                   setActiveOrder(o);
                   setScreen('order-details');
@@ -321,7 +343,7 @@ export default function App() {
             {screen === 'order-details' && (
               <OrderDetailsScreen
                 order={activeOrder}
-                onBack={() => setScreen('my-orders')}
+                onBack={() => goBack('my-orders')}
                 onTrack={() => setScreen('my-orders')}
                 onCancel={() => setScreen('my-orders')}
               />
@@ -330,7 +352,7 @@ export default function App() {
             {/* See-all listing screens */}
             {screen === 'distributors-list' && (
               <DistributorsListScreen
-                onBack={() => setScreen('home')}
+                onBack={() => goBack('home')}
                 onSelectDistributor={(distributor: any) => {
                   setSelectedDistributor(distributor);
                   setScreen('storefront');
@@ -351,7 +373,7 @@ export default function App() {
             )}
             {screen === 'all-brands' && (
               <AllBrandsScreen
-                onBack={() => setScreen('home')}
+                onBack={() => goBack('home')}
                 onSelectBrand={(brand: any) => {
                   setSelectedCategory({ id: brand.id, name: brand.name, isBrand: true });
                   setScreen('listing');
@@ -361,7 +383,7 @@ export default function App() {
             {screen === 'wholesaler-categories' && (
               <WholesalersCategoriesScreen
                 variant={wholesalerCategoryVariant}
-                onBack={() => setScreen('home')}
+                onBack={() => goBack('home')}
                 onSelectCategory={(cat: any) => {
                   setSelectedCategory({ id: cat.id, name: cat.name });
                   setScreen('wholesaler-products');
@@ -381,7 +403,7 @@ export default function App() {
               <CategoriesBrandsScreen
                 distributor={selectedDistributor}
                 category={selectedCategory}
-                onBack={() => setScreen('storefront')}
+                onBack={() => goBack('storefront')}
                 onSelectBrand={(brand: any) => {
                   setSelectedCategory({ id: brand.id, name: brand.name, isBrand: true });
                   setScreen('listing');
@@ -395,7 +417,7 @@ export default function App() {
                 category={selectedCategory}
                 cartItems={listingCart}
                 cartTotal={cartTotal}
-                onBack={() => setScreen('wholesaler-categories')}
+                onBack={() => goBack('wholesaler-categories')}
                 onOpenSheet={handleOpenSheet}
                 onOpenImageSheet={(p: any) => setImageSheetProduct(p)}
                 onOpenDiscounts={(product: any, variant: any) =>
@@ -408,7 +430,7 @@ export default function App() {
             {screen === 'coupons' && (
               <CouponsScreen
                 cartTotal={cartTotal}
-                onBack={() => setScreen('order-summary')}
+                onBack={() => goBack('order-summary')}
                 onApply={(coupon: any) => {
                   setAppliedCoupon(coupon);
                   setToast(`Coupon ${coupon.code} applied`);
@@ -436,15 +458,15 @@ export default function App() {
                   if (p === 'my-orders' || p === 'orders') setScreen('my-orders');
                   else setScreen(`sub:${p}`);
                 }}
-                onSignOut={() => setScreen('splash')}
+                onSignOut={() => resetTo('splash')}
               />
             )}
-            {screen === 'sub:addresses' && <AddressesScreen onBack={() => setScreen('profile')} />}
-            {screen === 'sub:payment' && <PaymentScreen onBack={() => setScreen('profile')} />}
-            {screen === 'sub:credit' && <CreditScreen onBack={() => setScreen('profile')} />}
-            {screen === 'sub:help' && <HelpScreen onBack={() => setScreen('profile')} />}
+            {screen === 'sub:addresses' && <AddressesScreen onBack={() => goBack('profile')} />}
+            {screen === 'sub:payment' && <PaymentScreen onBack={() => goBack('profile')} />}
+            {screen === 'sub:credit' && <CreditScreen onBack={() => goBack('profile')} />}
+            {screen === 'sub:help' && <HelpScreen onBack={() => goBack('profile')} />}
             {screen === 'sub:language' && (
-              <LanguageScreen onBack={() => setScreen('profile')} />
+              <LanguageScreen onBack={() => goBack('profile')} />
             )}
             {(screen === 'sub:settings' ||
               screen === 'sub:notif-prefs' ||
@@ -452,7 +474,7 @@ export default function App() {
               screen === 'sub:invoices' ||
               screen === 'sub:refer') && (
               <SettingsScreen
-                onBack={() => setScreen('profile')}
+                onBack={() => goBack('profile')}
                 page={screen.replace('sub:', '')}
               />
             )}
@@ -460,7 +482,7 @@ export default function App() {
               <SellerStorefront
                 cartCount={cartCount}
                 distributor={selectedDistributor}
-                onBack={() => setScreen('home')}
+                onBack={() => goBack('home')}
                 onNavigate={handleNavigate}
                 onSelectCategory={(cat: any) => {
                   // Direct to ProductListing — the brands+products drill-in
@@ -477,7 +499,7 @@ export default function App() {
                 cartItems={listingCart}
                 cartTotal={cartTotal}
                 filters={listingFilters}
-                onBack={() => setScreen('storefront')}
+                onBack={() => goBack('storefront')}
                 onOpenSheet={handleOpenSheet}
                 onOpenImageSheet={(product) => setImageSheetProduct(product)}
                 onOpenDiscounts={(product, variant) => setDiscountsSheet({ product, variant })}
@@ -490,7 +512,7 @@ export default function App() {
             {screen === 'cart' && (
               <MultiSellerCart
                 cart={cart}
-                onBack={() => setScreen('listing')}
+                onBack={() => goBack('listing')}
                 onUpdateItemQty={handleUpdateItemQty}
                 onAddSuggestion={handleAddSuggestion}
                 onContinueShopping={() => setScreen('storefront')}

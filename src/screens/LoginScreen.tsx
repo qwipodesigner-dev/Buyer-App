@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { Icon } from '../components/Icons';
+import { Icon, StatusBar } from '../components/Icons';
 
 export default function LoginScreen({ onBack, onSubmit }: any) {
   const [phone, setPhone] = useState('');
@@ -7,6 +7,7 @@ export default function LoginScreen({ onBack, onSubmit }: any) {
 
   return (
     <div className="auth-screen login-screen">
+      <StatusBar />
       <button className="icon-btn auth-back" onClick={onBack} aria-label="Back">
         <Icon.Back />
       </button>
