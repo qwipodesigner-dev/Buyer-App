@@ -298,7 +298,6 @@ export default function App() {
             )}
             {screen === 'login' && (
               <LoginScreen
-                onBack={() => goBack('home')}
                 onSubmit={(phone: string) => {
                   setAuthPhone(phone);
                   setScreen('otp');

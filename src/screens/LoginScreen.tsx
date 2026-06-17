@@ -1,16 +1,13 @@
 import { useState } from 'react';
 import { Icon, StatusBar } from '../components/Icons';
 
-export default function LoginScreen({ onBack, onSubmit }: any) {
+export default function LoginScreen({ onSubmit }: any) {
   const [phone, setPhone] = useState('');
   const valid = /^\d{10}$/.test(phone);
 
   return (
     <div className="auth-screen login-screen">
       <StatusBar />
-      <button className="icon-btn auth-back" onClick={onBack} aria-label="Back">
-        <Icon.Back />
-      </button>
 
       <div className="auth-brand">
         <img
