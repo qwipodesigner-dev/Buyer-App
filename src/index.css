@@ -8432,3 +8432,95 @@ body {
 [data-theme='dark'] .ondc-logo-img.is-dark {
   filter: invert(1) hue-rotate(180deg) brightness(1.05) saturate(1.15);
 }
+
+/* ============================================================
+   SPLASH SCREEN V2 — bg-purple ⇢ white morph animation.
+   Stage 1: lavender background + white Q icon scales in.
+   Stage 2: bg fades to white, white icon cross-fades into the
+            primary (lavender ring) Qwipo logo at the same spot.
+   ============================================================ */
+.splash-screen-v2 {
+  position: absolute;
+  inset: 0;
+  background: var(--brand-purple);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
+  animation: splash-bg 2400ms ease-in-out forwards;
+}
+
+.splash-stage {
+  position: relative;
+  width: 220px;
+  height: 220px;
+}
+
+.splash-logo {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  user-select: none;
+  pointer-events: none;
+  /* image-rendering smoothing for high-res PNGs */
+  -webkit-user-drag: none;
+}
+
+/* Stage 1 — white icon-only logo. Visible 0–60% then fades out. */
+.splash-logo-white {
+  width: 60%;
+  height: auto;
+  opacity: 0;
+  animation: splash-white 2400ms ease-out forwards;
+}
+
+/* Stage 2 — primary lavender logo. Hidden until bg starts fading,
+   then settles in centred on the white background. */
+.splash-logo-primary {
+  width: 70%;
+  height: auto;
+  opacity: 0;
+  animation: splash-primary 2400ms ease-out forwards;
+}
+
+@keyframes splash-bg {
+  0%, 55%   { background: var(--brand-purple); }
+  /* Bg cross-fades to white during the logo morph window */
+  85%       { background: #ffffff; }
+  100%      { background: #ffffff; }
+}
+
+@keyframes splash-white {
+  0%        { opacity: 0; transform: translate(-50%, -50%) scale(1.6); }
+  18%       { opacity: 1; transform: translate(-50%, -50%) scale(1.05); }
+  /* Hold full size + opacity through the lavender stage */
+  55%       { opacity: 1; transform: translate(-50%, -50%) scale(1); }
+  /* Cross-fade out as the primary fades in */
+  80%, 100% { opacity: 0; transform: translate(-50%, -50%) scale(0.9); }
+}
+
+@keyframes splash-primary {
+  0%, 55%   { opacity: 0; transform: translate(-50%, -50%) scale(0.95); }
+  /* Cross-fade with the white logo */
+  80%       { opacity: 1; transform: translate(-50%, -50%) scale(1); }
+  100%      { opacity: 1; transform: translate(-50%, -50%) scale(1); }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .splash-logo-white,
+  .splash-logo-primary,
+  .splash-screen-v2 {
+    animation-duration: 600ms;
+  }
+}
+
+/* Primary Qwipo wordmark on Login / OTP screens */
+.auth-brand-logo {
+  display: block;
+  height: 92px;
+  width: auto;
+  margin: 0 auto 16px;
+  user-select: none;
+  -webkit-user-drag: none;
+}

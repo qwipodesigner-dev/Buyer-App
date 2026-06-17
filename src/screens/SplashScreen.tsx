@@ -1,29 +1,44 @@
 import { useEffect } from 'react';
 
+// Splash animation per the attached reference (Splash Screen 5 → 8):
+//   0.00–0.45s  full lavender background, no logo
+//   0.45–1.10s  white Q icon scales in (1.6 → 1.0), staying centred
+//   1.10–1.80s  background fades lavender → white, white icon dissolves
+//               into the primary (lavender) Qwipo logo at the same spot
+//   1.80–2.40s  steady on white with primary logo
+//   2.40s       advance to Login
+//
+// The whole choreography lives in CSS keyframes so a tap-to-skip still works
+// — clicking the splash advances immediately.
+
+const TOTAL_MS = 2400;
+
 export default function SplashScreen({ onContinue }: any) {
   useEffect(() => {
-    const t = setTimeout(onContinue, 2500);
+    const t = setTimeout(onContinue, TOTAL_MS);
     return () => clearTimeout(t);
   }, [onContinue]);
 
   return (
-    <div className="auth-screen splash-screen" onClick={onContinue}>
-      <div className="splash-stack">
-        <div className="splash-q-circle">
-          <svg viewBox="0 0 248 248" fill="none">
-            <circle cx="124" cy="124" r="124" fill="#BC77FF" />
-            <path
-              d="M130 156l27-15v-40l-34-19-33 19v40l36 21 19 11s5 4 15 5c0 0 6 1 18-3 0 0-1 5-6 8-5 3-5 7-18 9-13 3-26-5-27-6l-2-1-31-18-24-15V94l54-31 54 31v65l-27 16-21-13z"
-              fill="#fff"
-            />
-          </svg>
-        </div>
-        <div className="splash-wordmark">
-          <span className="qm-q">Q</span>wipo
-        </div>
-        <div className="splash-powered">
-          <img src="/brand/digidukaan-logo.svg" alt="Powered by ONDC DigiDukaan" />
-        </div>
+    <div
+      className="auth-screen splash-screen-v2"
+      onClick={onContinue}
+      role="button"
+      aria-label="Tap to continue"
+    >
+      <div className="splash-stage" aria-hidden="true">
+        {/* Stage 1: White icon-only logo, visible on the lavender bg */}
+        <img
+          className="splash-logo splash-logo-white"
+          src="/brand/qwipo-icon-white.png"
+          alt=""
+        />
+        {/* Stage 2: Primary logo (lavender ring + wipo wordmark) on white bg */}
+        <img
+          className="splash-logo splash-logo-primary"
+          src="/brand/qwipo-primary.png"
+          alt="Qwipo"
+        />
       </div>
     </div>
   );
