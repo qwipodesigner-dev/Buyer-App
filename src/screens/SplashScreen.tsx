@@ -14,7 +14,7 @@ import { useEffect } from 'react';
 //
 // Tap-to-skip remains available.
 
-const TOTAL_MS = 2400;
+const TOTAL_MS = 2700;
 
 export default function SplashScreen({ onContinue }: any) {
   useEffect(() => {

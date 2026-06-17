@@ -8457,18 +8457,21 @@ body {
   position: absolute;
   inset: 0;
   background: var(--brand-purple);
-  display: flex;
-  align-items: center;
-  justify-content: center;
   overflow: hidden;
-  animation: splash-bg 2400ms ease-in-out forwards;
+  animation: splash-bg 2700ms ease-in-out forwards;
 }
 
-/* Stage — fixed footprint, sized to fit the SVG viewBox aspect (735.55 × 985.52). */
+/* Stage — absolutely positioned. Starts centered, ends at Login's
+   auth-brand-logo spot (top: 122px, 97 × 130) for a seamless handoff. */
 .splash-stage {
-  position: relative;
-  width: 200px;
-  height: 268px;  /* 200 × (985.52 / 735.55) */
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  margin-top: -100.5px;  /* half of 201 — centers vertically */
+  margin-left: -75px;    /* half of 150 — centers horizontally */
+  width: 150px;
+  height: 201px;
+  animation: splash-stage-shift 2700ms cubic-bezier(0.4, 0, 0.2, 1) forwards;
 }
 
 .splash-logo {
@@ -8485,37 +8488,56 @@ body {
 /* Stage 1 — white version of the primary brand SVG. */
 .splash-logo-white {
   opacity: 0;
-  animation: splash-white 2400ms ease-out forwards;
+  animation: splash-white 2700ms ease-out forwards;
 }
 
 /* Stage 2 — colored primary brand SVG (same viewBox → seamless morph). */
 .splash-logo-primary {
   opacity: 0;
-  animation: splash-primary 2400ms ease-out forwards;
+  animation: splash-primary 2700ms ease-out forwards;
 }
 
 /* Background — lavender for the first half, white for the second. */
 @keyframes splash-bg {
-  0%, 55%   { background: var(--brand-purple); }
-  85%, 100% { background: #ffffff; }
+  0%, 50%   { background: var(--brand-purple); }
+  76%, 100% { background: #ffffff; }
 }
 
 @keyframes splash-white {
   0%        { opacity: 0; transform: scale(1.25); }
-  20%       { opacity: 1; transform: scale(1.02); }
-  30%, 60%  { opacity: 1; transform: scale(1); }
-  82%, 100% { opacity: 0; transform: scale(1); }
+  18%       { opacity: 1; transform: scale(1.02); }
+  27%, 53%  { opacity: 1; transform: scale(1); }
+  73%, 100% { opacity: 0; transform: scale(1); }
 }
 
 @keyframes splash-primary {
-  0%, 60%   { opacity: 0; transform: scale(1); }
-  82%, 100% { opacity: 1; transform: scale(1); }
+  0%, 53%   { opacity: 0; transform: scale(1); }
+  73%, 100% { opacity: 1; transform: scale(1); }
+}
+
+/* Stage shift — hold centered, then glide up + shrink to Login's logo spot. */
+@keyframes splash-stage-shift {
+  0%, 85% {
+    top: 50%;
+    margin-top: -100.5px;
+    margin-left: -75px;
+    width: 150px;
+    height: 201px;
+  }
+  100% {
+    top: 122px;
+    margin-top: 0;
+    margin-left: -48.5px;  /* half of 97 — keeps it horizontally centered */
+    width: 97px;
+    height: 130px;
+  }
 }
 
 @media (prefers-reduced-motion: reduce) {
   .splash-logo-white,
   .splash-logo-primary,
-  .splash-screen-v2 {
+  .splash-screen-v2,
+  .splash-stage {
     animation-duration: 600ms;
   }
 }
