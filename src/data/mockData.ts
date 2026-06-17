@@ -423,18 +423,18 @@ export const brandRegistry: Record<string, BrandRegistryEntry> = {
 // the attached "Category Images" set. Image is the source of truth; emoji kept
 // as a fallback when the PNG fails to load.
 export const categories: Category[] = [
-  { id: 'cooking-oil',   name: 'Cooking Oils & Ghee',        icon: '🛢️',  count: 142, color: '#FEF3C7', image: '/category-images/Cooking Oils & Ghee.png' },
-  { id: 'rice',          name: 'Rice & Rice Products',       icon: '🌾',  count: 87,  color: '#FED7AA', image: '/category-images/Rice & Rice Products.png' },
-  { id: 'flour',         name: 'Atta, Flours & Sooji',       icon: '🥖',  count: 64,  color: '#FDE68A', image: '/category-images/Atta, Flours & Sooji.png' },
-  { id: 'beverages',     name: 'Beverages',                  icon: '🥤',  count: 218, color: '#DBEAFE', image: '/category-images/Beverages.png' },
-  { id: 'personal-care', name: 'Personal Care',              icon: '🧴',  count: 312, color: '#FCE7F3', image: '/category-images/Personal Care.png' },
-  { id: 'cleaning',      name: 'Cleaning & Household',       icon: '🧼',  count: 156, color: '#E0E7FF', image: '/category-images/Cleaning & Household.png' },
-  { id: 'snacks',        name: 'Biscuits, Snacks & Namkeen', icon: '🍪',  count: 245, color: '#FEE2E2', image: '/category-images/Biscuits, Snacks & Namkeen.png' },
-  { id: 'dals',          name: 'Dals & Pulses',              icon: '🫘',  count: 94,  color: '#FED7AA', image: '/category-images/Dals & Pulses.png' },
-  { id: 'spices',        name: 'Sugar & Spices',             icon: '🌶️',  count: 78,  color: '#FECACA', image: '/category-images/Sugar & Spices.png' },
-  { id: 'dry-fruits',    name: 'Dry Fruits',                 icon: '🥜',  count: 56,  color: '#FDE68A', image: '/category-images/Dry Fruits.png' },
-  { id: 'pickles',       name: 'Pickles & Podis',            icon: '🥒',  count: 42,  color: '#FBCFE8', image: '/category-images/Pickles & Podis.png' },
-  { id: 'pooja',         name: 'Pooja Needs',                icon: '🕉️',  count: 38,  color: '#FED7AA', image: '/category-images/Pooja Needs.png' },
+  { id: 'cooking-oil',   name: 'Cooking Oils & Ghee',        icon: '🛢️',  count: 142, color: '#FEF3C7', image: '/wholesaler-category-images/Cooking Oils & Ghee.png' },
+  { id: 'rice',          name: 'Rice & Rice Products',       icon: '🌾',  count: 87,  color: '#FED7AA', image: '/wholesaler-category-images/Rice & Rice Products.png' },
+  { id: 'flour',         name: 'Atta, Flours & Sooji',       icon: '🥖',  count: 64,  color: '#FDE68A', image: '/wholesaler-category-images/Atta, Flours & Sooji.png' },
+  { id: 'beverages',     name: 'Beverages',                  icon: '🥤',  count: 218, color: '#DBEAFE', image: '/wholesaler-category-images/Beverages.png' },
+  { id: 'personal-care', name: 'Personal Care',              icon: '🧴',  count: 312, color: '#FCE7F3', image: '/wholesaler-category-images/Personal Care.png' },
+  { id: 'cleaning',      name: 'Cleaning & Household',       icon: '🧼',  count: 156, color: '#E0E7FF', image: '/wholesaler-category-images/Cleaning & Household.png' },
+  { id: 'snacks',        name: 'Biscuits, Snacks & Namkeen', icon: '🍪',  count: 245, color: '#FEE2E2', image: '/wholesaler-category-images/Biscuits, Snacks & Namkeen.png' },
+  { id: 'dals',          name: 'Dals & Pulses',              icon: '🫘',  count: 94,  color: '#FED7AA', image: '/wholesaler-category-images/Dals & Pulses.png' },
+  { id: 'spices',        name: 'Sugar & Spices',             icon: '🌶️',  count: 78,  color: '#FECACA', image: '/wholesaler-category-images/Sugar & Spices.png' },
+  { id: 'dry-fruits',    name: 'Dry Fruits',                 icon: '🥜',  count: 56,  color: '#FDE68A', image: '/wholesaler-category-images/Dry Fruits.png' },
+  { id: 'pickles',       name: 'Pickles & Podis',            icon: '🥒',  count: 42,  color: '#FBCFE8', image: '/wholesaler-category-images/Pickles & Podis.png' },
+  { id: 'pooja',         name: 'Pooja Needs',                icon: '🕉️',  count: 38,  color: '#FED7AA', image: '/wholesaler-category-images/Pooja Needs.png' },
 ];
 
 // Brands rail (uses registry data) — Phase-one brand-logo PNGs now live in
@@ -1362,25 +1362,25 @@ export const distributorsList = [
 // Wholesalers Groceries categories (from the reference)
 // Wholesalers groceries — full set with the real category photos
 export const wholesalersGroceries = [
-  { id: 'rice',       name: 'Rice & Rice Products', emoji: '🌾', bg: 'linear-gradient(135deg, #FEF3C7 0%, #FDE68A 100%)', image: '/category-images/Rice & Rice Products.png' },
-  { id: 'dals',       name: 'Dals & Pulses',        emoji: '🫘', bg: 'linear-gradient(135deg, #FFEDD5 0%, #FED7AA 100%)', image: '/category-images/Dals & Pulses.png' },
-  { id: 'atta',       name: 'Atta, Flours & Sooji', emoji: '🥖', bg: 'linear-gradient(135deg, #FEE2E2 0%, #FECACA 100%)', image: '/category-images/Atta, Flours & Sooji.png' },
-  { id: 'oils',       name: 'Cooking Oils & Ghee',  emoji: '🛢️', bg: 'linear-gradient(135deg, #FEF9C3 0%, #FDE68A 100%)', image: '/category-images/Cooking Oils & Ghee.png' },
-  { id: 'sugar',      name: 'Sugar & Spices',       emoji: '🌶️', bg: 'linear-gradient(135deg, #FED7AA 0%, #FDBA74 100%)', image: '/category-images/Sugar & Spices.png' },
-  { id: 'pickles',    name: 'Pickles & Podis',      emoji: '🥒', bg: 'linear-gradient(135deg, #FBCFE8 0%, #F9A8D4 100%)', image: '/category-images/Pickles & Podis.png' },
-  { id: 'dry-fruits', name: 'Dry Fruits',           emoji: '🥜', bg: 'linear-gradient(135deg, #FDE68A 0%, #FCD34D 100%)', image: '/category-images/Dry Fruits.png' },
+  { id: 'rice',       name: 'Rice & Rice Products', emoji: '🌾', bg: 'linear-gradient(135deg, #FEF3C7 0%, #FDE68A 100%)', image: '/wholesaler-category-images/Rice & Rice Products.png' },
+  { id: 'dals',       name: 'Dals & Pulses',        emoji: '🫘', bg: 'linear-gradient(135deg, #FFEDD5 0%, #FED7AA 100%)', image: '/wholesaler-category-images/Dals & Pulses.png' },
+  { id: 'atta',       name: 'Atta, Flours & Sooji', emoji: '🥖', bg: 'linear-gradient(135deg, #FEE2E2 0%, #FECACA 100%)', image: '/wholesaler-category-images/Atta, Flours & Sooji.png' },
+  { id: 'oils',       name: 'Cooking Oils & Ghee',  emoji: '🛢️', bg: 'linear-gradient(135deg, #FEF9C3 0%, #FDE68A 100%)', image: '/wholesaler-category-images/Cooking Oils & Ghee.png' },
+  { id: 'sugar',      name: 'Sugar & Spices',       emoji: '🌶️', bg: 'linear-gradient(135deg, #FED7AA 0%, #FDBA74 100%)', image: '/wholesaler-category-images/Sugar & Spices.png' },
+  { id: 'pickles',    name: 'Pickles & Podis',      emoji: '🥒', bg: 'linear-gradient(135deg, #FBCFE8 0%, #F9A8D4 100%)', image: '/wholesaler-category-images/Pickles & Podis.png' },
+  { id: 'dry-fruits', name: 'Dry Fruits',           emoji: '🥜', bg: 'linear-gradient(135deg, #FDE68A 0%, #FCD34D 100%)', image: '/wholesaler-category-images/Dry Fruits.png' },
 ];
 
 // Wholesalers FMCG categories
 export const wholesalersFMCG = [
-  { id: 'oats',       name: 'Oats & Noodles',             emoji: '🍜', bg: 'linear-gradient(135deg, #FEF3C7 0%, #FDE68A 100%)', image: '/category-images/Oats & Noodles.png' },
-  { id: 'personal',   name: 'Personal Care',              emoji: '🧴', bg: 'linear-gradient(135deg, #DBEAFE 0%, #BFDBFE 100%)', image: '/category-images/Personal Care.png' },
-  { id: 'pooja',      name: 'Pooja Needs',                emoji: '🕉️', bg: 'linear-gradient(135deg, #FED7AA 0%, #FDBA74 100%)', image: '/category-images/Pooja Needs.png' },
-  { id: 'ready',      name: 'Ready to cook',              emoji: '🍱', bg: 'linear-gradient(135deg, #FEE2E2 0%, #FECACA 100%)', image: '/category-images/Ready to cook.png' },
-  { id: 'sauces',     name: 'Spreads, Sauces & Ketchups', emoji: '🍅', bg: 'linear-gradient(135deg, #FECACA 0%, #FCA5A5 100%)', image: '/category-images/Spreads, Sauces & Ketchups.png' },
-  { id: 'biscuits',   name: 'Biscuits, Snacks & Namkeen', emoji: '🍪', bg: 'linear-gradient(135deg, #FED7AA 0%, #FDBA74 100%)', image: '/category-images/Biscuits, Snacks & Namkeen.png' },
-  { id: 'cleaning',   name: 'Cleaning & Household',       emoji: '🧼', bg: 'linear-gradient(135deg, #E0E7FF 0%, #C7D2FE 100%)', image: '/category-images/Cleaning & Household.png' },
-  { id: 'stationery', name: 'Stationery',                 emoji: '✏️', bg: 'linear-gradient(135deg, #D1FAE5 0%, #A7F3D0 100%)', image: '/category-images/Stationery.png' },
+  { id: 'oats',       name: 'Oats & Noodles',             emoji: '🍜', bg: 'linear-gradient(135deg, #FEF3C7 0%, #FDE68A 100%)', image: '/wholesaler-category-images/Oats & Noodles.png' },
+  { id: 'personal',   name: 'Personal Care',              emoji: '🧴', bg: 'linear-gradient(135deg, #DBEAFE 0%, #BFDBFE 100%)', image: '/wholesaler-category-images/Personal Care.png' },
+  { id: 'pooja',      name: 'Pooja Needs',                emoji: '🕉️', bg: 'linear-gradient(135deg, #FED7AA 0%, #FDBA74 100%)', image: '/wholesaler-category-images/Pooja Needs.png' },
+  { id: 'ready',      name: 'Ready to cook',              emoji: '🍱', bg: 'linear-gradient(135deg, #FEE2E2 0%, #FECACA 100%)', image: '/wholesaler-category-images/Ready to cook.png' },
+  { id: 'sauces',     name: 'Spreads, Sauces & Ketchups', emoji: '🍅', bg: 'linear-gradient(135deg, #FECACA 0%, #FCA5A5 100%)', image: '/wholesaler-category-images/Spreads, Sauces & Ketchups.png' },
+  { id: 'biscuits',   name: 'Biscuits, Snacks & Namkeen', emoji: '🍪', bg: 'linear-gradient(135deg, #FED7AA 0%, #FDBA74 100%)', image: '/wholesaler-category-images/Biscuits, Snacks & Namkeen.png' },
+  { id: 'cleaning',   name: 'Cleaning & Household',       emoji: '🧼', bg: 'linear-gradient(135deg, #E0E7FF 0%, #C7D2FE 100%)', image: '/wholesaler-category-images/Cleaning & Household.png' },
+  { id: 'stationery', name: 'Stationery',                 emoji: '✏️', bg: 'linear-gradient(135deg, #D1FAE5 0%, #A7F3D0 100%)', image: '/wholesaler-category-images/Stationery.png' },
 ];
 
 // MOV suggestions — realistic add-ons

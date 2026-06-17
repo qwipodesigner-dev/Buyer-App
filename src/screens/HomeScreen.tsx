@@ -293,29 +293,26 @@ function WholesalersView({ onSelectBrand, onOpenWholesalerCategory, onSeeAllBran
           {wholesalerCategories.map((c: any) => (
             <button
               key={c.id}
-              className="wholesale-category-card"
-              style={{ background: c.bg }}
+              className="cat-tile cat-tile-grid"
               onClick={() => onOpenWholesalerCategory?.(c.id)}
             >
-              {c.image ? (
-                <img
-                  className="wholesale-category-img"
-                  src={c.image}
-                  alt={c.name}
-                  onError={(e) => {
-                    const el = e.currentTarget as HTMLImageElement;
-                    el.style.display = 'none';
-                    const parent = el.parentElement!;
-                    parent.innerHTML = `<div class="wholesale-category-emoji">${c.emoji}</div><div class="wholesale-category-name">${c.name}</div>`;
-                  }}
-                />
-              ) : (
-                <>
-                  <div className="wholesale-category-emoji">{c.emoji}</div>
-                  <div className="wholesale-category-name">{c.name}</div>
-                </>
-              )}
-              <div className="wholesale-category-label">{c.name}</div>
+              <div className="cat-tile-card" style={{ background: c.bg }}>
+                {c.image ? (
+                  <img
+                    src={c.image}
+                    alt={c.name}
+                    onError={(e) => {
+                      const el = e.currentTarget as HTMLImageElement;
+                      el.style.display = 'none';
+                      const parent = el.parentElement!;
+                      parent.innerHTML = `<span class="cat-card-fallback">${c.emoji}</span>`;
+                    }}
+                  />
+                ) : (
+                  <span className="cat-card-fallback">{c.emoji}</span>
+                )}
+              </div>
+              <div className="cat-tile-name">{c.name}</div>
             </button>
           ))}
         </div>
