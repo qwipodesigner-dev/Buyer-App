@@ -78,14 +78,13 @@ export default function SellerStorefront({ cartCount, distributor, onBack, onNav
             <button className="section-link">See all</button>
           </div>
           <div className="cat-rail">
-            {categories.map((cat) => {
-              return (
+            {categories.map((cat) => (
               <button
                 key={cat.id}
-                className="cat-card"
+                className="cat-tile cat-tile-rail"
                 onClick={() => onSelectCategory(cat)}
               >
-                <div className="cat-card-img" style={{ background: cat.color }}>
+                <div className="cat-tile-card" style={{ background: cat.color }}>
                   {cat.image ? (
                     <img
                       src={cat.image}
@@ -100,13 +99,9 @@ export default function SellerStorefront({ cartCount, distributor, onBack, onNav
                     <span className="cat-card-fallback">{cat.icon}</span>
                   )}
                 </div>
-                <div className="cat-card-body">
-                  <div className="cat-card-name">{cat.name}</div>
-                  <div className="cat-card-count">{cat.count} items</div>
-                </div>
+                <div className="cat-tile-name">{cat.name}</div>
               </button>
-              );
-            })}
+            ))}
           </div>
         </div>
 

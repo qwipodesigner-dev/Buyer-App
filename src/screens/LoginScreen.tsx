@@ -15,7 +15,7 @@ export default function LoginScreen({ onBack, onSubmit }: any) {
       <div className="auth-brand">
         <img
           className="auth-brand-logo"
-          src="/brand/qwipo-primary.png"
+          src="/brand/qwipo-primary.svg"
           alt="Qwipo"
         />
         <div className="splash-powered">
