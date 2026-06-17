@@ -1,5 +1,5 @@
 import { useEffect, useRef, useState } from 'react';
-import { Icon } from '../components/Icons';
+import { Icon, StatusBar } from '../components/Icons';
 
 export default function OTPScreen({ phone, onBack, onVerify }: any) {
   const [digits, setDigits] = useState<string[]>(['', '', '', '', '', '']);
@@ -35,6 +35,7 @@ export default function OTPScreen({ phone, onBack, onVerify }: any) {
 
   return (
     <div className="auth-screen login-screen">
+      <StatusBar />
       <button className="icon-btn auth-back" onClick={onBack} aria-label="Back">
         <Icon.Back />
       </button>
