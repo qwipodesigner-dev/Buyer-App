@@ -37,7 +37,9 @@ import { filtersDefault } from './screens/ProductListing';
 import { initialCart, categories } from './data/mockData';
 
 export default function App() {
-  const [screen, setScreenRaw] = useState<string>('home');
+  // Always boot into the Splash screen so the full Splash → Login → OTP →
+  // Onboarding → Home flow plays on every fresh load / refresh.
+  const [screen, setScreenRaw] = useState<string>('splash');
   // History stack — every screen change pushes the current screen so goBack
   // always returns to the previous screen rather than a hard-coded target.
   const [history, setHistory] = useState<string[]>([]);
