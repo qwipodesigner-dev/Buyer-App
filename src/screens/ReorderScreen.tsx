@@ -18,33 +18,33 @@ export default function ReorderScreen({ cartCount, onNavigate, onOpenSheet, onOp
     <>
       <StatusBar />
       <div className="screen-body">
-        {/* Top bar */}
-        <div className="top-bar">
-          <div className="top-title">
-            <h1>Reorder</h1>
-            <p>Quick re-buy from your purchase history</p>
+        {/* Sticky cluster: header + pill tabs stay pinned while content scrolls. */}
+        <div className="dl-sticky-top">
+          <div className="top-bar">
+            <div className="top-title">
+              <h1>Reorder</h1>
+              <p>Quick re-buy from your purchase history</p>
+            </div>
+            <button className="icon-btn">
+              <Icon.Search />
+            </button>
           </div>
-          <button className="icon-btn">
-            <Icon.Search />
-          </button>
-        </div>
 
-        {/* Tabs */}
-        <div className="home-tabs">
-          <button
-            className={`home-tab ${tab === 'distributor' ? 'active' : ''}`}
-            onClick={() => setTab('distributor')}
-          >
-            <div className="home-tab-img" style={{ background: '#FEF3C7' }}>📦</div>
-            <span>Distributors</span>
-          </button>
-          <button
-            className={`home-tab ${tab === 'wholesaler' ? 'active' : ''}`}
-            onClick={() => setTab('wholesaler')}
-          >
-            <div className="home-tab-img" style={{ background: '#FED7AA' }}>🏪</div>
-            <span>Wholesalers</span>
-          </button>
+          {/* Pill toggle tabs — Wholesalers / Distributors */}
+          <div className="toggle-tabs">
+            <button
+              className={`toggle-tab ${tab === 'wholesaler' ? 'active' : ''}`}
+              onClick={() => setTab('wholesaler')}
+            >
+              Wholesalers
+            </button>
+            <button
+              className={`toggle-tab ${tab === 'distributor' ? 'active' : ''}`}
+              onClick={() => setTab('distributor')}
+            >
+              Distributors
+            </button>
+          </div>
         </div>
 
         {/* Summary strip */}

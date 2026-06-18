@@ -5579,7 +5579,7 @@ body {
    DISTRIBUTORS LIST PAGE
    ============================================================ */
 .dl-body {
-  padding: 14px 16px 30px;
+  padding: 14px 16px 110px;  /* bottom space so last card clears BottomNav */
   display: flex;
   flex-direction: column;
   gap: 14px;
@@ -5668,6 +5668,14 @@ body {
   align-items: center;
   justify-content: center;
   margin-bottom: 6px;
+  overflow: hidden;
+}
+
+.dl-brand-circle img {
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+  display: block;
 }
 
 .dl-brand-circle span {
@@ -5683,6 +5691,102 @@ body {
   color: var(--neutral);
   text-align: center;
   letter-spacing: -0.01em;
+}
+
+/* "View More / View Less" link under the brand grid. Underlined blue text
+   centered below the brand tiles. Only rendered when total brands > limit. */
+.dl-view-toggle {
+  display: block;
+  margin: 4px auto 0;
+  background: none;
+  border: none;
+  padding: 0 8px 2px;
+  color: #2563eb;
+  font-size: 13px;
+  font-weight: 500;
+  text-decoration: underline;
+  text-underline-offset: 3px;
+  cursor: pointer;
+}
+
+.dl-view-toggle:active {
+  opacity: 0.7;
+}
+
+/* ============================================================
+   TOGGLE TABS — canonical pill-style segmented control.
+   Used wherever a 2- or 3-tab text-only toggle is needed
+   (Authorised Distributors, Global Search, My Orders, Reorder).
+   White container with grey inactive pills and a blue active pill.
+   ============================================================ */
+.toggle-tabs {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  padding: 3px;
+  background: #FFFFFF;
+  border-radius: 10px;
+  margin: 8px 16px;
+}
+
+.toggle-tab {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  padding: 6px 10px;
+  background: #F4F4F4;
+  color: #2781E7;
+  border: none;
+  border-radius: 7px;
+  font-size: 13px;
+  font-weight: 500;
+  line-height: 16px;
+  cursor: pointer;
+  transition: background 0.15s, color 0.15s;
+}
+
+.toggle-tab.active {
+  background: #2781E7;
+  color: #FFFFFF;
+}
+
+/* Dark-mode flip — container becomes the surface and grey pills follow it. */
+[data-theme='dark'] .toggle-tabs { background: var(--surface-1); }
+[data-theme='dark'] .toggle-tab { background: var(--surface-2); }
+[data-theme='dark'] .toggle-tab.active { background: #2781E7; color: #FFFFFF; }
+
+/* Categories tab — 2-col grid of cat tiles inside the list body. */
+.dl-tabpane-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 12px;
+  padding: 14px 16px 110px;  /* extra bottom space so last row clears BottomNav */
+}
+
+/* Brands tab — 4-col brand grid sitting directly on the list body (no card). */
+.dl-body.dl-brand-grid-all {
+  padding: 14px 16px 110px;
+}
+
+/* Sticky header for the Authorised Distributors page: keeps the top-bar and
+   the Categories/Brands/Sellers toggle in view while the content scrolls.
+   Wrapper background matches the page shell (not white) so the toggle-tabs
+   pill keeps its original rounded white card look against a tinted backdrop. */
+.dl-sticky-top {
+  position: sticky;
+  top: 0;
+  z-index: 10;
+  background: var(--shell-bg);
+}
+
+/* The top-bar / search-top-bar nested inside the sticky wrapper do not need
+   their own sticky behaviour — the wrapper handles it. */
+.dl-sticky-top .top-bar,
+.dl-sticky-top .search-top-bar {
+  position: relative;
+  top: auto;
 }
 
 /* ============================================================

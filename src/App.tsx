@@ -353,6 +353,9 @@ export default function App() {
             {screen === 'distributors-list' && (
               <DistributorsListScreen
                 onBack={() => goBack('home')}
+                cartCount={cartCount}
+                onNavigate={handleNavigate}
+                onSelectCategory={handleSelectCategory}
                 onSelectDistributor={(distributor: any) => {
                   setSelectedDistributor(distributor);
                   setScreen('storefront');
