@@ -62,29 +62,32 @@ export default function MyOrdersScreen({ onBack, onOpenDetails }: any) {
     <>
       <StatusBar />
       <div className="screen-body">
-        <div className="top-bar">
-          <button className="icon-btn" onClick={onBack}>
-            <Icon.Back />
-          </button>
-          <div className="top-title">
-            <h1>{t('orders.my_orders')}</h1>
+        {/* Sticky cluster: header + pill tabs stay pinned while orders scroll. */}
+        <div className="dl-sticky-top">
+          <div className="top-bar">
+            <button className="icon-btn" onClick={onBack}>
+              <Icon.Back />
+            </button>
+            <div className="top-title">
+              <h1>{t('orders.my_orders')}</h1>
+            </div>
           </div>
-        </div>
 
-        {/* Pill tabs */}
-        <div className="orders-tabs">
-          <button
-            className={`orders-tab ${tab === 'wholesalers' ? 'on' : ''}`}
-            onClick={() => setTab('wholesalers')}
-          >
-            {t('home.wholesalers')}
-          </button>
-          <button
-            className={`orders-tab ${tab === 'distributors' ? 'on' : ''}`}
-            onClick={() => setTab('distributors')}
-          >
-            {t('home.distributors')}
-          </button>
+          {/* Pill tabs */}
+          <div className="toggle-tabs">
+            <button
+              className={`toggle-tab ${tab === 'wholesalers' ? 'active' : ''}`}
+              onClick={() => setTab('wholesalers')}
+            >
+              {t('home.wholesalers')}
+            </button>
+            <button
+              className={`toggle-tab ${tab === 'distributors' ? 'active' : ''}`}
+              onClick={() => setTab('distributors')}
+            >
+              {t('home.distributors')}
+            </button>
+          </div>
         </div>
 
         <div className="orders-list">

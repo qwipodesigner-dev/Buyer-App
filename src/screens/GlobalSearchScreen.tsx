@@ -28,50 +28,52 @@ export default function GlobalSearchScreen({ onBack, onSelectProduct }: any) {
     <>
       <StatusBar />
       <div className="screen-body">
-        {/* Search top bar */}
-        <div className="search-top-bar">
-          <button className="icon-btn" onClick={onBack} aria-label="Back">
-            <Icon.Back />
-          </button>
-          <div className="search-top-input">
-            <Icon.Search />
-            <input
-              ref={inputRef}
-              value={query}
-              onChange={(e) => setQuery(e.target.value)}
-              placeholder="Search for products, brands, SKUs…"
-            />
-            {query && (
-              <button
-                className="search-clear"
-                onClick={() => setQuery('')}
-                aria-label="Clear"
-              >
-                ✕
-              </button>
-            )}
+        {/* Sticky cluster: search bar + result tabs stay pinned while results scroll. */}
+        <div className="dl-sticky-top">
+          <div className="search-top-bar">
+            <button className="icon-btn" onClick={onBack} aria-label="Back">
+              <Icon.Back />
+            </button>
+            <div className="search-top-input">
+              <Icon.Search />
+              <input
+                ref={inputRef}
+                value={query}
+                onChange={(e) => setQuery(e.target.value)}
+                placeholder="Search for products, brands, SKUs…"
+              />
+              {query && (
+                <button
+                  className="search-clear"
+                  onClick={() => setQuery('')}
+                  aria-label="Clear"
+                >
+                  ✕
+                </button>
+              )}
+            </div>
           </div>
-        </div>
 
-        {/* Tabs are only meaningful once there are results */}
-        {q && (
-          <div className="gs-tabs">
-            <button
-              className={`gs-tab ${tab === 'distributors' ? 'on' : ''}`}
-              onClick={() => setTab('distributors')}
-            >
-              Distributors
-              <span className="gs-tab-count">{matched.length}</span>
-            </button>
-            <button
-              className={`gs-tab ${tab === 'wholesalers' ? 'on' : ''}`}
-              onClick={() => setTab('wholesalers')}
-            >
-              Wholesalers
-              <span className="gs-tab-count">{matched.length}</span>
-            </button>
-          </div>
-        )}
+          {/* Tabs are only meaningful once there are results */}
+          {q && (
+            <div className="toggle-tabs">
+              <button
+                className={`toggle-tab ${tab === 'distributors' ? 'active' : ''}`}
+                onClick={() => setTab('distributors')}
+              >
+                Distributors
+                <span className="gs-tab-count">{matched.length}</span>
+              </button>
+              <button
+                className={`toggle-tab ${tab === 'wholesalers' ? 'active' : ''}`}
+                onClick={() => setTab('wholesalers')}
+              >
+                Wholesalers
+                <span className="gs-tab-count">{matched.length}</span>
+              </button>
+            </div>
+          )}
+        </div>
 
         {/* Quiet hint when no query yet */}
         {!q && (
