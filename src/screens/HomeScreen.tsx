@@ -11,6 +11,7 @@ import {
   wholesalerBanners,
   wholesalerCategories,
   exclusiveOffers,
+  categories,
 } from '../data/mockData';
 
 export default function HomeScreen({
@@ -23,6 +24,7 @@ export default function HomeScreen({
   onSeeAllBrands,
   onOpenWholesalerCategory,
   onOpenAddresses,
+  onSelectCategory,
 }: any) {
   const { t } = useI18n();
   const { isDark } = useTheme();
@@ -36,76 +38,78 @@ export default function HomeScreen({
     <>
       <StatusBar />
       <div className="screen-body">
-        {/* Brand header */}
-        <div className="home-header">
-          <img
-            className="home-brand-logo"
-            src={isDark ? '/brand/qwipo-logo-dark.svg' : '/brand/qwipo-logo.svg'}
-            alt="Qwipo"
-          />
-          <div className="ondc-badge">
+        {/* Sticky header block — brand + address + tabs all on one white surface
+            so the status bar through the tabs reads as one continuous header
+            that stays put while the content below scrolls. */}
+        <div className="home-sticky-top">
+          <div className="home-header">
             <img
-              className={`ondc-logo-img ${isDark ? 'is-dark' : ''}`}
-              src="/brand/digidukaan-logo.svg"
-              alt="Powered by ONDC DigiDukaan"
+              className="home-brand-logo"
+              src={isDark ? '/brand/qwipo-logo-dark.svg' : '/brand/qwipo-logo.svg'}
+              alt="Qwipo"
             />
+            <div className="ondc-badge">
+              <img
+                className={`ondc-logo-img ${isDark ? 'is-dark' : ''}`}
+                src="/brand/digidukaan-logo.svg"
+                alt="Powered by ONDC DigiDukaan"
+              />
+            </div>
+            <div className="home-header-actions">
+              <button className="icon-btn" onClick={onOpenNotifications}>
+                <Icon.Bell />
+                <div className="bell-dot" />
+              </button>
+            </div>
           </div>
-          <div className="home-header-actions">
-            <button className="icon-btn" onClick={onOpenNotifications}>
-              <Icon.Bell />
-              <div className="bell-dot" />
+
+          <div className="location-bar">
+            <button
+              className="location-bar-inner"
+              aria-label="Change delivery address"
+              onClick={onOpenAddresses}
+            >
+              <span className="location-pin"><Icon.MapPin /></span>
+              <span className="location-prefix">{t('common.deliver_to')}</span>
+              <span className="location-value">Lit Box, Rai Durg, Hitech City</span>
+              <Icon.ChevronDown />
             </button>
           </div>
-        </div>
 
-        {/* Delivery address chip — blue tint per reference, taps to Addresses */}
-        <div className="location-bar">
-          <button
-            className="location-bar-inner"
-            aria-label="Change delivery address"
-            onClick={onOpenAddresses}
-          >
-            <span className="location-pin"><Icon.MapPin /></span>
-            <span className="location-prefix">{t('common.deliver_to')}</span>
-            <span className="location-value">Lit Box, Rai Durg, Hitech City</span>
-            <Icon.ChevronDown />
-          </button>
-        </div>
-
-        {/* Tab segmented control — uses the Home Screen Images set */}
-        <div className="home-tabs">
-          <button
-            className={`home-tab ${tab === 'distributors' ? 'active' : ''}`}
-            onClick={() => setTab('distributors')}
-          >
-            <div className="home-tab-img" style={{ background: '#FEF3C7' }}>
-              <img
-                src="/home-category-cards/distributors.png"
-                alt="Distributors"
-                onError={(e) => {
-                  (e.currentTarget as HTMLImageElement).style.display = 'none';
-                  (e.currentTarget as HTMLImageElement).parentElement!.textContent = '📦';
-                }}
-              />
-            </div>
-            <span>{t('home.authorised_distributors')}</span>
-          </button>
-          <button
-            className={`home-tab ${tab === 'wholesalers' ? 'active' : ''}`}
-            onClick={() => setTab('wholesalers')}
-          >
-            <div className="home-tab-img" style={{ background: '#FED7AA' }}>
-              <img
-                src="/home-category-cards/wholesalers.png"
-                alt="Wholesalers"
-                onError={(e) => {
-                  (e.currentTarget as HTMLImageElement).style.display = 'none';
-                  (e.currentTarget as HTMLImageElement).parentElement!.textContent = '🏪';
-                }}
-              />
-            </div>
-            <span>{t('home.wholesalers')}</span>
-          </button>
+          <div className="home-tabs">
+            <button
+              className={`home-tab ${tab === 'distributors' ? 'active' : ''}`}
+              onClick={() => setTab('distributors')}
+            >
+              <div className="home-tab-img" style={{ background: '#FEF3C7' }}>
+                <img
+                  src="/home-category-cards/distributors.png"
+                  alt="Distributors"
+                  onError={(e) => {
+                    (e.currentTarget as HTMLImageElement).style.display = 'none';
+                    (e.currentTarget as HTMLImageElement).parentElement!.textContent = '📦';
+                  }}
+                />
+              </div>
+              <span>{t('home.authorised_distributors')}</span>
+            </button>
+            <button
+              className={`home-tab ${tab === 'wholesalers' ? 'active' : ''}`}
+              onClick={() => setTab('wholesalers')}
+            >
+              <div className="home-tab-img" style={{ background: '#FED7AA' }}>
+                <img
+                  src="/home-category-cards/wholesalers.png"
+                  alt="Wholesalers"
+                  onError={(e) => {
+                    (e.currentTarget as HTMLImageElement).style.display = 'none';
+                    (e.currentTarget as HTMLImageElement).parentElement!.textContent = '🏪';
+                  }}
+                />
+              </div>
+              <span>{t('home.wholesalers')}</span>
+            </button>
+          </div>
         </div>
 
         {tab === 'distributors' ? (
@@ -119,6 +123,7 @@ export default function HomeScreen({
         ) : (
           <WholesalersView
             onSelectBrand={onSelectBrand}
+            onSelectCategory={onSelectCategory}
             onOpenWholesalerCategory={onOpenWholesalerCategory}
             onSeeAllBrands={onSeeAllBrands}
           />
@@ -230,7 +235,7 @@ function DistributorsView({
           </button>
         </div>
         <div className="brand-grid">
-          {brands.map((b) => (
+          {brands.slice(0, 16).map((b) => (
             <button
               key={b.id}
               className="brand-grid-tile"
@@ -264,7 +269,7 @@ function DistributorsView({
   );
 }
 
-function WholesalersView({ onSelectBrand, onOpenWholesalerCategory, onSeeAllBrands }: any) {
+function WholesalersView({ onSelectBrand, onSelectCategory, onOpenWholesalerCategory, onSeeAllBrands }: any) {
   const { t } = useI18n();
   return (
     <>
@@ -341,21 +346,56 @@ function WholesalersView({ onSelectBrand, onOpenWholesalerCategory, onSeeAllBran
         </div>
       </div>
 
-      {/* Top categories */}
-      <div className="section" style={{ paddingBottom: 110 }}>
+      {/* Top categories — single horizontal row of SKU categories */}
+      <div className="section">
         <div className="section-head">
           <div className="section-title">{t('home.top_categories')}</div>
           <button className="section-link" onClick={onSeeAllBrands}>{t('common.see_all')}</button>
         </div>
-        <div className="brand-grid">
-          {brands.slice(0, 6).map((b) => (
+        <div className="rail">
+          {categories.map((c: any) => (
+            <button
+              key={c.id}
+              className="cat-tile cat-tile-rail-sm"
+              onClick={() => onSelectCategory?.(c)}
+            >
+              <div className="cat-tile-card" style={{ background: c.color || '#F3F4F6' }}>
+                {c.image ? (
+                  <img
+                    src={c.image}
+                    alt={c.name}
+                    onError={(e) => {
+                      const el = e.currentTarget as HTMLImageElement;
+                      el.style.display = 'none';
+                      const parent = el.parentElement!;
+                      parent.innerHTML = `<span class="cat-card-fallback">${c.icon}</span>`;
+                    }}
+                  />
+                ) : (
+                  <span className="cat-card-fallback">{c.icon}</span>
+                )}
+              </div>
+              <div className="cat-tile-name">{c.name}</div>
+            </button>
+          ))}
+        </div>
+      </div>
+
+      {/* Top Brands — single horizontal row of brand logos */}
+      <div className="section" style={{ paddingBottom: 110 }}>
+        <div className="section-head">
+          <div className="section-title">{t('home.top_brands') || 'Top Brands'}</div>
+          <button className="section-link" onClick={onSeeAllBrands}>{t('common.see_all')}</button>
+        </div>
+        <div className="brand-rail">
+          {brands.slice(0, 12).map((b: any) => (
             <button
               key={b.id}
-              className="brand-grid-tile"
+              className="brand-rail-tile"
               onClick={() => onSelectBrand(b)}
             >
               <div
-                className="brand-grid-circle"
+                className="brand-rail-circle"
                 style={{ background: b.logo ? '#ffffff' : b.color }}
               >
                 {b.logo ? (
@@ -364,16 +404,16 @@ function WholesalersView({ onSelectBrand, onOpenWholesalerCategory, onSeeAllBran
                     alt={b.name}
                     onError={(e) => {
                       e.currentTarget.style.display = 'none';
-                      e.currentTarget.parentElement.textContent = b.logoText;
-                      e.currentTarget.parentElement.style.color = '#ffffff';
-                      e.currentTarget.parentElement.style.background = b.color;
+                      e.currentTarget.parentElement!.textContent = b.logoText;
+                      e.currentTarget.parentElement!.style.color = '#ffffff';
+                      e.currentTarget.parentElement!.style.background = b.color;
                     }}
                   />
                 ) : (
                   b.logoText
                 )}
               </div>
-              <div className="brand-grid-name">{b.name}</div>
+              <div className="brand-rail-name">{b.name}</div>
             </button>
           ))}
         </div>

@@ -226,6 +226,33 @@ export const wholesalerBanners: WholesalerBanner[] = [
     bg: 'linear-gradient(135deg, #FEF3C7 0%, #FDE68A 100%)',
     emoji: '🍚',
   },
+  {
+    id: 'wb3',
+    tag: 'FRESH STOCK',
+    title: 'Cooking Oils & Ghee',
+    discount: 'BULK PRICES',
+    cta: 'Browse Now',
+    bg: 'linear-gradient(135deg, #FFEDD5 0%, #FED7AA 100%)',
+    emoji: '🛢️',
+  },
+  {
+    id: 'wb4',
+    tag: 'DAILY ESSENTIALS',
+    title: 'Atta, Flours & Sooji',
+    discount: 'SAVE UP TO 25%',
+    cta: 'Order Now',
+    bg: 'linear-gradient(135deg, #FEF9C3 0%, #FDE68A 100%)',
+    emoji: '🥖',
+  },
+  {
+    id: 'wb5',
+    tag: 'BEVERAGE FEST',
+    title: 'Cold Drinks & Juices',
+    discount: 'FLAT 20% OFF',
+    cta: 'Shop Now',
+    bg: 'linear-gradient(135deg, #DBEAFE 0%, #BFDBFE 100%)',
+    emoji: '🥤',
+  },
 ];
 
 export const wholesalerCategories: WholesalerCategory[] = [
