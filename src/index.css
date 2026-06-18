@@ -5765,9 +5765,44 @@ body {
   padding: 14px 16px 110px;  /* extra bottom space so last row clears BottomNav */
 }
 
+/* Match the home "Top categories" name styling — 11px / 500 / centered. */
+.dl-tabpane-grid .cat-tile-name {
+  font-size: 11px;
+  font-weight: 500;
+  text-align: center;
+}
+
 /* Brands tab — 4-col brand grid sitting directly on the list body (no card). */
 .dl-body.dl-brand-grid-all {
   padding: 14px 16px 110px;
+}
+
+/* Brands tab tiles take the home "Top Brands" rail look — circular logo +
+   centred name under it, sharing the same typography (11px / 500). */
+.dl-brand-grid-all .dl-brand-tile {
+  background: transparent;
+  border: none;
+  padding: 6px 4px;
+}
+
+.dl-brand-grid-all .dl-brand-circle {
+  width: 60px;
+  height: 60px;
+  border-radius: 50%;
+  border: 1px solid var(--border-soft);
+  margin-bottom: 8px;
+}
+
+.dl-brand-grid-all .dl-brand-circle img {
+  width: 92%;
+  height: 92%;
+}
+
+.dl-brand-grid-all .dl-brand-name {
+  font-size: 11px;
+  font-weight: 500;
+  color: var(--foreground);
+  line-height: 1.25;
 }
 
 /* Sticky header for the Authorised Distributors page: keeps the top-bar and

@@ -33,19 +33,19 @@ export default function BottomNav({ active, cartCount, onNavigate }: any) {
       </button>
 
       <button
+        className={`nav-item ${active === 'profile' ? 'active' : ''}`}
+        onClick={() => onNavigate('profile')}
+      >
+        <Icon.Profile />
+        <span>{t('nav.account')}</span>
+      </button>
+      <button
         className={`nav-item ${active === 'cart' ? 'active' : ''}`}
         onClick={() => onNavigate('cart')}
       >
         <Icon.Cart />
         {cartCount > 0 && <div className="nav-badge">{cartCount}</div>}
         <span>{t('nav.cart')}</span>
-      </button>
-      <button
-        className={`nav-item ${active === 'profile' ? 'active' : ''}`}
-        onClick={() => onNavigate('profile')}
-      >
-        <Icon.Profile />
-        <span>{t('nav.account')}</span>
       </button>
     </div>
   );

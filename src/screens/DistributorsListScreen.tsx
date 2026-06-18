@@ -22,7 +22,7 @@ export default function DistributorsListScreen({
   cartCount,
   onNavigate,
 }: any) {
-  const [tab, setTab] = useState<TabKey>('sellers');
+  const [tab, setTab] = useState<TabKey>('categories');
 
   // Only ONE distributor card can be expanded at a time — opening another
   // automatically collapses the previous one.
