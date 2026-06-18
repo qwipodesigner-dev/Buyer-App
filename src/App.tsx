@@ -270,6 +270,7 @@ export default function App() {
                 onNavigate={handleNavigate}
                 onSelectDistributor={handleSelectDistributor}
                 onSelectBrand={handleSelectBrand}
+                onSelectCategory={handleSelectCategory}
                 onOpenNotifications={() => setScreen('notifications')}
                 onSeeAllDistributors={() => setScreen('distributors-list')}
                 onSeeAllBrands={() => setScreen('all-brands')}

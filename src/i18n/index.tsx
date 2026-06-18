@@ -48,6 +48,7 @@ const STRINGS: Record<LangCode, Record<string, string>> = {
     'home.categories': 'Categories',
     'home.exclusive_offers': 'Exclusive offers',
     'home.top_categories': 'Top categories',
+    'home.top_brands': 'Top Brands',
     'home.shop_now': 'Shop now',
 
     'nav.home': 'Home',
@@ -121,6 +122,7 @@ const STRINGS: Record<LangCode, Record<string, string>> = {
     'home.categories': 'श्रेणियाँ',
     'home.exclusive_offers': 'विशेष ऑफर',
     'home.top_categories': 'मुख्य श्रेणियाँ',
+    'home.top_brands': 'मुख्य ब्रांड',
     'home.shop_now': 'अभी खरीदें',
 
     'nav.home': 'होम',
@@ -193,6 +195,7 @@ const STRINGS: Record<LangCode, Record<string, string>> = {
     'home.categories': 'వర్గాలు',
     'home.exclusive_offers': 'ప్రత్యేక ఆఫర్‌లు',
     'home.top_categories': 'ముఖ్య వర్గాలు',
+    'home.top_brands': 'ముఖ్య బ్రాండ్‌లు',
     'home.shop_now': 'ఇప్పుడే కొనండి',
 
     'nav.home': 'హోం',
@@ -265,6 +268,7 @@ const STRINGS: Record<LangCode, Record<string, string>> = {
     'home.categories': 'வகைகள்',
     'home.exclusive_offers': 'சிறப்பு சலுகைகள்',
     'home.top_categories': 'முக்கிய வகைகள்',
+    'home.top_brands': 'முக்கிய பிராண்டுகள்',
     'home.shop_now': 'இப்போதே வாங்கு',
 
     'nav.home': 'முகப்பு',
