@@ -30,9 +30,11 @@ export default function HomeScreen({
   const { isDark } = useTheme();
   const [tab, setTab] = useState('distributors');
 
-  const visibleDistributors = distributors.filter((d) =>
-    tab === 'distributors' ? d.isAuthorised : true
-  );
+  // Cap the home rail at 16 distributor cards (the Distributors section).
+  // Beyond that, "See all" routes to the Authorised Distributors list.
+  const visibleDistributors = distributors
+    .filter((d) => (tab === 'distributors' ? d.isAuthorised : true))
+    .slice(0, 16);
 
   return (
     <>
