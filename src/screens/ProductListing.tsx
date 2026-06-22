@@ -1,6 +1,26 @@
 import { useState, useMemo } from 'react';
 import { Icon, StatusBar } from '../components/Icons';
-import { seller, products, brands as allBrands } from '../data/mockData';
+import {
+  seller,
+  products,
+  brands as allBrands,
+  distributorsList,
+} from '../data/mockData';
+
+// Map a product to the distributor that carries its brand. Used to surface
+// the seller name on each product card when we're browsing the brand-pool
+// (cumulative across sellers) listing.
+function sellerForProduct(product: any): string {
+  const target = (product.brand || '').toLowerCase();
+  for (const d of distributorsList) {
+    if (d.brands.some((b: any) =>
+      (b.short || b.name || '').toLowerCase() === target
+    )) {
+      return d.name;
+    }
+  }
+  return seller.name;
+}
 
 const DEFAULT_FILTERS = {
   sort: 'recommended',
@@ -107,9 +127,7 @@ export default function ProductListing({
             </button>
             <div className="top-title">
               <h1>{category?.name || 'Catalog'}</h1>
-              <p>
-                {seller.name} · {filteredProducts.length} products
-              </p>
+              <p>{filteredProducts.length} products</p>
             </div>
             <button className="icon-btn" onClick={onOpenSearch} aria-label="Search">
               <Icon.Search />
@@ -171,6 +189,7 @@ export default function ProductListing({
                     <div className="product-name">
                       {product.name} - {sizeTitle} Packet X {variant.casePcs} Nos
                     </div>
+                    <div className="product-seller">{sellerForProduct(product)}</div>
                     <div className="product-subline">
                       <span>{variant.casePcs} pc/Case</span>
                       <span className="product-case-price">
@@ -271,6 +290,26 @@ export default function ProductListing({
                       <Icon.Plus /> Add
                     </button>
                   )}
+                </div>
+
+                {/* Delivery options — view only here. Buyer picks per-seller
+                    on the cart page. Compact 2-column layout: short day name
+                    on the first line, MOV + fee on the second. */}
+                <div className="product-delivery">
+                  <div className="product-delivery-option">
+                    <div className="product-delivery-day">Tomorrow</div>
+                    <div className="product-delivery-meta">
+                      <span>MOV: <strong>2500</strong></span>
+                      <span className="product-delivery-fee">Free Delivery</span>
+                    </div>
+                  </div>
+                  <div className="product-delivery-option">
+                    <div className="product-delivery-day">Fri</div>
+                    <div className="product-delivery-meta">
+                      <span>MOV: <strong>500</strong></span>
+                      <span className="product-delivery-fee">Free Delivery</span>
+                    </div>
+                  </div>
                 </div>
               </div>
             );

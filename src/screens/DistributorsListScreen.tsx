@@ -18,8 +18,9 @@ export default function DistributorsListScreen({
   onSelectBrand,
   onSelectDistributor,
   onSelectCategory,
+  initialTab,
 }: any) {
-  const [tab, setTab] = useState<TabKey>('categories');
+  const [tab, setTab] = useState<TabKey>((initialTab as TabKey) || 'categories');
   const [query, setQuery] = useState('');
   const q = query.trim().toLowerCase();
 
