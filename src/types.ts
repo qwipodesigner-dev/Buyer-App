@@ -155,6 +155,7 @@ export interface CartSeller {
   mov: number;
   deliveryTime: string;
   sellerOffer: string | null;
+  type?: 'distributor' | 'wholesaler';
   items: CartItem[];
 }
 

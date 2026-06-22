@@ -16,7 +16,6 @@ import OrderSummaryScreen from './screens/OrderSummaryScreen';
 import MyOrdersScreen from './screens/MyOrdersScreen';
 import OrderDetailsScreen from './screens/OrderDetailsScreen';
 import DistributorsListScreen from './screens/DistributorsListScreen';
-import AllBrandsScreen from './screens/AllBrandsScreen';
 import WholesalersCategoriesScreen from './screens/WholesalersCategoriesScreen';
 import GlobalSearchScreen from './screens/GlobalSearchScreen';
 import CategoriesBrandsScreen from './screens/CategoriesBrandsScreen';
@@ -34,7 +33,7 @@ import ProductImageSheet from './components/ProductImageSheet';
 import DiscountsSheet from './components/DiscountsSheet';
 import FiltersSheet from './components/FiltersSheet';
 import { filtersDefault } from './screens/ProductListing';
-import { initialCart, categories } from './data/mockData';
+import { initialCart, categories, distributors } from './data/mockData';
 
 export default function App() {
   // Always boot into the Splash screen so the full Splash → Login → OTP →
@@ -80,6 +79,7 @@ export default function App() {
   const [listingFilters, setListingFilters] = useState<any>(filtersDefault);
   const [authPhone, setAuthPhone] = useState<string>('');
   const [wholesalerCategoryVariant, setWholesalerCategoryVariant] = useState<'groceries' | 'fmcg'>('groceries');
+  const [initialDistributorsTab, setInitialDistributorsTab] = useState<'categories' | 'brands' | 'sellers'>('categories');
   const [activeOrder, setActiveOrder] = useState<any>(null);
   const [cartValidationOpen, setCartValidationOpen] = useState<boolean>(false);
   const [appliedCoupon, setAppliedCoupon] = useState<any>(null);
@@ -274,8 +274,18 @@ export default function App() {
                 onSelectBrand={handleSelectBrand}
                 onSelectCategory={handleSelectCategory}
                 onOpenNotifications={() => setScreen('notifications')}
-                onSeeAllDistributors={() => setScreen('distributors-list')}
-                onSeeAllBrands={() => setScreen('all-brands')}
+                onSeeAllDistributors={() => {
+                  setInitialDistributorsTab('sellers');
+                  setScreen('distributors-list');
+                }}
+                onSeeAllBrands={() => {
+                  setInitialDistributorsTab('brands');
+                  setScreen('distributors-list');
+                }}
+                onSeeAllCategories={() => {
+                  setInitialDistributorsTab('categories');
+                  setScreen('distributors-list');
+                }}
                 onOpenWholesalerCategory={(id: string) => {
                   setWholesalerCategoryVariant(id === 'groceries' ? 'groceries' : 'fmcg');
                   setScreen('wholesaler-categories');
@@ -354,7 +364,12 @@ export default function App() {
             {/* See-all listing screens */}
             {screen === 'distributors-list' && (
               <DistributorsListScreen
-                onBack={() => goBack('home')}
+                initialTab={initialDistributorsTab}
+                onBack={() => {
+                  // Reset the tab seed so the next entry defaults back to Categories.
+                  setInitialDistributorsTab('categories');
+                  goBack('home');
+                }}
                 onSelectCategory={(c: any) => {
                   // Distributors-list → Categories tab → listing.
                   setSelectedCategory({
@@ -402,15 +417,6 @@ export default function App() {
                     });
                     setScreen('listing');
                   }
-                }}
-              />
-            )}
-            {screen === 'all-brands' && (
-              <AllBrandsScreen
-                onBack={() => goBack('home')}
-                onSelectBrand={(brand: any) => {
-                  setSelectedCategory({ id: brand.id, name: brand.name, isBrand: true });
-                  setScreen('listing');
                 }}
               />
             )}
@@ -579,8 +585,26 @@ export default function App() {
                 onBack={() => goBack('listing')}
                 onUpdateItemQty={handleUpdateItemQty}
                 onAddSuggestion={handleAddSuggestion}
-                onContinueShopping={() => setScreen('storefront')}
                 onCheckout={() => setCartValidationOpen(true)}
+                onAddItems={(seller: any) => {
+                  if (seller?.type === 'wholesaler') {
+                    // Wholesalers — go to the wholesaler home (groceries
+                    // categories grid). Default to the groceries variant.
+                    setWholesalerCategoryVariant('groceries');
+                    setScreen('wholesaler-categories');
+                    return;
+                  }
+                  // Distributors — open the matching seller's storefront.
+                  const match = distributors.find(
+                    (d) => d.name.toLowerCase() === (seller?.name || '').toLowerCase()
+                  );
+                  if (match) {
+                    setSelectedDistributor(match);
+                    setScreen('storefront');
+                  } else {
+                    setScreen('home');
+                  }
+                }}
               />
             )}
 
@@ -650,7 +674,6 @@ const SCREEN_GROUPS: { title: string; items: { id: string; label: string }[] }[]
     items: [
       { id: 'home', label: 'Home · Distributors & Wholesalers' },
       { id: 'distributors-list', label: 'All Authorised Distributors' },
-      { id: 'all-brands', label: 'All Brands' },
       { id: 'wholesaler-categories', label: 'Wholesaler · Groceries / FMCG' },
       { id: 'global-search', label: 'Global Search' },
     ],

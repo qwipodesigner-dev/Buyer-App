@@ -1,8 +1,26 @@
+import { useState } from 'react';
 import { Icon, StatusBar } from '../components/Icons';
 import { movSuggestions } from '../data/mockData';
 
-export default function MultiSellerCart({ cart, onBack, onUpdateItemQty, onAddSuggestion, onContinueShopping, onCheckout }: any) {
-  // Compute subtotals per seller
+type DeliveryKind = 'beat' | 'tomorrow';
+
+const DELIVERY_OPTIONS: Record<DeliveryKind, { day: string; mov: number; fee: string }> = {
+  beat: { day: 'Friday (Beat day)', mov: 500, fee: 'Free Delivery' },
+  tomorrow: { day: 'Tomorrow', mov: 2500, fee: 'Free Delivery' },
+};
+
+export default function MultiSellerCart({ cart, onBack, onUpdateItemQty, onAddSuggestion: _onAddSuggestion, onContinueShopping: _onContinueShopping, onCheckout, onAddItems }: any) {
+  // Per-seller delivery selection — defaults to the seller's beat day.
+  const [deliveryBySeller, setDeliveryBySeller] = useState<Record<string, DeliveryKind>>({});
+  const getDelivery = (id: string): DeliveryKind => deliveryBySeller[id] || 'beat';
+
+  // Which seller cards have their "View items" list expanded.
+  const [openItemsBySeller, setOpenItemsBySeller] = useState<Record<string, boolean>>({});
+  const toggleItems = (id: string) =>
+    setOpenItemsBySeller((prev) => ({ ...prev, [id]: !prev[id] }));
+
+  // Compute subtotals per seller. MOV is driven by the chosen delivery
+  // option (Beat = 500, Tomorrow = 2500) rather than the seller's static mov.
   const sellerData = cart.sellers.map((seller) => {
     let subtotal = 0;
     let mrpTotal = 0;
@@ -21,9 +39,11 @@ export default function MultiSellerCart({ cart, onBack, onUpdateItemQty, onAddSu
     });
 
     const final = subtotal - schemeSavings;
-    const movMet = final >= seller.mov;
-    const movProgress = Math.min((final / seller.mov) * 100, 100);
-    const movRemaining = Math.max(seller.mov - final, 0);
+    const delivery = DELIVERY_OPTIONS[getDelivery(seller.id)];
+    const effectiveMov = delivery.mov;
+    const movMet = final >= effectiveMov;
+    const movProgress = Math.min((final / effectiveMov) * 100, 100);
+    const movRemaining = Math.max(effectiveMov - final, 0);
 
     return {
       ...seller,
@@ -31,6 +51,7 @@ export default function MultiSellerCart({ cart, onBack, onUpdateItemQty, onAddSu
       mrpTotal,
       schemeSavings,
       final,
+      mov: effectiveMov,
       movMet,
       movProgress,
       movRemaining,
@@ -75,10 +96,54 @@ export default function MultiSellerCart({ cart, onBack, onUpdateItemQty, onAddSu
             </div>
           )}
 
-          {/* Seller blocks */}
-          {sellerData.map((s) => (
-            <div key={s.id} className="seller-block">
-              {/* Head */}
+          {/* Sellers grouped by type. Distributors render per seller;
+              wholesalers are pooled into a single "Qwipo Wholesalers" block
+              with delivery locked to Tomorrow. */}
+          {(['distributor', 'wholesaler'] as const).map((groupType) => {
+            const raw = sellerData.filter((s: any) => (s.type || 'distributor') === groupType);
+            if (raw.length === 0) return null;
+            const label = groupType === 'distributor' ? 'Distributors' : 'Wholesalers';
+
+            // For wholesalers, fold every seller into one virtual block so
+            // the buyer sees a single Qwipo Wholesalers card.
+            let group: any[];
+            if (groupType === 'wholesaler') {
+              const combined: any = {
+                id: 'qwipo-wholesalers',
+                name: 'Qwipo Wholesalers',
+                logo: 'QW',
+                logoColor: '#7C3AED',
+                deliveryTime: 'Tomorrow',
+                type: 'wholesaler',
+                items: raw.flatMap((s: any) => s.items),
+                subtotal: raw.reduce((n: number, s: any) => n + s.subtotal, 0),
+                mrpTotal: raw.reduce((n: number, s: any) => n + s.mrpTotal, 0),
+                schemeSavings: raw.reduce((n: number, s: any) => n + s.schemeSavings, 0),
+                final: raw.reduce((n: number, s: any) => n + s.final, 0),
+                itemSavings: raw.reduce((n: number, s: any) => n + s.itemSavings, 0),
+                totalSavings: raw.reduce((n: number, s: any) => n + s.totalSavings, 0),
+                mov: DELIVERY_OPTIONS.tomorrow.mov,
+              };
+              combined.movMet = combined.final >= combined.mov;
+              combined.movProgress = Math.min((combined.final / combined.mov) * 100, 100);
+              combined.movRemaining = Math.max(combined.mov - combined.final, 0);
+              group = [combined];
+            } else {
+              group = raw;
+            }
+
+            return (
+              <div key={groupType} className="cart-group">
+                <div className="cart-group-head">
+                  <div className="cart-group-title">{label}</div>
+                  <div className="cart-group-count">
+                    {groupType === 'wholesaler' ? '1 seller' : `${group.length} sellers`}
+                  </div>
+                </div>
+                {group.map((s: any) => (
+                  <div key={s.id} className="seller-block">
+              {/* Head — for wholesaler the delivery is fixed to Tomorrow
+                  and no toggle is shown. */}
               <div className="seller-block-head">
                 <div
                   className="seller-block-logo"
@@ -89,13 +154,44 @@ export default function MultiSellerCart({ cart, onBack, onUpdateItemQty, onAddSu
                 <div className="seller-block-info">
                   <div className="seller-block-name">{s.name}</div>
                   <div className="seller-block-delivery">
-                    <Icon.Truck /> Delivery: {s.deliveryTime}
+                    <Icon.Truck /> Delivery:{' '}
+                    {s.type === 'wholesaler'
+                      ? 'Tomorrow'
+                      : DELIVERY_OPTIONS[getDelivery(s.id)].day}
                   </div>
                 </div>
                 <div className="seller-block-chevron">
                   <Icon.ChevronRight />
                 </div>
               </div>
+
+              {s.type !== 'wholesaler' && (
+                <div className="cart-delivery-toggle" role="radiogroup" aria-label="Delivery option">
+                  {(['beat', 'tomorrow'] as DeliveryKind[]).map((kind) => {
+                    const opt = DELIVERY_OPTIONS[kind];
+                    const active = getDelivery(s.id) === kind;
+                    return (
+                      <button
+                        key={kind}
+                        role="radio"
+                        aria-checked={active}
+                        className={`cart-delivery-option ${active ? 'active' : ''}`}
+                        onClick={() =>
+                          setDeliveryBySeller((prev) => ({ ...prev, [s.id]: kind }))
+                        }
+                      >
+                        <div className="cart-delivery-line">
+                          Delivery by <span className="cart-delivery-day">{opt.day}</span>
+                        </div>
+                        <div className="cart-delivery-meta">
+                          <span>MOV: <strong>{opt.mov}</strong></span>
+                          <span className="cart-delivery-fee">{opt.fee}</span>
+                        </div>
+                      </button>
+                    );
+                  })}
+                </div>
+              )}
 
               {/* MOV bar */}
               <div className="mov-block">
@@ -121,42 +217,61 @@ export default function MultiSellerCart({ cart, onBack, onUpdateItemQty, onAddSu
                 </div>
               </div>
 
-              {/* Items */}
-              <div className="cart-items">
-                {s.items.map((item, idx) => (
-                  <div key={idx} className="cart-item">
-                    <div className="cart-item-img" style={{ background: item.bgColor }}>
-                      {item.image}
-                    </div>
-                    <div className="cart-item-info">
-                      <div className="cart-item-name">{item.name}</div>
-                      <div className="cart-item-variant">{item.variant} · {item.brand}</div>
-                      <div className="cart-item-pricing">
-                        <span className="cart-item-price">₹{item.price}</span>
-                        <span className="cart-item-mrp">₹{item.mrp}</span>
-                        <span style={{ fontSize: 11, color: '#6b7280' }}>per pc</span>
-                      </div>
-                      {item.scheme && (
-                        <div className="cart-item-scheme">
-                          <Icon.Gift /> {item.scheme}
-                        </div>
-                      )}
-                      {item.freeQty > 0 && (
-                        <div className="free-tag">+ {item.freeQty} Free Pc applied</div>
-                      )}
-                    </div>
-                    <div className="cart-item-qty">
-                      <button onClick={() => onUpdateItemQty(s.id, idx, item.quantity - 1)}>
-                        <Icon.Minus />
-                      </button>
-                      <span>{item.quantity}</span>
-                      <button onClick={() => onUpdateItemQty(s.id, idx, item.quantity + 1)}>
-                        <Icon.Plus />
-                      </button>
-                    </div>
-                  </div>
-                ))}
+              {/* Action row — Add items + View items. Items list collapses
+                  by default; the toggle expands it inline. */}
+              <div className="cart-seller-actions">
+                <button
+                  className="cart-action-btn cart-action-add"
+                  onClick={() => onAddItems?.(s)}
+                >
+                  <Icon.Plus /> Add items
+                </button>
+                <button
+                  className="cart-action-btn cart-action-view"
+                  onClick={() => toggleItems(s.id)}
+                  aria-expanded={!!openItemsBySeller[s.id]}
+                >
+                  {openItemsBySeller[s.id] ? 'Hide items' : `View items (${s.items.length})`}
+                </button>
               </div>
+
+              {openItemsBySeller[s.id] && (
+                <div className="cart-items">
+                  {s.items.map((item, idx) => (
+                    <div key={idx} className="cart-item">
+                      <div className="cart-item-img" style={{ background: item.bgColor }}>
+                        {item.image}
+                      </div>
+                      <div className="cart-item-info">
+                        <div className="cart-item-name">{item.name}</div>
+                        <div className="cart-item-variant">{item.variant} · {item.brand}</div>
+                        <div className="cart-item-pricing">
+                          <span className="cart-item-price">₹{item.price}</span>
+                          <span className="cart-item-mrp">₹{item.mrp}</span>
+                          <span style={{ fontSize: 11, color: '#6b7280' }}>per pc</span>
+                        </div>
+                        {item.scheme && (
+                          <div className="cart-item-scheme">
+                            <Icon.Gift /> {item.scheme}
+                          </div>
+                        )}
+                        {item.freeQty > 0 && (
+                          <div className="free-tag">+ {item.freeQty} Free Pc applied</div>
+                        )}
+                      </div>
+                      <div className="cart-item-qty">
+                        <button onClick={() => onUpdateItemQty(s.id, idx, item.quantity - 1)}>
+                          <Icon.Minus />
+                        </button>
+                        <span>{item.quantity}</span>
+                        <button onClick={() => onUpdateItemQty(s.id, idx, item.quantity + 1)}>
+                          <Icon.Plus />
+                        </button>
+                      </div>
+                    </div>
+                  ))}
+                </div>
+              )}
 
               {/* MOV suggestions when MOV is not met */}
               {!s.movMet && (
@@ -175,7 +290,7 @@ export default function MultiSellerCart({ cart, onBack, onUpdateItemQty, onAddSu
                         </div>
                         <div className="suggest-name">{sug.name}</div>
                         <div className="suggest-price">₹{sug.price}/pc</div>
-                        <button className="suggest-add" onClick={() => onAddSuggestion(s.id, sug)}>
+                        <button className="suggest-add" onClick={() => _onAddSuggestion?.(s.id, sug)}>
                           + Add Case
                         </button>
                       </div>
@@ -208,27 +323,10 @@ export default function MultiSellerCart({ cart, onBack, onUpdateItemQty, onAddSu
                 </div>
               </div>
             </div>
-          ))}
-
-          {/* Continue shopping */}
-          <button
-            onClick={onContinueShopping}
-            style={{
-              padding: '14px',
-              background: '#ffffff',
-              border: '1px dashed #d1d5db',
-              borderRadius: '12px',
-              fontSize: '13px',
-              fontWeight: 500,
-              color: '#4b5563',
-              display: 'flex',
-              alignItems: 'center',
-              justifyContent: 'center',
-              gap: '6px',
-            }}
-          >
-            <Icon.Plus /> Continue shopping
-          </button>
+                ))}
+              </div>
+            );
+          })}
         </div>
       </div>
 

@@ -12,6 +12,7 @@ import {
   wholesalerCategories,
   exclusiveOffers,
   categories,
+  distributorCategories,
 } from '../data/mockData';
 
 export default function HomeScreen({
@@ -25,6 +26,7 @@ export default function HomeScreen({
   onOpenWholesalerCategory,
   onOpenAddresses,
   onSelectCategory,
+  onSeeAllCategories,
 }: any) {
   const { t } = useI18n();
   const { isDark } = useTheme();
@@ -119,8 +121,10 @@ export default function HomeScreen({
             visibleDistributors={visibleDistributors}
             onSelectDistributor={onSelectDistributor}
             onSelectBrand={onSelectBrand}
+            onSelectCategory={onSelectCategory}
             onSeeAllDistributors={onSeeAllDistributors}
             onSeeAllBrands={onSeeAllBrands}
+            onSeeAllCategories={onSeeAllCategories}
           />
         ) : (
           <WholesalersView
@@ -141,8 +145,10 @@ function DistributorsView({
   visibleDistributors,
   onSelectDistributor,
   onSelectBrand,
+  onSelectCategory,
   onSeeAllDistributors,
   onSeeAllBrands,
+  onSeeAllCategories,
 }: any) {
   const { t } = useI18n();
   return (
@@ -225,6 +231,32 @@ function DistributorsView({
               </button>
             );
           })}
+        </div>
+      </div>
+
+      {/* Categories — single horizontal row of distributor categories
+          (image card + name). Up to 8 shown; "See all" routes to the
+          Authorised Distributors page with the Categories tab active. */}
+      <div className="section">
+        <div className="section-head">
+          <div className="section-title">{t('home.categories')}</div>
+          <button className="section-link" onClick={onSeeAllCategories}>
+            {t('common.see_all')}
+          </button>
+        </div>
+        <div className="rail">
+          {distributorCategories.slice(0, 8).map((c: any) => (
+            <button
+              key={c.id}
+              className="cat-tile cat-tile-rail-sm"
+              onClick={() => onSelectCategory?.(c)}
+            >
+              <div className="cat-tile-card">
+                <img src={c.image} alt={c.name} />
+              </div>
+              <div className="cat-tile-name">{c.name}</div>
+            </button>
+          ))}
         </div>
       </div>
 

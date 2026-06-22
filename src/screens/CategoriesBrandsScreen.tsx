@@ -8,6 +8,87 @@ import { distributorsList, distributorCategories } from '../data/mockData';
 // — both clickable and routing into the ProductListing. Inline search filters
 // both grids at once.
 
+// Brand → relevant category ids. Maps each brand id to the categories its
+// parent company actually sells in, so the drill-in feels curated to that
+// brand family instead of dumping every category on the user.
+const BRAND_CATEGORIES: Record<string, string[]> = {
+  // Edible oils
+  freedom:        ['oil-ghee', 'cooking-baking', 'foodgrains'],
+  fortune:        ['oil-ghee', 'cooking-baking', 'foodgrains'],
+  'gold-drop':    ['oil-ghee', 'cooking-baking'],
+  'gold-fresh':   ['oil-ghee', 'cooking-baking'],
+  'ruchi-gold':   ['oil-ghee', 'cooking-baking'],
+  ruchi:          ['oil-ghee', 'cooking-baking'],
+  'double-horse': ['oil-ghee', 'masala-seasoning'],
+  'deer-brand':   ['oil-ghee', 'cooking-baking'],
+  sneha:          ['oil-ghee', 'cooking-baking'],
+  gokul:          ['oil-ghee', 'cooking-baking'],
+  'rajini-gold':  ['oil-ghee', 'cooking-baking'],
+  srinivas:       ['oil-ghee', 'cooking-baking'],
+  // Atta & rice
+  aashirvaad:     ['atta-flours-sooji', 'rice-rice-products', 'salt-sugar-jaggery'],
+  'lal-kila':     ['rice-rice-products', 'foodgrains'],
+  // Spices, ready-to-cook & sweets
+  mtr:            ['masala-seasoning', 'ready-cook-eat', 'pickles-chutney', 'indian-sweets'],
+  eastern:        ['masala-seasoning', 'ready-cook-eat', 'pickles-chutney'],
+  'priya-foods':  ['pickles-chutney', 'masala-seasoning', 'sauces-spreads-dips'],
+  'sri-lalitha':  ['pickles-chutney', 'masala-seasoning'],
+  parrys:         ['salt-sugar-jaggery', 'cooking-baking'],
+  madhur:         ['salt-sugar-jaggery'],
+  tata:           ['salt-sugar-jaggery', 'beverages', 'masala-seasoning'],
+  'gd-hing':      ['masala-seasoning', 'pickles-chutney'],
+  mahateja:       ['masala-seasoning'],
+  // Snacks / packaged
+  maggi:          ['pasta-soup-noodles', 'snacks-namkeen'],
+  'parle-g':      ['chocolates-biscuits', 'snacks-namkeen'],
+  // Personal care, beauty, ayurvedic
+  'mysore-sandal': ['beauty-hygiene', 'oral-care'],
+  vicco:           ['oral-care', 'beauty-hygiene'],
+  'black-rose':    ['beauty-hygiene'],
+  dwibhashi:       ['ayurvedic', 'beauty-hygiene'],
+  himalaya:        ['ayurvedic', 'beauty-hygiene', 'baby-care'],
+  cow:             ['pooja-needs', 'ayurvedic'],
+  naturralle:      ['ayurvedic', 'beauty-hygiene'],
+  'nature-guru':   ['ayurvedic', 'beauty-hygiene'],
+  zindha:          ['ayurvedic', 'oral-care'],
+  zuri:            ['beauty-hygiene'],
+  vijaya:          ['pooja-needs', 'ayurvedic'],
+  // Pooja, agarbathi, batteries
+  'ajay-care':     ['pooja-needs'],
+  cycle:           ['pooja-needs'],
+  grb:             ['indian-sweets', 'snacks-namkeen'],
+  'priya-gold':    ['chocolates-biscuits', 'snacks-namkeen'],
+  nippo:           ['kitchen-accessories'],
+  festival:        ['pooja-needs'],
+  netaji:          ['pooja-needs'],
+  roxy:            ['oil-ghee', 'masala-seasoning'],
+  gajraj:          ['pooja-needs'],
+  karani:          ['pooja-needs', 'masala-seasoning'],
+  'malai-magic':   ['dairy-cheese', 'cooking-baking'],
+  'my-choice':     ['snacks-namkeen', 'beverages'],
+  kurnool:         ['rice-rice-products', 'dals-pulses'],
+  'sri-krishna':   ['rice-rice-products', 'foodgrains'],
+  'sri-rk':        ['rice-rice-products', 'foodgrains'],
+  prime:           ['oil-ghee', 'masala-seasoning'],
+  mv:              ['masala-seasoning'],
+  mvr:             ['masala-seasoning'],
+  'ondc-staples':  ['foodgrains', 'rice-rice-products', 'dals-pulses'],
+  'as-brand':      ['ayurvedic'],
+  sjl:             ['ayurvedic'],
+  sms:             ['ayurvedic', 'beauty-hygiene'],
+  ssi:             ['ayurvedic'],
+};
+
+// Categories shown when we don't have a curated mapping for the brand.
+const DEFAULT_CATEGORIES = [
+  'oil-ghee',
+  'rice-rice-products',
+  'atta-flours-sooji',
+  'dals-pulses',
+  'masala-seasoning',
+  'snacks-namkeen',
+];
+
 export default function CategoriesBrandsScreen({
   distributor,
   category,
@@ -21,10 +102,14 @@ export default function CategoriesBrandsScreen({
   const cat = category || { name: 'Brand' };
   const dist = distributor || { name: 'Distributor', shortName: 'Distributor' };
 
-  // Source the brand pool from distributorsList — pool every brand that the
-  // 3 listed distributors carry so the grid feels populated even when the
-  // selected distributor isn't in distributorsList.
-  const allBrands = useMemo(() => {
+  // Pull the seller's actual brand portfolio (the distributor we came from
+  // carries these). Falls back to the cumulative union if we can't match.
+  const sellerBrands = useMemo(() => {
+    const match = distributorsList.find(
+      (d: any) => d.name.toLowerCase() === (dist.name || '').toLowerCase()
+    );
+    if (match) return match.brands;
+    // Fallback: cumulative pool de-duplicated by id
     const seen = new Set<string>();
     const out: any[] = [];
     distributorsList.forEach((d: any) =>
@@ -35,19 +120,25 @@ export default function CategoriesBrandsScreen({
       })
     );
     return out;
-  }, []);
+  }, [dist.name]);
+
+  // Curated categories for the tapped brand.
+  const relevantCatIds = BRAND_CATEGORIES[cat.id] || DEFAULT_CATEGORIES;
+  const relevantCats = distributorCategories.filter((c: any) =>
+    relevantCatIds.includes(c.id)
+  );
 
   const visibleBrands = q
-    ? allBrands.filter((b: any) =>
+    ? sellerBrands.filter((b: any) =>
         (b.short || b.name || '').toLowerCase().includes(q)
       )
-    : allBrands;
+    : sellerBrands;
 
   const visibleCats = q
-    ? distributorCategories.filter((c: any) =>
+    ? relevantCats.filter((c: any) =>
         c.name.toLowerCase().includes(q)
       )
-    : distributorCategories;
+    : relevantCats;
 
   const distShort = (dist.shortName || dist.name || '').replace(/[…\.]+$/g, '');
 
