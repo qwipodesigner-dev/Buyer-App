@@ -179,7 +179,12 @@ function DistributorsView({
                     <li key={i}>{bl}</li>
                   ))}
                 </ul>
-                <button className="hero-banner-cta">{b.cta} →</button>
+                <button
+                  className="hero-banner-cta"
+                  onClick={() => onSeeAllDistributors?.()}
+                >
+                  {b.cta} →
+                </button>
               </div>
               <div className="hero-banner-art">{b.emoji}</div>
             </div>
@@ -316,7 +321,12 @@ function WholesalersView({ onSelectBrand, onSelectCategory, onOpenWholesalerCate
               <div className="hero-banner-tag" style={{ color: '#DC2626' }}>{b.tag}</div>
               <div className="hero-banner-title" style={{ color: '#7C2D12' }}>{b.title}</div>
               <div className="snack-discount">{b.discount}</div>
-              <button className="hero-banner-cta orange-cta">{b.cta} →</button>
+              <button
+                className="hero-banner-cta orange-cta"
+                onClick={() => onOpenWholesalerCategory?.('groceries')}
+              >
+                {b.cta} →
+              </button>
             </div>
             <div className="hero-banner-art">{b.emoji}</div>
           </div>
@@ -361,14 +371,19 @@ function WholesalersView({ onSelectBrand, onSelectCategory, onOpenWholesalerCate
       <div className="section">
         <div className="section-head">
           <div className="section-title">{t('home.exclusive_offers')}</div>
-          <button className="section-link">{t('common.see_all')}</button>
+          <button className="section-link" onClick={onSeeAllBrands}>
+            {t('common.see_all')}
+          </button>
         </div>
         <div className="rail">
-          {exclusiveOffers.map((o) => (
+          {exclusiveOffers.map((o: any) => (
             <button
               key={o.id}
               className="exclusive-card"
               style={{ background: o.bg, color: o.textColor }}
+              onClick={() =>
+                onSelectBrand?.({ id: o.id, name: o.title, isBrand: true })
+              }
             >
               <div className="exclusive-card-discount">{o.discount}</div>
               <div className="exclusive-card-art">{o.emoji}</div>
