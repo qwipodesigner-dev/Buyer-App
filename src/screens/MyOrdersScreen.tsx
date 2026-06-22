@@ -1,5 +1,6 @@
 import { useMemo, useState } from 'react';
 import { Icon, StatusBar } from '../components/Icons';
+import BottomNav from '../components/BottomNav';
 import { SheetHeader, useSheetSwipe } from '../components/SheetBase';
 import { orderHistoryList } from '../data/mockData';
 import { useI18n } from '../i18n';
@@ -40,7 +41,7 @@ function isWholesalerOrder(o: any) {
   return /wholesale|mart/i.test(o.seller);
 }
 
-export default function MyOrdersScreen({ onBack, onOpenDetails }: any) {
+export default function MyOrdersScreen({ onBack, onOpenDetails, cartCount, onNavigate }: any) {
   const { t } = useI18n();
   const [tab, setTab] = useState<TabKind>('distributors');
   const [tracking, setTracking] = useState<any>(null);
@@ -212,6 +213,8 @@ export default function MyOrdersScreen({ onBack, onOpenDetails }: any) {
           }}
         />
       )}
+
+      <BottomNav active="profile" cartCount={cartCount} onNavigate={onNavigate} />
     </>
   );
 }

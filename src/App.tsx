@@ -346,6 +346,8 @@ export default function App() {
             {screen === 'my-orders' && (
               <MyOrdersScreen
                 onBack={() => goBack('profile')}
+                cartCount={cartCount}
+                onNavigate={handleNavigate}
                 onOpenDetails={(o: any) => {
                   setActiveOrder(o);
                   setScreen('order-details');
@@ -564,7 +566,7 @@ export default function App() {
                 cartItems={listingCart}
                 cartTotal={cartTotal}
                 filters={listingFilters}
-                onBack={() => goBack('storefront')}
+                onBack={() => goBack('home')}
                 onOpenSheet={handleOpenSheet}
                 onOpenImageSheet={(product) => setImageSheetProduct(product)}
                 onOpenDiscounts={(product, variant) => setDiscountsSheet({ product, variant })}
