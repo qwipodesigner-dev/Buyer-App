@@ -2625,9 +2625,9 @@ body {
 .crumb {
   font-size: 12px;
   font-weight: 500;
-  color: #2563eb;
+  color: var(--text-muted);
   white-space: nowrap;
-  max-width: 100px;
+  max-width: 110px;
   overflow: hidden;
   text-overflow: ellipsis;
   background: none;
@@ -2635,8 +2635,9 @@ body {
   cursor: pointer;
 }
 
+/* Current page in the trail — blue and not clickable. */
 .crumb.last {
-  color: var(--text-muted);
+  color: #2563eb;
   cursor: default;
 }
 
@@ -3129,28 +3130,33 @@ body {
 
 .product-card {
   background: var(--surface-1);
-  border-radius: 8px;
-  padding: 12px;
-  border: 1px solid var(--border);
+  border-radius: 12px;
+  padding: 14px;
+  border: 1px solid var(--border-soft);
 }
 
+/* Head row — title + subline on the LEFT, large product image on the RIGHT.
+   Mirrors the buyer-app reference design. */
 .product-card-top {
   display: flex;
-  gap: 10px;
+  gap: 14px;
   align-items: flex-start;
 }
 
 .product-img {
-  width: 64px;
-  height: 64px;
-  border-radius: 10px;
+  order: 2;                 /* push image to the right of the flex row */
+  width: 110px;
+  height: 110px;
+  border-radius: 12px;
   flex-shrink: 0;
+  overflow: hidden;
   display: flex;
   align-items: center;
   justify-content: center;
   font-size: 30px;
-  padding: 4px;
-  border: none;
+  padding: 0;               /* image fills the container edge-to-edge */
+  border: 1px solid var(--border-soft);
+  background: var(--surface-1) !important;
   cursor: pointer;
   position: relative;
 }
@@ -3158,7 +3164,7 @@ body {
 .product-img img {
   width: 100%;
   height: 100%;
-  object-fit: contain;
+  object-fit: cover;
 }
 
 .product-img-count {
@@ -3174,8 +3180,12 @@ body {
 }
 
 .product-info {
+  order: 1;                 /* keep text on the LEFT of the head row */
   flex: 1;
   min-width: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
 }
 
 .product-brand-tag {
@@ -3192,12 +3202,32 @@ body {
 }
 
 .product-name {
-  font-size: 13px;
+  font-size: 14px;
   font-weight: 500;
   color: var(--foreground);
   line-height: 1.3;
-  margin-top: 4px;
-  margin-bottom: 0;
+  letter-spacing: -0.01em;
+  margin: 0;
+  /* Clamp at two lines and ellipsise — keeps the card height predictable. */
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+/* Sub line under the name: "16 pc/Case ₹ 2,832" */
+.product-subline {
+  display: flex;
+  align-items: baseline;
+  gap: 8px;
+  font-size: 12px;
+  color: var(--text-muted);
+  font-weight: 500;
+}
+
+.product-subline .product-case-price {
+  color: var(--text-muted);
 }
 
 /* B2B-relevant meta pill — replaces consumer rating */
@@ -3307,11 +3337,11 @@ body {
 
 .variant-pill {
   flex-shrink: 0;
-  padding: 6px 10px;
+  padding: 7px 14px;
   border: 1px solid var(--border);
   border-radius: 8px;
   background: var(--surface-1);
-  font-size: 11px;
+  font-size: 12px;
   font-weight: 500;
   color: var(--text-secondary);
   cursor: pointer;
@@ -3319,43 +3349,65 @@ body {
 }
 
 .variant-pill.active {
-  background: #eff6ff;
+  background: #2563eb;
   border-color: #2563eb;
-  color: #1d4ed8;
+  color: #ffffff;
 }
 
+/* Pricing row — "13% Margin" outlined chip on the LEFT, MRP stacked above
+   the current price on the RIGHT (right-aligned). */
 .product-price-row {
   display: flex;
   align-items: center;
   justify-content: space-between;
-  margin-top: 10px;
-  padding-top: 10px;
-  border-top: 1px dashed var(--border-soft);
+  gap: 12px;
+  margin-top: 12px;
+  padding-top: 12px;
+  border-top: 1px solid var(--border-soft);
 }
 
 .price-block {
   display: flex;
   flex-direction: column;
-  gap: 1px;
+  align-items: flex-end;
+  gap: 2px;
+  text-align: right;
 }
 
 .price-main {
   display: flex;
   align-items: baseline;
-  gap: 5px;
+  gap: 2px;
 }
 
 .price-current {
-  font-size: 16px;
+  font-size: 20px;
   font-weight: 500;
   color: var(--foreground);
   letter-spacing: -0.01em;
+  line-height: 1;
+}
+
+.price-unit {
+  font-size: 13px;
+  font-weight: 500;
+  color: var(--text-muted);
+  margin-left: 1px;
+}
+
+.price-mrp-row {
+  display: flex;
+  align-items: baseline;
+  gap: 4px;
+  font-size: 12px;
+  font-weight: 500;
+  color: #dc2626;
 }
 
 .price-mrp {
-  font-size: 11px;
-  color: var(--text-placeholder);
-  text-decoration: line-through;
+  font-size: 12px;
+  color: #dc2626;
+  text-decoration: none;
   font-weight: 500;
 }
 
@@ -3382,16 +3434,18 @@ body {
   font-weight: 500;
 }
 
+/* Outlined green margin chip — transparent fill, green border + text. */
 .margin-badge {
   display: inline-flex;
   align-items: center;
-  gap: 4px;
-  padding: 4px 8px;
-  background: #d1fae5;
+  gap: 3px;
+  padding: 4px 10px;
+  background: transparent;
+  border: 1px solid #10b981;
   border-radius: 6px;
   font-size: 11px;
   font-weight: 500;
-  color: #065f46;
+  color: #059669;
 }
 
 .scheme-banner {
@@ -3427,10 +3481,11 @@ body {
 
 .product-actions {
   display: flex;
-  gap: 8px;
-  margin-top: 10px;
-  padding-top: 10px;
-  border-top: 1px dashed var(--border-soft);
+  justify-content: space-between;   /* discount left, add right, gap in between */
+  gap: 12px;
+  margin-top: 12px;
+  padding-top: 12px;
+  border-top: 1px solid var(--border-soft);
   align-items: center;
 }
 
@@ -3499,11 +3554,14 @@ body {
   height: 14px;
 }
 
-/* Compact variants used in the listing — slimmer + smaller text */
+/* Compact variants used in the listing — sized to content so the row reads
+   as two pills (left Discounts, right Add) instead of full-width split. */
 .add-btn.compact {
-  flex: 1;
+  flex: 0 0 auto;
   height: 34px;
+  padding: 0 14px;
   font-size: 12px;
+  font-weight: 500;
   border-radius: 8px;
   gap: 4px;
 }
@@ -3519,10 +3577,11 @@ body {
   cursor: not-allowed;
 }
 
-/* Filled green Discounts CTA — small + bold matching the reference */
+/* Filled green Discounts CTA — sized to content. */
 .discounts-btn-filled {
-  flex: 1;
+  flex: 0 0 auto;
   height: 34px;
+  padding: 0 14px;
   background: #10b981;
   color: #ffffff;
   border: none;
@@ -3548,7 +3607,7 @@ body {
 
 /* Compact qty controller used in the listing card */
 .qty-control.compact {
-  flex: 1;
+  flex: 0 0 auto;
   height: 34px;
   border-radius: 8px;
 }
@@ -5713,6 +5772,52 @@ body {
   opacity: 0.7;
 }
 
+/* Page-level search input on DistributorsList + CategoriesBrandsScreen. */
+.dl-search {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin: 6px 16px 10px;
+  padding: 0 12px;
+  background: var(--surface-1);
+  border: 1px solid var(--border-soft);
+  border-radius: 10px;
+  height: 38px;
+}
+
+.dl-search-icon {
+  display: inline-flex;
+  align-items: center;
+  color: var(--text-muted);
+}
+
+.dl-search-icon svg {
+  width: 16px;
+  height: 16px;
+}
+
+.dl-search-input {
+  flex: 1;
+  border: none;
+  outline: none;
+  background: transparent;
+  font-size: 13px;
+  color: var(--foreground);
+  font-weight: 500;
+}
+
+.dl-search-input::placeholder {
+  color: var(--text-placeholder);
+  font-weight: 500;
+}
+
+.dl-empty {
+  padding: 36px 16px;
+  text-align: center;
+  font-size: 13px;
+  color: var(--text-muted);
+}
+
 /* ============================================================
    TOGGLE TABS — canonical pill-style segmented control.
    Used wherever a 2- or 3-tab text-only toggle is needed
@@ -6476,6 +6581,58 @@ body {
   font-weight: 600;
   color: var(--foreground);
   margin-bottom: 2px;
+}
+
+/* Brand tiles inside CategoriesBrandsScreen — 4-col grid of round logo
+   cards with the brand name underneath. Same look as home Top Brands. */
+.cb-brands-grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 16px 12px;
+}
+
+.cb-brands-tile {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  background: none;
+  border: none;
+  padding: 0;
+  cursor: pointer;
+}
+
+.cb-brands-tile:active {
+  transform: scale(0.96);
+}
+
+.cb-brands-circle {
+  width: 64px;
+  height: 64px;
+  border-radius: 50%;
+  border: 1px solid var(--border-soft);
+  background: var(--surface-1);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
+  margin-bottom: 8px;
+  font-size: 13px;
+  font-weight: 500;
+  color: var(--foreground);
+}
+
+.cb-brands-circle img {
+  width: 92%;
+  height: 92%;
+  object-fit: contain;
+}
+
+.cb-brands-name {
+  font-size: 11px;
+  font-weight: 500;
+  color: var(--foreground);
+  line-height: 1.25;
+  text-align: center;
 }
 
 .cb-brand-tile-skus {

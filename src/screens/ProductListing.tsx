@@ -35,6 +35,7 @@ export default function ProductListing({
   onGoToCart,
   onUpdateQty,
   onOpenSearch,
+  onNavigateBreadcrumb,
 }: any) {
   const [selectedVariant, setSelectedVariant] = useState<any>({});
 
@@ -97,37 +98,54 @@ export default function ProductListing({
     <>
       <StatusBar />
       <div className="screen-body">
-        {/* Top bar */}
-        <div className="top-bar">
-          <button className="icon-btn" onClick={onBack}>
-            <Icon.Back />
-          </button>
-          <div className="top-title">
-            <h1>{category?.name || 'Catalog'}</h1>
-            <p>
-              {seller.name} · {filteredProducts.length} products
-            </p>
+        {/* Sticky cluster: top-bar + breadcrumb stay pinned while the product
+            list scrolls beneath. */}
+        <div className="dl-sticky-top">
+          <div className="top-bar">
+            <button className="icon-btn" onClick={onBack}>
+              <Icon.Back />
+            </button>
+            <div className="top-title">
+              <h1>{category?.name || 'Catalog'}</h1>
+              <p>
+                {seller.name} · {filteredProducts.length} products
+              </p>
+            </div>
+            <button className="icon-btn" onClick={onOpenSearch} aria-label="Search">
+              <Icon.Search />
+            </button>
+            <button
+              className="icon-btn filter-trigger"
+              onClick={onOpenFilters}
+              aria-label="Open filters"
+            >
+              <Icon.Sliders />
+              {activeCount > 0 && <span className="filter-trigger-badge">{activeCount}</span>}
+            </button>
           </div>
-          <button className="icon-btn" onClick={onOpenSearch} aria-label="Search">
-            <Icon.Search />
-          </button>
-          <button
-            className="icon-btn filter-trigger"
-            onClick={onOpenFilters}
-            aria-label="Open filters"
-          >
-            <Icon.Sliders />
-            {activeCount > 0 && <span className="filter-trigger-badge">{activeCount}</span>}
-          </button>
-        </div>
 
-        {/* Breadcrumb */}
-        <div className="breadcrumb">
-          <button className="crumb" onClick={onBack}>
-            Distributor
-          </button>
-          <span className="crumb-sep">›</span>
-          <span className="crumb last">{category?.name || 'Catalog'}</span>
+          {Array.isArray(category?.breadcrumb) && category.breadcrumb.length > 0 && (
+            <div className="breadcrumb">
+              {category.breadcrumb.map((b: any, i: number) => {
+                const isLast = i === category.breadcrumb.length - 1;
+                return (
+                  <span key={`${b.label}-${i}`} style={{ display: 'inline-flex', alignItems: 'center', gap: 6 }}>
+                    {isLast ? (
+                      <span className="crumb last">{b.label}</span>
+                    ) : (
+                      <button
+                        className="crumb"
+                        onClick={() => onNavigateBreadcrumb?.(b.goTo)}
+                      >
+                        {b.label}
+                      </button>
+                    )}
+                    {!isLast && <span className="crumb-sep">›</span>}
+                  </span>
+                );
+              })}
+            </div>
+          )}
         </div>
 
         {/* Product list */}
@@ -138,12 +156,30 @@ export default function ProductListing({
             const variant = product.variants.find((v) => v.id === activeVarId);
             const cartQty = getCartQty(product.id, variant.id);
 
+            // Strip packaging suffix (Pouch / Jar / Tin / Box / Bottle / etc.)
+            // from the variant size so the pill and the title show just the
+            // quantity ("1 Ltr" / "500 ml") until the buyer asks otherwise.
+            const stripPack = (s: string) =>
+              s.replace(/\s+(Pouch|Jar|Tin|Box|Packet|Bottle|Sachet|Carton|Bag|Tube)s?$/i, '');
+            const sizeClean = stripPack(variant.size);
+            const sizeTitle = sizeClean.replace(/\b\w/g, (c) => c.toUpperCase());
+
             return (
               <div key={product.id} className="product-card">
                 <div className="product-card-top">
+                  <div className="product-info">
+                    <div className="product-name">
+                      {product.name} - {sizeTitle} Packet X {variant.casePcs} Nos
+                    </div>
+                    <div className="product-subline">
+                      <span>{variant.casePcs} pc/Case</span>
+                      <span className="product-case-price">
+                        ₹ {variant.casePrice.toLocaleString('en-IN')}
+                      </span>
+                    </div>
+                  </div>
                   <button
                     className="product-img"
-                    style={{ background: product.bgColor }}
                     onClick={() => onOpenImageSheet(product)}
                     aria-label={`View images for ${product.name}`}
                   >
@@ -165,16 +201,6 @@ export default function ProductListing({
                       </div>
                     )}
                   </button>
-                  <div className="product-info">
-                    <div className="product-meta-row">
-                      <span className="product-brand-tag">{product.brand}</span>
-                      <span className={`stock-chip stock-${variant.stock}`}>
-                        <span className="stock-dot"></span>
-                        {stockLabel[variant.stock]}
-                      </span>
-                    </div>
-                    <div className="product-name">{product.name}</div>
-                  </div>
                 </div>
 
                 {/* Variants */}
@@ -190,23 +216,25 @@ export default function ProductListing({
                         })
                       }
                     >
-                      {v.size}
+                      {stripPack(v.size)}
                     </button>
                   ))}
                 </div>
 
-                {/* Pricing */}
+                {/* Pricing — outlined margin chip left, MRP + price stacked right */}
                 <div className="product-price-row">
+                  <div className="margin-badge">{variant.margin}% Margin</div>
                   <div className="price-block">
-                    <div className="price-main">
-                      <span className="price-current">₹{variant.sellingPrice}</span>
-                      <span className="price-mrp">₹{variant.mrp}</span>
+                    <div className="price-mrp-row">
+                      MRP <span className="price-mrp">₹ {variant.mrp}</span>
                     </div>
-                    <div className="price-meta">
-                      per pc · Case ₹{variant.casePrice.toLocaleString('en-IN')}
+                    <div className="price-main">
+                      <span className="price-current">
+                        ₹ {variant.sellingPrice}
+                      </span>
+                      <span className="price-unit">/pc</span>
                     </div>
                   </div>
-                  <div className="margin-badge">{variant.margin}% Margin</div>
                 </div>
 
                 {/* Actions — compact Discounts + Add */}

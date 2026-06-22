@@ -355,24 +355,53 @@ export default function App() {
             {screen === 'distributors-list' && (
               <DistributorsListScreen
                 onBack={() => goBack('home')}
-                cartCount={cartCount}
-                onNavigate={handleNavigate}
-                onSelectCategory={handleSelectCategory}
+                onSelectCategory={(c: any) => {
+                  // Distributors-list → Categories tab → listing.
+                  setSelectedCategory({
+                    ...c,
+                    breadcrumb: [
+                      { label: 'Distributors', goTo: 'home' },
+                      { label: 'Categories', goTo: 'distributors-list' },
+                      { label: c.name },
+                    ],
+                  });
+                  setScreen('listing');
+                }}
                 onSelectDistributor={(distributor: any) => {
                   setSelectedDistributor(distributor);
                   setScreen('storefront');
                 }}
                 onSelectBrand={(brand: any, distributor: any) => {
-                  // Brand tap from distributors list → Companies/Brands/Categories drill-in
-                  if (distributor) setSelectedDistributor(distributor);
-                  setSelectedCategory({
-                    id: brand.id,
-                    name: brand.short || brand.name,
-                    isBrand: true,
-                    color: brand.bg,
-                    icon: brand.initials,
-                  });
-                  setScreen('categories-brands');
+                  if (distributor) {
+                    // Sellers-tab tap: keep distributor context + drill into
+                    // the Companies/Brands/Categories page.
+                    setSelectedDistributor(distributor);
+                    setSelectedCategory({
+                      id: brand.id,
+                      name: brand.short || brand.name,
+                      isBrand: true,
+                      color: brand.bg,
+                      icon: brand.initials,
+                    });
+                    setScreen('categories-brands');
+                  } else {
+                    // Brands-tab tap: pool products across every seller and
+                    // go straight to the product listing with a 3-level trail.
+                    setSelectedDistributor(null);
+                    setSelectedCategory({
+                      id: brand.id,
+                      name: brand.short || brand.name,
+                      isBrand: true,
+                      color: brand.bg,
+                      icon: brand.initials,
+                      breadcrumb: [
+                        { label: 'Distributors', goTo: 'home' },
+                        { label: 'Brands', goTo: 'distributors-list' },
+                        { label: brand.short || brand.name },
+                      ],
+                    });
+                    setScreen('listing');
+                  }
                 }}
               />
             )}
@@ -408,13 +437,38 @@ export default function App() {
               <CategoriesBrandsScreen
                 distributor={selectedDistributor}
                 category={selectedCategory}
-                onBack={() => goBack('storefront')}
+                onBack={() => goBack('distributors-list')}
                 onSelectBrand={(brand: any) => {
-                  setSelectedCategory({ id: brand.id, name: brand.name, isBrand: true });
+                  const sellerLabel =
+                    (selectedDistributor?.shortName || selectedDistributor?.name || 'Seller')
+                      .replace(/[…\.]+$/g, '');
+                  setSelectedCategory({
+                    id: brand.id,
+                    name: brand.name,
+                    isBrand: true,
+                    breadcrumb: [
+                      { label: 'Distributors', goTo: 'home' },
+                      { label: sellerLabel, goTo: 'categories-brands' },
+                      { label: brand.name },
+                    ],
+                  });
+                  setScreen('listing');
+                }}
+                onSelectCategory={(c: any) => {
+                  const sellerLabel =
+                    (selectedDistributor?.shortName || selectedDistributor?.name || 'Seller')
+                      .replace(/[…\.]+$/g, '');
+                  setSelectedCategory({
+                    ...c,
+                    breadcrumb: [
+                      { label: 'Distributors', goTo: 'home' },
+                      { label: sellerLabel, goTo: 'categories-brands' },
+                      { label: c.name },
+                    ],
+                  });
                   setScreen('listing');
                 }}
                 onSelectProduct={handleSelectProduct}
-                onOpenSearch={() => setScreen('global-search')}
               />
             )}
             {screen === 'wholesaler-products' && (
@@ -512,6 +566,11 @@ export default function App() {
                 onGoToCart={() => setScreen('cart')}
                 onUpdateQty={handleUpdateListingQty}
                 onOpenSearch={() => setScreen('global-search')}
+                onNavigateBreadcrumb={(target?: string) => {
+                  // First-segment "Distributors" → home; middle segments are
+                  // explicit screen targets stored in the breadcrumb item.
+                  if (target) setScreen(target);
+                }}
               />
             )}
             {screen === 'cart' && (
