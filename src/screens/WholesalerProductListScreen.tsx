@@ -69,15 +69,6 @@ export default function WholesalerProductListScreen({
           </button>
         </div>
 
-        {/* Breadcrumb */}
-        <div className="breadcrumb">
-          <button className="crumb" onClick={onBack}>
-            Wholesalers
-          </button>
-          <span className="crumb-sep">›</span>
-          <span className="crumb last">{cat.name}</span>
-        </div>
-
         {/* Product list — distributor card pattern */}
         <div className="product-list">
           {list.map((product) => {
@@ -90,12 +81,29 @@ export default function WholesalerProductListScreen({
             const isBest = activePrice.price === bestPrice;
             const cartQty = getCartQty(product.id, variant.id);
 
+            // Drop packaging descriptor — show only the quantity in the title
+            // and the variant pills until product packaging UI returns.
+            const stripPack = (s: string) =>
+              s.replace(/\s+(Pouch|Jar|Tin|Box|Packet|Bottle|Sachet|Carton|Bag|Tube)s?$/i, '');
+            const sizeClean = stripPack(variant.size);
+            const sizeTitle = sizeClean.replace(/\b\w/g, (c) => c.toUpperCase());
+
             return (
               <div key={product.id} className="product-card">
                 <div className="product-card-top">
+                  <div className="product-info">
+                    <div className="product-name">
+                      {product.name} - {sizeTitle} Packet X {variant.casePcs} Nos
+                    </div>
+                    <div className="product-subline">
+                      <span>{variant.casePcs} pc/Case</span>
+                      <span className="product-case-price">
+                        ₹ {variant.casePrice.toLocaleString('en-IN')}
+                      </span>
+                    </div>
+                  </div>
                   <button
                     className="product-img"
-                    style={{ background: product.bgColor }}
                     onClick={() => onOpenImageSheet?.(product)}
                     aria-label={`View images for ${product.name}`}
                   >
@@ -105,16 +113,6 @@ export default function WholesalerProductListScreen({
                       <span style={{ fontSize: 30 }}>{product.image}</span>
                     )}
                   </button>
-                  <div className="product-info">
-                    <div className="product-meta-row">
-                      <span className="product-brand-tag">{product.brand}</span>
-                      <span className={`stock-chip stock-${variant.stock}`}>
-                        <span className="stock-dot"></span>
-                        {stockLabel[variant.stock]}
-                      </span>
-                    </div>
-                    <div className="product-name">{product.name}</div>
-                  </div>
                 </div>
 
                 {/* Variants (weight) */}
@@ -130,7 +128,7 @@ export default function WholesalerProductListScreen({
                         })
                       }
                     >
-                      {v.size}
+                      {stripPack(v.size)}
                     </button>
                   ))}
                 </div>
@@ -160,19 +158,18 @@ export default function WholesalerProductListScreen({
                   })}
                 </div>
 
-                {/* Pricing — same shape as distributor card */}
+                {/* Pricing — outlined margin chip left, MRP + price stacked right */}
                 <div className="product-price-row">
+                  <div className="margin-badge">{variant.margin}% Margin</div>
                   <div className="price-block">
-                    <div className="price-main">
-                      <span className="price-current">₹{activePrice.price}</span>
-                      <span className="price-mrp">₹{variant.mrp}</span>
-                      {isBest && <span className="best-tag">BEST PRICE</span>}
+                    <div className="price-mrp-row">
+                      MRP <span className="price-mrp">₹ {variant.mrp}</span>
                     </div>
-                    <div className="price-meta">
-                      per pc · {activePrice.seller.name}
+                    <div className="price-main">
+                      <span className="price-current">₹ {activePrice.price}</span>
+                      <span className="price-unit">/pc</span>
                     </div>
                   </div>
-                  <div className="margin-badge">{variant.margin}% Margin</div>
                 </div>
 
                 {/* Actions — Discounts + Add, exactly like distributor */}

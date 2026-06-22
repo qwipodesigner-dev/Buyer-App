@@ -1,6 +1,5 @@
 import { useMemo, useState } from 'react';
 import { Icon, StatusBar } from '../components/Icons';
-import BottomNav from '../components/BottomNav';
 import {
   distributorsList,
   distributors,
@@ -19,10 +18,10 @@ export default function DistributorsListScreen({
   onSelectBrand,
   onSelectDistributor,
   onSelectCategory,
-  cartCount,
-  onNavigate,
 }: any) {
   const [tab, setTab] = useState<TabKey>('categories');
+  const [query, setQuery] = useState('');
+  const q = query.trim().toLowerCase();
 
   // Only ONE distributor card can be expanded at a time — opening another
   // automatically collapses the previous one.
@@ -49,11 +48,31 @@ export default function DistributorsListScreen({
     return out;
   }, []);
 
+  // Page-level search filters whichever tab is active.
+  const filteredCategories = q
+    ? distributorCategories.filter((c: any) => c.name.toLowerCase().includes(q))
+    : distributorCategories;
+  const filteredBrands = q
+    ? allBrands.filter((b: any) => (b.short || b.name || '').toLowerCase().includes(q))
+    : allBrands;
+  const filteredSellers = q
+    ? distributorsList.filter((d: any) =>
+        d.name.toLowerCase().includes(q) ||
+        d.brands.some((b: any) => (b.short || b.name || '').toLowerCase().includes(q))
+      )
+    : distributorsList;
+
+  const placeholderByTab: Record<TabKey, string> = {
+    categories: 'Search categories',
+    brands: 'Search brands',
+    sellers: 'Search sellers or brands',
+  };
+
   return (
     <>
       <StatusBar />
       <div className="screen-body">
-        {/* Sticky cluster: header + tabs stay pinned while content scrolls. */}
+        {/* Sticky cluster: header + tabs + page-level search stay pinned. */}
         <div className="dl-sticky-top">
           <div className="top-bar">
             <button className="icon-btn" onClick={onBack}>
@@ -62,9 +81,6 @@ export default function DistributorsListScreen({
             <div className="top-title">
               <h1>Authorised Distributors</h1>
             </div>
-            <button className="icon-btn">
-              <Icon.Search />
-            </button>
           </div>
 
           {/* Three-tab segmented control */}
@@ -79,11 +95,26 @@ export default function DistributorsListScreen({
               </button>
             ))}
           </div>
+
+          {/* Page-level search — filters whichever tab is active. */}
+          <div className="dl-search">
+            <span className="dl-search-icon"><Icon.Search /></span>
+            <input
+              className="dl-search-input"
+              type="text"
+              value={query}
+              onChange={(e) => setQuery(e.target.value)}
+              placeholder={placeholderByTab[tab]}
+            />
+          </div>
         </div>
 
         {tab === 'sellers' && (
           <div className="dl-body">
-            {distributorsList.map((d: any) => {
+            {filteredSellers.length === 0 && (
+              <div className="dl-empty">No sellers match "{query}".</div>
+            )}
+            {filteredSellers.map((d: any) => {
               const fullDistributor = findDistributor(d.name) || {
                 id: d.id,
                 name: d.name,
@@ -155,54 +186,60 @@ export default function DistributorsListScreen({
 
         {tab === 'categories' && (
           <div className="dl-body dl-tabpane-grid">
-            {distributorCategories.map((c: any) => (
-              <button
-                key={c.id}
-                className="cat-tile cat-tile-grid"
-                onClick={() => onSelectCategory?.(c)}
-              >
-                <div className="cat-tile-card">
-                  <img src={c.image} alt={c.name} />
-                </div>
-                <div className="cat-tile-name">{c.name}</div>
-              </button>
-            ))}
+            {filteredCategories.length === 0 ? (
+              <div className="dl-empty">No categories match "{query}".</div>
+            ) : (
+              filteredCategories.map((c: any) => (
+                <button
+                  key={c.id}
+                  className="cat-tile cat-tile-grid"
+                  onClick={() => onSelectCategory?.(c)}
+                >
+                  <div className="cat-tile-card">
+                    <img src={c.image} alt={c.name} />
+                  </div>
+                  <div className="cat-tile-name">{c.name}</div>
+                </button>
+              ))
+            )}
           </div>
         )}
 
         {tab === 'brands' && (
           <div className="dl-body dl-brand-grid dl-brand-grid-all">
-            {allBrands.map((b: any) => (
-              <button
-                key={b.id}
-                className="dl-brand-tile"
-                onClick={() => onSelectBrand?.(b)}
-              >
-                <div className="dl-brand-circle" style={{ background: b.logo ? '#ffffff' : b.bg }}>
-                  {b.logo ? (
-                    <img
-                      src={b.logo}
-                      alt={b.short || b.name}
-                      onError={(e) => {
-                        const img = e.currentTarget as HTMLImageElement;
-                        img.style.display = 'none';
-                        const parent = img.parentElement!;
-                        parent.style.background = b.bg;
-                        parent.innerHTML = `<span>${b.initials}</span>`;
-                      }}
-                    />
-                  ) : (
-                    <span>{b.initials}</span>
-                  )}
-                </div>
-                <div className="dl-brand-name">{b.short || b.name}</div>
-              </button>
-            ))}
+            {filteredBrands.length === 0 ? (
+              <div className="dl-empty">No brands match "{query}".</div>
+            ) : (
+              filteredBrands.map((b: any) => (
+                <button
+                  key={b.id}
+                  className="dl-brand-tile"
+                  onClick={() => onSelectBrand?.(b)}
+                >
+                  <div className="dl-brand-circle" style={{ background: b.logo ? '#ffffff' : b.bg }}>
+                    {b.logo ? (
+                      <img
+                        src={b.logo}
+                        alt={b.short || b.name}
+                        onError={(e) => {
+                          const img = e.currentTarget as HTMLImageElement;
+                          img.style.display = 'none';
+                          const parent = img.parentElement!;
+                          parent.style.background = b.bg;
+                          parent.innerHTML = `<span>${b.initials}</span>`;
+                        }}
+                      />
+                    ) : (
+                      <span>{b.initials}</span>
+                    )}
+                  </div>
+                  <div className="dl-brand-name">{b.short || b.name}</div>
+                </button>
+              ))
+            )}
           </div>
         )}
       </div>
-
-      <BottomNav active="" cartCount={cartCount} onNavigate={onNavigate} />
     </>
   );
 }

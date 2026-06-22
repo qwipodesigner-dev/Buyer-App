@@ -49,7 +49,7 @@ export default function ProductImageSheet({ product, onClose, onAddClick }: any)
             style={{
               width: '100%',
               aspectRatio: '1',
-              background: product.bgColor,
+              background: '#ffffff',
               display: 'flex',
               alignItems: 'center',
               justifyContent: 'center',
@@ -62,9 +62,9 @@ export default function ProductImageSheet({ product, onClose, onAddClick }: any)
                 src={images[activeIdx]}
                 alt={product.name}
                 style={{
-                  width: '90%',
-                  height: '90%',
-                  objectFit: 'contain',
+                  width: '100%',
+                  height: '100%',
+                  objectFit: 'cover',
                   transition: 'opacity 0.2s',
                 }}
                 onError={(e) => {
@@ -152,7 +152,7 @@ export default function ProductImageSheet({ product, onClose, onAddClick }: any)
                   <img
                     src={img}
                     alt={`thumb-${idx}`}
-                    style={{ width: '100%', height: '100%', objectFit: 'contain' }}
+                    style={{ width: '100%', height: '100%', objectFit: 'cover', borderRadius: 6 }}
                     onError={(e) => (e.currentTarget.style.opacity = '0.3')}
                   />
                 </button>

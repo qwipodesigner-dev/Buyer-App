@@ -1,165 +1,158 @@
-import { useState } from 'react';
+import { useState, useMemo } from 'react';
 import { Icon, StatusBar } from '../components/Icons';
-import { brands, categories, products } from '../data/mockData';
+import { distributorsList, distributorCategories } from '../data/mockData';
 
-// PDF page 9 — drill-in showing all brands under a distributor's category.
-// E.g. tap "Nestle" under "Omkar Enterprises" → this screen lists Nestle SKUs.
+// Drill-in for "tap a brand from Distributors → Sellers tab". Layout matches
+// the buyer-app reference: title "Brand - Distributor", breadcrumb, then a
+// Brands grid (round logo + name) and a Categories grid (image card + name)
+// — both clickable and routing into the ProductListing. Inline search filters
+// both grids at once.
 
 export default function CategoriesBrandsScreen({
   distributor,
   category,
   onBack,
-  onSelectProduct,
   onSelectBrand,
-  onOpenSearch,
+  onSelectCategory,
 }: any) {
-  const [activeBrand, setActiveBrand] = useState<string>('all');
+  const [query, setQuery] = useState('');
+  const q = query.trim().toLowerCase();
 
-  const cat = category || categories[0];
-  const dist = distributor || { name: 'Omkar Enterprises', shortName: 'Omkar' };
+  const cat = category || { name: 'Brand' };
+  const dist = distributor || { name: 'Distributor', shortName: 'Distributor' };
 
-  // Brand chips shown at the top — derived from products in this category
-  const brandsForCategory = brands.slice(0, 6);
+  // Source the brand pool from distributorsList — pool every brand that the
+  // 3 listed distributors carry so the grid feels populated even when the
+  // selected distributor isn't in distributorsList.
+  const allBrands = useMemo(() => {
+    const seen = new Set<string>();
+    const out: any[] = [];
+    distributorsList.forEach((d: any) =>
+      d.brands.forEach((b: any) => {
+        if (seen.has(b.id)) return;
+        seen.add(b.id);
+        out.push(b);
+      })
+    );
+    return out;
+  }, []);
 
-  const filteredProducts =
-    activeBrand === 'all'
-      ? products
-      : products.filter((p) => p.brand.toLowerCase() === activeBrand.toLowerCase());
+  const visibleBrands = q
+    ? allBrands.filter((b: any) =>
+        (b.short || b.name || '').toLowerCase().includes(q)
+      )
+    : allBrands;
+
+  const visibleCats = q
+    ? distributorCategories.filter((c: any) =>
+        c.name.toLowerCase().includes(q)
+      )
+    : distributorCategories;
+
+  const distShort = (dist.shortName || dist.name || '').replace(/[…\.]+$/g, '');
 
   return (
     <>
       <StatusBar />
       <div className="screen-body">
-        {/* Top app bar */}
-        <div className="cb-top-bar">
-          <button className="icon-btn" onClick={onBack} aria-label="Back">
-            <Icon.Back />
-          </button>
-          <div className="cb-top-info">
-            <div className="cb-top-title">{cat.name}</div>
-            <div className="cb-top-sub">{dist.name}</div>
-          </div>
-          <button className="icon-btn" aria-label="Search" onClick={onOpenSearch}>
-            <Icon.Search />
-          </button>
-        </div>
-
-        {/* Hero banner */}
-        <div className="cb-hero" style={{ background: cat.color || '#FED7AA' }}>
-          <div className="cb-hero-text">
-            <div className="cb-hero-tag">FRESH STOCK • {cat.count || 142} SKUs</div>
-            <div className="cb-hero-title">{cat.name} from {dist.shortName}</div>
-            <div className="cb-hero-sub">Trusted brands • Authorised supply</div>
-          </div>
-          <div className="cb-hero-art">{cat.icon || '📦'}</div>
-        </div>
-
-        {/* Brand chips */}
-        <div className="cb-brand-rail-wrap">
-          <div className="cb-brand-rail">
-            <button
-              className={`cb-brand-chip ${activeBrand === 'all' ? 'on' : ''}`}
-              onClick={() => setActiveBrand('all')}
-            >
-              All brands
+        {/* Sticky cluster: top-bar + breadcrumb + page-level search input. */}
+        <div className="dl-sticky-top">
+          <div className="top-bar">
+            <button className="icon-btn" onClick={onBack} aria-label="Back">
+              <Icon.Back />
             </button>
-            {brandsForCategory.map((b) => (
-              <button
-                key={b.id}
-                className={`cb-brand-chip ${activeBrand === b.name ? 'on' : ''}`}
-                onClick={() => setActiveBrand(b.name)}
-              >
-                <span
-                  className="cb-brand-chip-circle"
-                  style={{ background: b.logo ? '#ffffff' : b.color }}
-                >
-                  {b.logo ? (
-                    <img src={b.logo} alt={b.name} />
-                  ) : (
-                    <span style={{ color: '#fff', fontSize: 10, fontWeight: 700 }}>
-                      {b.logoText}
-                    </span>
-                  )}
-                </span>
-                {b.name}
-              </button>
-            ))}
+            <div className="top-title">
+              <h1>{cat.name} - {dist.shortName || dist.name}</h1>
+            </div>
+          </div>
+
+          <div className="breadcrumb">
+            <button className="crumb" onClick={onBack}>Distributors</button>
+            <span className="crumb-sep">›</span>
+            <button className="crumb" onClick={onBack}>{distShort}</button>
+            <span className="crumb-sep">›</span>
+            <span className="crumb last">{cat.name}</span>
+          </div>
+
+          <div className="dl-search">
+            <span className="dl-search-icon"><Icon.Search /></span>
+            <input
+              className="dl-search-input"
+              type="text"
+              value={query}
+              onChange={(e) => setQuery(e.target.value)}
+              placeholder="Search brands or categories"
+            />
           </div>
         </div>
 
-        {/* Featured brands grid (PDF page 9 layout) */}
+        {/* Brands grid — 4-col round logo + name, same look as home Top Brands. */}
         <div className="section">
           <div className="section-head">
-            <div className="section-title">Featured brands</div>
-            <span className="cb-count">{brandsForCategory.length} brands</span>
+            <div className="section-title">Brands</div>
           </div>
-          <div className="cb-grid">
-            {brandsForCategory.map((b) => (
-              <button
-                key={b.id}
-                className="cb-brand-tile"
-                onClick={() => onSelectBrand?.(b)}
-              >
-                <div
-                  className="cb-brand-tile-circle"
-                  style={{ background: b.logo ? '#ffffff' : b.color }}
-                >
-                  {b.logo ? (
-                    <img src={b.logo} alt={b.name} />
-                  ) : (
-                    <span style={{ color: '#fff', fontSize: 16, fontWeight: 700 }}>
-                      {b.logoText}
-                    </span>
-                  )}
-                </div>
-                <div className="cb-brand-tile-name">{b.name}</div>
-                <div className="cb-brand-tile-skus">
-                  {/* Deterministic: char-code sum % 30 + 8 → stable across renders */}
-                  {(b.id.split('').reduce((a, c) => a + c.charCodeAt(0), 0) % 30) + 8} SKUs
-                </div>
-              </button>
-            ))}
-          </div>
-        </div>
-
-        {/* Product list */}
-        <div className="section" style={{ paddingBottom: 30 }}>
-          <div className="section-head">
-            <div className="section-title">
-              {activeBrand === 'all' ? 'All products' : activeBrand}
-            </div>
-            <span className="cb-count">{filteredProducts.length} items</span>
-          </div>
-          {filteredProducts.length === 0 ? (
-            <div className="cb-empty">No products found for {activeBrand}.</div>
+          {visibleBrands.length === 0 ? (
+            <div className="dl-empty">No brands match "{query}".</div>
           ) : (
-            <div className="cb-product-list">
-              {filteredProducts.slice(0, 10).map((p) => (
+            <div className="cb-brands-grid">
+              {visibleBrands.map((b: any) => (
                 <button
-                  key={p.id}
-                  className="cb-product"
-                  onClick={() => onSelectProduct?.(p)}
+                  key={b.id}
+                  className="cb-brands-tile"
+                  onClick={() =>
+                    onSelectBrand?.({
+                      id: b.id,
+                      name: b.short || b.name,
+                      short: b.short,
+                    })
+                  }
                 >
-                  <div className="cb-product-img" style={{ background: p.bgColor }}>
-                    {p.images?.[0] ? (
-                      <img src={p.images[0]} alt={p.name} />
+                  <div
+                    className="cb-brands-circle"
+                    style={{ background: b.logo ? '#ffffff' : b.bg }}
+                  >
+                    {b.logo ? (
+                      <img
+                        src={b.logo}
+                        alt={b.short || b.name}
+                        onError={(e) => {
+                          const img = e.currentTarget as HTMLImageElement;
+                          img.style.display = 'none';
+                          const parent = img.parentElement!;
+                          parent.style.background = b.bg;
+                          parent.innerHTML = `<span>${b.initials}</span>`;
+                        }}
+                      />
                     ) : (
-                      <span>{p.image}</span>
+                      <span>{b.initials}</span>
                     )}
                   </div>
-                  <div className="cb-product-info">
-                    <div className="cb-product-brand">{p.brand}</div>
-                    <div className="cb-product-name">{p.name}</div>
-                    <div className="cb-product-meta">
-                      {p.variants.length} pack sizes
-                    </div>
+                  <div className="cb-brands-name">{b.short || b.name}</div>
+                </button>
+              ))}
+            </div>
+          )}
+        </div>
+
+        {/* Categories grid — 2-col image card + name. */}
+        <div className="section" style={{ paddingBottom: 30 }}>
+          <div className="section-head">
+            <div className="section-title">Categories</div>
+          </div>
+          {visibleCats.length === 0 ? (
+            <div className="dl-empty">No categories match "{query}".</div>
+          ) : (
+            <div className="wholesale-categories">
+              {visibleCats.map((c: any) => (
+                <button
+                  key={c.id}
+                  className="cat-tile cat-tile-grid"
+                  onClick={() => onSelectCategory?.(c)}
+                >
+                  <div className="cat-tile-card">
+                    <img src={c.image} alt={c.name} />
                   </div>
-                  <div className="cb-product-price">
-                    <div className="cb-product-current">
-                      ₹{p.variants[0].sellingPrice}
-                    </div>
-                    <div className="cb-product-mrp">₹{p.variants[0].mrp}</div>
-                  </div>
+                  <div className="cat-tile-name">{c.name}</div>
                 </button>
               ))}
             </div>
