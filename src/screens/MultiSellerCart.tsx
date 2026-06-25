@@ -2,17 +2,20 @@ import { useState } from 'react';
 import { Icon, StatusBar } from '../components/Icons';
 import { movSuggestions } from '../data/mockData';
 
-type DeliveryKind = 'beat' | 'tomorrow';
+type DeliveryKind = 'tomorrow' | 'beat' | 'pickup';
 
-const DELIVERY_OPTIONS: Record<DeliveryKind, { day: string; mov: number; fee: string }> = {
-  beat: { day: 'Friday (Beat day)', mov: 500, fee: 'Free Delivery' },
-  tomorrow: { day: 'Tomorrow', mov: 2500, fee: 'Free Delivery' },
+const DELIVERY_OPTIONS: Record<DeliveryKind, { label: string; day: string; fee: number }> = {
+  tomorrow: { label: 'Tomorrow', day: 'Tomorrow',          fee: 50 },
+  beat:     { label: 'Friday',   day: 'Friday (Beat day)', fee: 0  },
+  pickup:   { label: 'Self pickup', day: 'Self pickup',    fee: 0  },
 };
 
-export default function MultiSellerCart({ cart, onBack, onUpdateItemQty, onAddSuggestion: _onAddSuggestion, onContinueShopping: _onContinueShopping, onCheckout, onAddItems }: any) {
-  // Per-seller delivery selection — defaults to the seller's beat day.
-  const [deliveryBySeller, setDeliveryBySeller] = useState<Record<string, DeliveryKind>>({});
-  const getDelivery = (id: string): DeliveryKind => deliveryBySeller[id] || 'beat';
+export default function MultiSellerCart({ cart, deliveryBySeller, onUpdateDelivery, onBack, onUpdateItemQty, onAddSuggestion: _onAddSuggestion, onContinueShopping: _onContinueShopping, onCheckout, onAddItems }: any) {
+  // Per-seller delivery selection lives on App so it stays in sync with the
+  // product cards. Keyed by seller NAME; defaults to 'beat' (Friday) when
+  // missing. Wholesalers ignore this — their delivery is locked to Tomorrow.
+  const getDelivery = (name: string): DeliveryKind =>
+    (deliveryBySeller && deliveryBySeller[name]) || 'beat';
 
   // Which seller cards have their "View items" list expanded.
   const [openItemsBySeller, setOpenItemsBySeller] = useState<Record<string, boolean>>({});
@@ -38,25 +41,33 @@ export default function MultiSellerCart({ cart, onBack, onUpdateItemQty, onAddSu
       }
     });
 
-    const final = subtotal - schemeSavings;
-    const delivery = DELIVERY_OPTIONS[getDelivery(seller.id)];
-    const effectiveMov = delivery.mov;
-    const movMet = final >= effectiveMov;
-    const movProgress = Math.min((final / effectiveMov) * 100, 100);
-    const movRemaining = Math.max(effectiveMov - final, 0);
+    // Wholesalers are always Tomorrow; distributors honour the shared
+    // per-seller selection (keyed by seller name so product cards mirror).
+    const deliveryKind: DeliveryKind =
+      seller.type === 'wholesaler' ? 'tomorrow' : getDelivery(seller.name);
+    const deliveryFee = DELIVERY_OPTIONS[deliveryKind].fee;
+    const itemsSubtotal = subtotal - schemeSavings;
+    const final = itemsSubtotal + deliveryFee;
+    const effectiveMov = seller.mov;
+    const movMet = itemsSubtotal >= effectiveMov;
+    const movProgress = Math.min((itemsSubtotal / effectiveMov) * 100, 100);
+    const movRemaining = Math.max(effectiveMov - itemsSubtotal, 0);
 
     return {
       ...seller,
       subtotal,
       mrpTotal,
       schemeSavings,
+      itemsSubtotal,
+      deliveryKind,
+      deliveryFee,
       final,
       mov: effectiveMov,
       movMet,
       movProgress,
       movRemaining,
       itemSavings: mrpTotal - subtotal,
-      totalSavings: mrpTotal - final,
+      totalSavings: mrpTotal - itemsSubtotal,
     };
   });
 
@@ -108,6 +119,8 @@ export default function MultiSellerCart({ cart, onBack, onUpdateItemQty, onAddSu
             // the buyer sees a single Qwipo Wholesalers card.
             let group: any[];
             if (groupType === 'wholesaler') {
+              const itemsSubtotal = raw.reduce((n: number, s: any) => n + s.itemsSubtotal, 0);
+              const deliveryFee = DELIVERY_OPTIONS.tomorrow.fee;
               const combined: any = {
                 id: 'qwipo-wholesalers',
                 name: 'Qwipo Wholesalers',
@@ -115,18 +128,21 @@ export default function MultiSellerCart({ cart, onBack, onUpdateItemQty, onAddSu
                 logoColor: '#7C3AED',
                 deliveryTime: 'Tomorrow',
                 type: 'wholesaler',
+                deliveryKind: 'tomorrow' as DeliveryKind,
+                deliveryFee,
                 items: raw.flatMap((s: any) => s.items),
                 subtotal: raw.reduce((n: number, s: any) => n + s.subtotal, 0),
                 mrpTotal: raw.reduce((n: number, s: any) => n + s.mrpTotal, 0),
                 schemeSavings: raw.reduce((n: number, s: any) => n + s.schemeSavings, 0),
-                final: raw.reduce((n: number, s: any) => n + s.final, 0),
+                itemsSubtotal,
+                final: itemsSubtotal + deliveryFee,
                 itemSavings: raw.reduce((n: number, s: any) => n + s.itemSavings, 0),
                 totalSavings: raw.reduce((n: number, s: any) => n + s.totalSavings, 0),
-                mov: DELIVERY_OPTIONS.tomorrow.mov,
+                mov: Math.max(...raw.map((s: any) => s.mov)),
               };
-              combined.movMet = combined.final >= combined.mov;
-              combined.movProgress = Math.min((combined.final / combined.mov) * 100, 100);
-              combined.movRemaining = Math.max(combined.mov - combined.final, 0);
+              combined.movMet = itemsSubtotal >= combined.mov;
+              combined.movProgress = Math.min((itemsSubtotal / combined.mov) * 100, 100);
+              combined.movRemaining = Math.max(combined.mov - itemsSubtotal, 0);
               group = [combined];
             } else {
               group = raw;
@@ -154,10 +170,7 @@ export default function MultiSellerCart({ cart, onBack, onUpdateItemQty, onAddSu
                 <div className="seller-block-info">
                   <div className="seller-block-name">{s.name}</div>
                   <div className="seller-block-delivery">
-                    <Icon.Truck /> Delivery:{' '}
-                    {s.type === 'wholesaler'
-                      ? 'Tomorrow'
-                      : DELIVERY_OPTIONS[getDelivery(s.id)].day}
+                    <Icon.Truck /> Delivery: {DELIVERY_OPTIONS[s.deliveryKind].day}
                   </div>
                 </div>
                 <div className="seller-block-chevron">
@@ -166,27 +179,18 @@ export default function MultiSellerCart({ cart, onBack, onUpdateItemQty, onAddSu
               </div>
 
               {s.type !== 'wholesaler' && (
-                <div className="cart-delivery-toggle" role="radiogroup" aria-label="Delivery option">
-                  {(['beat', 'tomorrow'] as DeliveryKind[]).map((kind) => {
-                    const opt = DELIVERY_OPTIONS[kind];
-                    const active = getDelivery(s.id) === kind;
+                <div className="cart-delivery-chips" role="radiogroup" aria-label="Delivery option">
+                  {(['beat', 'tomorrow', 'pickup'] as DeliveryKind[]).map((kind) => {
+                    const active = s.deliveryKind === kind;
                     return (
                       <button
                         key={kind}
                         role="radio"
                         aria-checked={active}
-                        className={`cart-delivery-option ${active ? 'active' : ''}`}
-                        onClick={() =>
-                          setDeliveryBySeller((prev) => ({ ...prev, [s.id]: kind }))
-                        }
+                        className={`cart-delivery-chip ${active ? 'active' : ''}`}
+                        onClick={() => onUpdateDelivery?.(s.name, kind)}
                       >
-                        <div className="cart-delivery-line">
-                          Delivery by <span className="cart-delivery-day">{opt.day}</span>
-                        </div>
-                        <div className="cart-delivery-meta">
-                          <span>MOV: <strong>{opt.mov}</strong></span>
-                          <span className="cart-delivery-fee">{opt.fee}</span>
-                        </div>
+                        {DELIVERY_OPTIONS[kind].label}
                       </button>
                     );
                   })}
@@ -317,6 +321,12 @@ export default function MultiSellerCart({ cart, onBack, onUpdateItemQty, onAddSu
                     <span className="saving">- ₹{Math.round(s.schemeSavings).toLocaleString('en-IN')}</span>
                   </div>
                 )}
+                <div className="subtotal-row">
+                  <span>Delivery fee</span>
+                  <span className={s.deliveryFee > 0 ? '' : 'saving'}>
+                    {s.deliveryFee > 0 ? `+ ₹${s.deliveryFee}` : 'Free'}
+                  </span>
+                </div>
                 <div className="subtotal-row bold">
                   <span>Seller subtotal</span>
                   <span>₹{Math.round(s.final).toLocaleString('en-IN')}</span>

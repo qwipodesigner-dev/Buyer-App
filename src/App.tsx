@@ -85,6 +85,11 @@ export default function App() {
   const [appliedCoupon, setAppliedCoupon] = useState<any>(null);
   const [cart, setCart] = useState(initialCart);
   const [listingCart, setListingCart] = useState({});
+  // Per-seller delivery selection — shared between ProductListing and the
+  // cart. Keyed by seller name; defaults to 'beat' (Friday) when missing.
+  const [deliveryBySeller, setDeliveryBySeller] = useState<Record<string, 'tomorrow' | 'beat' | 'pickup'>>({});
+  const updateDeliveryForSeller = (sellerName: string, kind: 'tomorrow' | 'beat' | 'pickup') =>
+    setDeliveryBySeller((prev) => ({ ...prev, [sellerName]: kind }));
   const [toast, setToast] = useState('');
 
   useEffect(() => {
@@ -566,6 +571,8 @@ export default function App() {
                 cartItems={listingCart}
                 cartTotal={cartTotal}
                 filters={listingFilters}
+                deliveryBySeller={deliveryBySeller}
+                onUpdateDelivery={updateDeliveryForSeller}
                 onBack={() => goBack('home')}
                 onOpenSheet={handleOpenSheet}
                 onOpenImageSheet={(product) => setImageSheetProduct(product)}
@@ -584,6 +591,8 @@ export default function App() {
             {screen === 'cart' && (
               <MultiSellerCart
                 cart={cart}
+                deliveryBySeller={deliveryBySeller}
+                onUpdateDelivery={updateDeliveryForSeller}
                 onBack={() => goBack('listing')}
                 onUpdateItemQty={handleUpdateItemQty}
                 onAddSuggestion={handleAddSuggestion}
