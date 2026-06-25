@@ -4,19 +4,26 @@ import {
   seller,
   products,
   brands as allBrands,
+  distributors,
   distributorsList,
 } from '../data/mockData';
 
 // Map a product to the distributor that carries its brand. Used to surface
 // the seller name on each product card when we're browsing the brand-pool
 // (cumulative across sellers) listing.
+//
+// distributorsList has the brand-membership info; the cart and the rest of
+// the app key off the canonical name in `distributors` (which differs in
+// places — e.g. "Sri Sai" vs "Shri Sai"). Resolve via id so the shared
+// per-seller delivery state stays in sync with the cart.
 function sellerForProduct(product: any): string {
   const target = (product.brand || '').toLowerCase();
   for (const d of distributorsList) {
     if (d.brands.some((b: any) =>
       (b.short || b.name || '').toLowerCase() === target
     )) {
-      return d.name;
+      const canonical = distributors.find((x: any) => x.id === d.id);
+      return canonical?.name || d.name;
     }
   }
   return seller.name;
@@ -47,6 +54,8 @@ export default function ProductListing({
   cartItems,
   cartTotal,
   filters,
+  deliveryBySeller,
+  onUpdateDelivery,
   onBack,
   onOpenSheet,
   onOpenImageSheet,
@@ -173,6 +182,8 @@ export default function ProductListing({
               selectedVariant[product.id] || product.variants[0].id;
             const variant = product.variants.find((v) => v.id === activeVarId);
             const cartQty = getCartQty(product.id, variant.id);
+            const sellerName = sellerForProduct(product);
+            const sellerDelivery = deliveryBySeller?.[sellerName] || 'beat';
 
             // Strip packaging suffix (Pouch / Jar / Tin / Box / Bottle / etc.)
             // from the variant size so the pill and the title show just the
@@ -189,7 +200,7 @@ export default function ProductListing({
                     <div className="product-name">
                       {product.name} - {sizeTitle} Packet X {variant.casePcs} Nos
                     </div>
-                    <div className="product-seller">{sellerForProduct(product)}</div>
+                    <div className="product-seller">{sellerName}</div>
                     <div className="product-subline">
                       <span>{variant.casePcs} pc/Case</span>
                       <span className="product-case-price">
@@ -292,24 +303,44 @@ export default function ProductListing({
                   )}
                 </div>
 
-                {/* Delivery options — view only here. Buyer picks per-seller
-                    on the cart page. Compact 2-column layout: short day name
-                    on the first line, MOV + fee on the second. */}
-                <div className="product-delivery">
-                  <div className="product-delivery-option">
-                    <div className="product-delivery-day">Tomorrow</div>
-                    <div className="product-delivery-meta">
-                      <span>MOV: <strong>2500</strong></span>
-                      <span className="product-delivery-fee">Free Delivery</span>
-                    </div>
-                  </div>
-                  <div className="product-delivery-option">
-                    <div className="product-delivery-day">Fri</div>
-                    <div className="product-delivery-meta">
-                      <span>MOV: <strong>500</strong></span>
-                      <span className="product-delivery-fee">Free Delivery</span>
-                    </div>
-                  </div>
+                {/* Delivery options — radio selection per seller. Friday
+                    (beat day) is the default and leads; switching here mirrors
+                    to every other product from the same seller and to the
+                    cart. Delivery fee is shown once at the bottom — always
+                    free today; placeholder for the future when a fee may
+                    apply. */}
+                <div
+                  className="product-delivery"
+                  role="radiogroup"
+                  aria-label="Delivery option"
+                >
+                  {([
+                    { kind: 'beat',     day: 'Fri (Beat day)', mov: 500  },
+                    { kind: 'tomorrow', day: 'Tomorrow',       mov: 2500 },
+                  ] as const).map((opt) => {
+                    const active = sellerDelivery === opt.kind;
+                    return (
+                      <button
+                        key={opt.kind}
+                        type="button"
+                        role="radio"
+                        aria-checked={active}
+                        className={`product-delivery-option ${active ? 'active' : ''}`}
+                        onClick={() => onUpdateDelivery?.(sellerName, opt.kind)}
+                      >
+                        <span className="product-delivery-radio" aria-hidden="true" />
+                        <span className="product-delivery-text">
+                          <span className="product-delivery-day">{opt.day}</span>
+                          <span className="product-delivery-meta">
+                            MOV: <strong>{opt.mov}</strong>
+                          </span>
+                        </span>
+                      </button>
+                    );
+                  })}
+                </div>
+                <div className="product-delivery-fee-note">
+                  <Icon.Truck /> Free Delivery
                 </div>
               </div>
             );
@@ -337,10 +368,7 @@ export default function ProductListing({
           </div>
           <button className="cart-strip-btn" onClick={onGoToCart}>
             <Icon.Cart />
-            <span className="badge">
-              {(Object.values(cartItems) as number[]).reduce((a, b) => a + b, 0)}
-            </span>
-            View cart
+            Cart
           </button>
         </div>
       )}
