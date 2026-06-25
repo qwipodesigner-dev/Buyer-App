@@ -31,6 +31,7 @@ import {
   Signal,
   Battery,
   Copy,
+  ArrowDownCircle,
 } from 'lucide-react';
 
 import type { ReactElement } from 'react';
@@ -78,6 +79,7 @@ export const Icon: Record<string, IconCmp> = {
   Wifi: wrap(Wifi),
   Signal: wrap(Signal),
   Battery: wrap(Battery),
+  PriceDrop: wrap(ArrowDownCircle),
 };
 
 // Status bar primitives kept here for parity with the previous module.

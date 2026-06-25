@@ -5,6 +5,7 @@ import HomeScreen from './screens/HomeScreen';
 import SellerStorefront from './screens/SellerStorefront';
 import ProductListing from './screens/ProductListing';
 import MultiSellerCart from './screens/MultiSellerCart';
+import MultiSellerCartV2 from './screens/MultiSellerCartV2';
 import ReorderScreen from './screens/ReorderScreen';
 import NotificationsScreen from './screens/NotificationsScreen';
 import ProfileScreen from './screens/ProfileScreen';
@@ -455,10 +456,16 @@ export default function App() {
                   const sellerLabel =
                     (selectedDistributor?.shortName || selectedDistributor?.name || 'Seller')
                       .replace(/[…\.]+$/g, '');
+                  // categories-brands always runs inside a selected
+                  // distributor's context (entered from Distributors →
+                  // Sellers → distributor), so the listing it drives is a
+                  // single-seller view — tag fromStorefront so the product
+                  // card hides the now-redundant seller label.
                   setSelectedCategory({
                     id: brand.id,
                     name: brand.name,
                     isBrand: true,
+                    fromStorefront: true,
                     breadcrumb: [
                       { label: 'Distributors', goTo: 'home' },
                       { label: sellerLabel, goTo: 'categories-brands' },
@@ -473,6 +480,7 @@ export default function App() {
                       .replace(/[…\.]+$/g, '');
                   setSelectedCategory({
                     ...c,
+                    fromStorefront: true,
                     breadcrumb: [
                       { label: 'Distributors', goTo: 'home' },
                       { label: sellerLabel, goTo: 'categories-brands' },
@@ -559,7 +567,10 @@ export default function App() {
                 onSelectCategory={(cat: any) => {
                   // Direct to ProductListing — the brands+products drill-in
                   // (CategoriesBrandsScreen) is reserved for explicit "browse by brand" flows.
-                  setSelectedCategory(cat);
+                  // Mark the category as coming from a specific seller's
+                  // storefront so the listing knows it's a single-seller
+                  // view and can hide the redundant per-card seller name.
+                  setSelectedCategory({ ...cat, fromStorefront: true });
                   setScreen('listing');
                 }}
                 onSelectProduct={handleSelectProduct}
@@ -616,6 +627,13 @@ export default function App() {
                     setScreen('home');
                   }
                 }}
+              />
+            )}
+            {screen === 'cart-v2' && (
+              <MultiSellerCartV2
+                cart={cart}
+                onBack={() => goBack('home')}
+                onCheckout={() => setCartValidationOpen(true)}
               />
             )}
 
@@ -703,6 +721,7 @@ const SCREEN_GROUPS: { title: string; items: { id: string; label: string }[] }[]
     title: 'Cart & Checkout',
     items: [
       { id: 'cart', label: 'Multi-Seller Cart' },
+      { id: 'cart-v2', label: 'Multi-Seller Cart V2 (design preview)' },
       { id: 'order-summary', label: 'Order Summary' },
       { id: 'coupons', label: 'Apply Offers & Coupons' },
     ],

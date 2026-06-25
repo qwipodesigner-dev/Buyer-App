@@ -37,6 +37,14 @@ const DEFAULT_FILTERS = {
   schemesOnly: false,
 };
 
+// Per-option delivery details surfaced on every product card. Beat day is
+// free; Tomorrow carries a fee that is shown next to the margin chip when
+// selected. Numbers are illustrative; production should pull from the seller.
+const DELIVERY_FEES = {
+  beat: 0,
+  tomorrow: 24,
+} as const;
+
 export const filtersDefault = DEFAULT_FILTERS;
 
 export function countActiveFilters(f) {
@@ -200,7 +208,14 @@ export default function ProductListing({
                     <div className="product-name">
                       {product.name} - {sizeTitle} Packet X {variant.casePcs} Nos
                     </div>
-                    <div className="product-seller">{sellerName}</div>
+                    {/* Hide the seller name when the listing was entered
+                        from a specific seller's storefront — it's redundant
+                        in that single-seller context. Brand/category pools
+                        (CategoriesBrandsScreen) keep it visible since the
+                        list mixes products from many sellers. */}
+                    {!category?.fromStorefront && (
+                      <div className="product-seller">{sellerName}</div>
+                    )}
                     <div className="product-subline">
                       <span>{variant.casePcs} pc/Case</span>
                       <span className="product-case-price">
@@ -251,9 +266,20 @@ export default function ProductListing({
                   ))}
                 </div>
 
-                {/* Pricing — outlined margin chip left, MRP + price stacked right */}
+                {/* Pricing — margin chip + delivery note stacked on the left,
+                    MRP + price stacked on the right. Free Delivery sits here
+                    (and would surface a delivery fee in the future) so the
+                    card footer can stay tight to the radio row. */}
                 <div className="product-price-row">
-                  <div className="margin-badge">{variant.margin}% Margin</div>
+                  <div className="margin-col">
+                    <div className="margin-badge">{variant.margin}% Margin</div>
+                    <div className="product-delivery-fee-inline">
+                      <Icon.Truck />
+                      {DELIVERY_FEES[sellerDelivery] === 0
+                        ? 'Free Delivery'
+                        : `+ ₹${DELIVERY_FEES[sellerDelivery]} Delivery`}
+                    </div>
+                  </div>
                   <div className="price-block">
                     <div className="price-mrp-row">
                       MRP <span className="price-mrp">₹ {variant.mrp}</span>
@@ -339,9 +365,6 @@ export default function ProductListing({
                     );
                   })}
                 </div>
-                <div className="product-delivery-fee-note">
-                  <Icon.Truck /> Free Delivery
-                </div>
               </div>
             );
           })}
@@ -364,7 +387,6 @@ export default function ProductListing({
           <div className="cart-strip-info">
             <div className="cart-strip-label">Total cart value</div>
             <div className="cart-strip-value">₹{cartTotal.toLocaleString('en-IN')}</div>
-            <div className="cart-strip-meta">Free delivery applied</div>
           </div>
           <button className="cart-strip-btn" onClick={onGoToCart}>
             <Icon.Cart />
