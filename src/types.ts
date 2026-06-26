@@ -26,6 +26,8 @@ export interface ProductVariant {
   scheme: string | null;
 }
 
+export type DeliveryOption = 'beat' | 'tomorrow';
+
 export interface Product {
   id: string;
   name: string;
@@ -39,6 +41,10 @@ export interface Product {
   images: string[];
   bgColor: string;
   variants: ProductVariant[];
+  // Which per-seller delivery slots this SKU is eligible for. Omitted means
+  // both (default). Use ['tomorrow'] for perishables / express-only SKUs and
+  // ['beat'] for items only offered on the beat-day route.
+  deliveryOptions?: DeliveryOption[];
 }
 
 export interface Seller {

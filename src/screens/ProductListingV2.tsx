@@ -3,19 +3,17 @@ import { Icon, StatusBar } from '../components/Icons';
 import {
   seller,
   products,
-  brands as allBrands,
   distributors,
   distributorsList,
 } from '../data/mockData';
+import { filtersDefault, countActiveFilters } from './ProductListing';
 
-// Map a product to the distributor that carries its brand. Used to surface
-// the seller name on each product card when we're browsing the brand-pool
-// (cumulative across sellers) listing.
-//
-// distributorsList has the brand-membership info; the cart and the rest of
-// the app key off the canonical name in `distributors` (which differs in
-// places — e.g. "Sri Sai" vs "Shri Sai"). Resolve via id so the shared
-// per-seller delivery state stays in sync with the cart.
+// Preview-only V2 of the product listing. Same layout as V1 but the per-
+// product delivery options are READ-ONLY information — no radio buttons,
+// no selection state, no seller-level mirroring. The card just surfaces
+// which delivery dates are available for the SKU and their MOVs. Sits
+// behind sidebar entry #12 (design preview), not in the main flow.
+
 function sellerForProduct(product: any): string {
   const target = (product.brand || '').toLowerCase();
   for (const d of distributorsList) {
@@ -29,17 +27,8 @@ function sellerForProduct(product: any): string {
   return seller.name;
 }
 
-const DEFAULT_FILTERS = {
-  sort: 'recommended',
-  stock: [],         // empty = all
-  brands: [],        // empty = all
-  minMargin: 0,
-  schemesOnly: false,
-};
+type DeliveryKind = 'beat' | 'tomorrow';
 
-// Per-option delivery details surfaced on every product card. Beat day is
-// free; Tomorrow carries a fee that is shown next to the margin chip when
-// selected. Numbers are illustrative; production should pull from the seller.
 const DELIVERY_FEES = {
   beat: 0,
   tomorrow: 24,
@@ -50,27 +39,11 @@ const DELIVERY_LABELS = {
   tomorrow: { day: 'Tomorrow',       mov: 2500 },
 } as const;
 
-type DeliveryKind = 'beat' | 'tomorrow';
-
-export const filtersDefault = DEFAULT_FILTERS;
-
-export function countActiveFilters(f) {
-  let n = 0;
-  if (f.sort !== 'recommended') n += 1;
-  if (f.stock.length) n += 1;
-  if (f.brands.length) n += 1;
-  if (f.minMargin > 0) n += 1;
-  if (f.schemesOnly) n += 1;
-  return n;
-}
-
-export default function ProductListing({
+export default function ProductListingV2({
   category,
   cartItems,
   cartTotal,
   filters,
-  deliveryBySeller,
-  onUpdateDelivery,
   onBack,
   onOpenSheet,
   onOpenImageSheet,
@@ -82,14 +55,7 @@ export default function ProductListing({
   onNavigateBreadcrumb,
 }: any) {
   const [selectedVariant, setSelectedVariant] = useState<any>({});
-
-  const activeFilters = filters || DEFAULT_FILTERS;
-
-  const stockLabel = {
-    available: 'In Stock',
-    limited: 'Limited',
-    out: 'Out of Stock',
-  };
+  const activeFilters = filters || filtersDefault;
 
   const filteredProducts = useMemo(() => {
     let list = products.filter((p) => {
@@ -97,11 +63,7 @@ export default function ProductListing({
       if (category.isBrand) return p.brand === category.name;
       return p.category === category.id;
     });
-    // No fallback when the category has zero matches — surface an empty
-    // state instead. The previous behaviour leaked the entire catalog
-    // into any empty category (oils showed up under Atta, etc.).
 
-    // Apply filter sheet selections
     if (activeFilters.brands.length) {
       list = list.filter((p) => activeFilters.brands.includes(p.brand));
     }
@@ -120,22 +82,19 @@ export default function ProductListing({
       list = list.filter((p) => p.variants.some((v) => v.scheme));
     }
 
-    // Sort
     const sorted = [...list];
     if (activeFilters.sort === 'price_asc') {
       sorted.sort((a, b) => a.variants[0].sellingPrice - b.variants[0].sellingPrice);
     } else if (activeFilters.sort === 'price_desc') {
       sorted.sort((a, b) => b.variants[0].sellingPrice - a.variants[0].sellingPrice);
     } else if (activeFilters.sort === 'margin_desc') {
-      // Sort by the variant currently shown in the card (= first variant)
-      // so the visible margin ordering matches the sort direction.
       sorted.sort((a, b) => b.variants[0].margin - a.variants[0].margin);
     }
 
     return sorted;
   }, [category, activeFilters]);
 
-  const getCartQty = (productId, variantId) =>
+  const getCartQty = (productId: string, variantId: string) =>
     cartItems[`${productId}_${variantId}`] || 0;
 
   const activeCount = countActiveFilters(activeFilters);
@@ -144,8 +103,6 @@ export default function ProductListing({
     <>
       <StatusBar />
       <div className="screen-body">
-        {/* Sticky cluster: top-bar + breadcrumb stay pinned while the product
-            list scrolls beneath. */}
         <div className="dl-sticky-top">
           <div className="top-bar">
             <button className="icon-btn" onClick={onBack}>
@@ -192,7 +149,6 @@ export default function ProductListing({
           )}
         </div>
 
-        {/* Product list */}
         <div className="product-list">
           {filteredProducts.map((product) => {
             const activeVarId =
@@ -200,22 +156,14 @@ export default function ProductListing({
             const variant = product.variants.find((v) => v.id === activeVarId);
             const cartQty = getCartQty(product.id, variant.id);
             const sellerName = sellerForProduct(product);
-            // Per-product delivery eligibility; omitted = both options.
             const productOpts: readonly DeliveryKind[] =
               product.deliveryOptions && product.deliveryOptions.length > 0
                 ? product.deliveryOptions
                 : (['beat', 'tomorrow'] as const);
-            const sellerChoice = deliveryBySeller?.[sellerName] as DeliveryKind | undefined;
-            // Fall back to the first available option when the seller-level
-            // pick isn't offered for this SKU (e.g. perishables on Tomorrow only).
-            const sellerDelivery: DeliveryKind =
-              sellerChoice && productOpts.includes(sellerChoice)
-                ? sellerChoice
-                : (productOpts.includes('beat') ? 'beat' : productOpts[0]);
+            // Default the inline "Free / + ₹X" fee note to the cheapest
+            // eligible option since there's no selection on this screen.
+            const defaultKind: DeliveryKind = productOpts.includes('beat') ? 'beat' : productOpts[0];
 
-            // Strip packaging suffix (Pouch / Jar / Tin / Box / Bottle / etc.)
-            // from the variant size so the pill and the title show just the
-            // quantity ("1 Ltr" / "500 ml") until the buyer asks otherwise.
             const stripPack = (s: string) =>
               s.replace(/\s+(Pouch|Jar|Tin|Box|Packet|Bottle|Sachet|Carton|Bag|Tube)s?$/i, '');
             const sizeClean = stripPack(variant.size);
@@ -228,11 +176,6 @@ export default function ProductListing({
                     <div className="product-name">
                       {product.name} - {sizeTitle} Packet X {variant.casePcs} Nos
                     </div>
-                    {/* Hide the seller name when the listing was entered
-                        from a specific seller's storefront — it's redundant
-                        in that single-seller context. Brand/category pools
-                        (CategoriesBrandsScreen) keep it visible since the
-                        list mixes products from many sellers. */}
                     {!category?.fromStorefront && (
                       <div className="product-seller">{sellerName}</div>
                     )}
@@ -250,8 +193,8 @@ export default function ProductListing({
                         src={product.images[0]}
                         alt={product.name}
                         onError={(e) => {
-                          e.currentTarget.style.display = 'none';
-                          e.currentTarget.parentElement.innerHTML = `<span style="font-size:30px">${product.image}</span>`;
+                          (e.currentTarget as HTMLImageElement).style.display = 'none';
+                          (e.currentTarget as HTMLImageElement).parentElement!.innerHTML = `<span style="font-size:30px">${product.image}</span>`;
                         }}
                       />
                     ) : (
@@ -260,9 +203,8 @@ export default function ProductListing({
                   </button>
                 </div>
 
-                {/* Variants */}
                 <div className="variant-pills">
-                  {product.variants.map((v) => (
+                  {product.variants.map((v: any) => (
                     <button
                       key={v.id}
                       className={`variant-pill ${v.id === activeVarId ? 'active' : ''}`}
@@ -278,18 +220,14 @@ export default function ProductListing({
                   ))}
                 </div>
 
-                {/* Pricing — margin chip + delivery note stacked on the left,
-                    MRP + price stacked on the right. Free Delivery sits here
-                    (and would surface a delivery fee in the future) so the
-                    card footer can stay tight to the radio row. */}
                 <div className="product-price-row">
                   <div className="margin-col">
                     <div className="margin-badge">{variant.margin}% Margin</div>
                     <div className="product-delivery-fee-inline">
                       <Icon.Truck />
-                      {DELIVERY_FEES[sellerDelivery] === 0
+                      {DELIVERY_FEES[defaultKind] === 0
                         ? 'Free Delivery'
-                        : `+ ₹${DELIVERY_FEES[sellerDelivery]} Delivery`}
+                        : `+ ₹${DELIVERY_FEES[defaultKind]} Delivery`}
                     </div>
                   </div>
                   <div className="price-block">
@@ -305,7 +243,6 @@ export default function ProductListing({
                   </div>
                 </div>
 
-                {/* Actions — compact Discounts + Add */}
                 <div className="product-actions">
                   <button
                     className="discounts-btn-filled"
@@ -341,37 +278,22 @@ export default function ProductListing({
                   )}
                 </div>
 
-                {/* Delivery options — radio selection per seller. Friday
-                    (beat day) is the default and leads; switching here mirrors
-                    to every other product from the same seller and to the
-                    cart. Delivery fee is shown once at the bottom — always
-                    free today; placeholder for the future when a fee may
-                    apply. */}
-                <div
-                  className="product-delivery"
-                  role="radiogroup"
-                  aria-label="Delivery option"
-                >
+                {/* Read-only delivery info — no radios, no selection, no
+                    click. Surfaces the dates and MOVs as plain labels so
+                    the buyer can see what's available; selection happens
+                    later in the cart. */}
+                <div className="product-delivery readonly" aria-label="Delivery dates">
                   {productOpts.map((kind) => {
                     const opt = DELIVERY_LABELS[kind];
-                    const active = sellerDelivery === kind;
                     return (
-                      <button
-                        key={kind}
-                        type="button"
-                        role="radio"
-                        aria-checked={active}
-                        className={`product-delivery-option ${active ? 'active' : ''}`}
-                        onClick={() => onUpdateDelivery?.(sellerName, kind)}
-                      >
-                        <span className="product-delivery-radio" aria-hidden="true" />
+                      <div key={kind} className="product-delivery-option readonly">
                         <span className="product-delivery-text">
                           <span className="product-delivery-day">{opt.day}</span>
                           <span className="product-delivery-meta">
                             MOV: <strong>₹{opt.mov.toLocaleString('en-IN')}</strong>
                           </span>
                         </span>
-                      </button>
+                      </div>
                     );
                   })}
                 </div>
@@ -391,7 +313,6 @@ export default function ProductListing({
         </div>
       </div>
 
-      {/* Sticky cart strip */}
       {cartTotal > 0 && (
         <div className="cart-strip">
           <div className="cart-strip-info">
@@ -407,6 +328,3 @@ export default function ProductListing({
     </>
   );
 }
-
-// Re-export brands for FiltersSheet to use
-export const availableBrands = allBrands;

@@ -4,6 +4,7 @@ import { Icon, PhoneNotch } from './components/Icons';
 import HomeScreen from './screens/HomeScreen';
 import SellerStorefront from './screens/SellerStorefront';
 import ProductListing from './screens/ProductListing';
+import ProductListingV2 from './screens/ProductListingV2';
 import MultiSellerCart from './screens/MultiSellerCart';
 import MultiSellerCartV2 from './screens/MultiSellerCartV2';
 import ReorderScreen from './screens/ReorderScreen';
@@ -34,7 +35,7 @@ import ProductImageSheet from './components/ProductImageSheet';
 import DiscountsSheet from './components/DiscountsSheet';
 import FiltersSheet from './components/FiltersSheet';
 import { filtersDefault } from './screens/ProductListing';
-import { initialCart, categories, distributors } from './data/mockData';
+import { initialCart, categories, distributors, DIST_CAT_TO_PRODUCT_CAT } from './data/mockData';
 
 export default function App() {
   // Always boot into the Splash screen so the full Splash → Login → OTP →
@@ -379,9 +380,14 @@ export default function App() {
                   goBack('home');
                 }}
                 onSelectCategory={(c: any) => {
-                  // Distributors-list → Categories tab → listing.
+                  // Distributors-list → Categories tab → listing. The tile
+                  // ids come from distributorCategories ('atta-flours-sooji',
+                  // ...) so translate to the buyer product category id
+                  // ('flour', ...) before filtering.
+                  const productCatId = DIST_CAT_TO_PRODUCT_CAT[c.id] || c.id;
                   setSelectedCategory({
                     ...c,
+                    id: productCatId,
                     breadcrumb: [
                       { label: 'Distributors', goTo: 'home' },
                       { label: 'Categories', goTo: 'distributors-list' },
@@ -478,8 +484,13 @@ export default function App() {
                   const sellerLabel =
                     (selectedDistributor?.shortName || selectedDistributor?.name || 'Seller')
                       .replace(/[…\.]+$/g, '');
+                  // Translate distributor-catalog ids ('atta-flours-sooji',
+                  // 'oil-ghee', ...) to the buyer product category ids
+                  // ('flour', 'cooking-oil', ...) so the listing finds SKUs.
+                  const productCatId = DIST_CAT_TO_PRODUCT_CAT[c.id] || c.id;
                   setSelectedCategory({
                     ...c,
+                    id: productCatId,
                     fromStorefront: true,
                     breadcrumb: [
                       { label: 'Distributors', goTo: 'home' },
@@ -599,6 +610,25 @@ export default function App() {
                 }}
               />
             )}
+            {screen === 'listing-v2' && (
+              <ProductListingV2
+                category={selectedCategory}
+                cartItems={listingCart}
+                cartTotal={cartTotal}
+                filters={listingFilters}
+                onBack={() => goBack('home')}
+                onOpenSheet={handleOpenSheet}
+                onOpenImageSheet={(product: any) => setImageSheetProduct(product)}
+                onOpenDiscounts={(product: any, variant: any) => setDiscountsSheet({ product, variant })}
+                onOpenFilters={() => setFiltersOpen(true)}
+                onGoToCart={() => setScreen('cart')}
+                onUpdateQty={handleUpdateListingQty}
+                onOpenSearch={() => setScreen('global-search')}
+                onNavigateBreadcrumb={(target?: string) => {
+                  if (target) setScreen(target);
+                }}
+              />
+            )}
             {screen === 'cart' && (
               <MultiSellerCart
                 cart={cart}
@@ -713,6 +743,7 @@ const SCREEN_GROUPS: { title: string; items: { id: string; label: string }[] }[]
       { id: 'storefront', label: 'Authorised Distributor Storefront' },
       { id: 'categories-brands', label: 'Categories & Brands drill-in' },
       { id: 'listing', label: 'Product Listing' },
+      { id: 'listing-v2', label: 'Product Listing V2 (design preview)' },
       { id: 'wholesaler-products', label: 'Wholesaler Products (multi-seller)' },
       { id: 'reorder', label: 'Reorder' },
     ],

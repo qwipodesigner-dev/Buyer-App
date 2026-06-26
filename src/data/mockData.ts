@@ -25,58 +25,8 @@ import type {
   WholesalerCategory,
 } from '../types';
 
-// Product photo URLs — all from Wikimedia Commons (CDN, no hotlink protection)
-const IMG: Record<string, string[]> = {
-  sunflowerOil: [
-    'https://upload.wikimedia.org/wikipedia/commons/thumb/3/33/Bottle_1_liter_Sunflower_refined_oil.jpg/500px-Bottle_1_liter_Sunflower_refined_oil.jpg',
-    'https://upload.wikimedia.org/wikipedia/commons/thumb/6/60/Sunflower_oil.jpg/500px-Sunflower_oil.jpg',
-    'https://upload.wikimedia.org/wikipedia/commons/thumb/4/41/Sunflower_oil_bottles_in_Dnipro.jpg/500px-Sunflower_oil_bottles_in_Dnipro.jpg',
-  ],
-  groundnutOil: [
-    'https://upload.wikimedia.org/wikipedia/commons/thumb/6/64/Groundnut_Oil.jpg/500px-Groundnut_Oil.jpg',
-    'https://upload.wikimedia.org/wikipedia/commons/thumb/3/3e/ILUAMUTHU_GROUNDNUT_OIL.jpg/500px-ILUAMUTHU_GROUNDNUT_OIL.jpg',
-    'https://upload.wikimedia.org/wikipedia/commons/thumb/2/20/Fried_oil_or_peanut_oil_Oil_from_frying_chicken_or_fish.jpg/500px-Fried_oil_or_peanut_oil_Oil_from_frying_chicken_or_fish.jpg',
-  ],
-  soyaOil: [
-    'https://upload.wikimedia.org/wikipedia/commons/thumb/f/ff/Soybean_Oil_%2810059657806%29.jpg/500px-Soybean_Oil_%2810059657806%29.jpg',
-    'https://upload.wikimedia.org/wikipedia/commons/7/77/AWL_Agri_Business.jpg',
-  ],
-  atta: [
-    'https://upload.wikimedia.org/wikipedia/commons/thumb/2/26/Atta_flour.jpg/500px-Atta_flour.jpg',
-    'https://upload.wikimedia.org/wikipedia/commons/thumb/d/de/Chapaticooking.jpg/500px-Chapaticooking.jpg',
-    'https://upload.wikimedia.org/wikipedia/commons/thumb/d/d9/Tandoor_roti.jpg/500px-Tandoor_roti.jpg',
-    'https://upload.wikimedia.org/wikipedia/commons/thumb/3/39/Puri.jpg/500px-Puri.jpg',
-  ],
-  ghee: [
-    'https://upload.wikimedia.org/wikipedia/commons/thumb/c/c7/Home_made_Ghee.jpg/500px-Home_made_Ghee.jpg',
-    'https://upload.wikimedia.org/wikipedia/commons/thumb/d/db/Desi_ghee.JPG/500px-Desi_ghee.JPG',
-    'https://upload.wikimedia.org/wikipedia/commons/thumb/9/9c/Cream_to_get_clarified_butter_home_made.Ghee.jpg/500px-Cream_to_get_clarified_butter_home_made.Ghee.jpg',
-  ],
-  detergent: [
-    'https://upload.wikimedia.org/wikipedia/en/thumb/7/77/Surf_Excel.svg/500px-Surf_Excel.svg.png',
-    'https://upload.wikimedia.org/wikipedia/commons/thumb/9/94/Detergent_powder_with_laundry_enzymes.jpg/500px-Detergent_powder_with_laundry_enzymes.jpg',
-    'https://upload.wikimedia.org/wikipedia/commons/thumb/e/ef/Laundry_detergent_1.jpg/500px-Laundry_detergent_1.jpg',
-    'https://upload.wikimedia.org/wikipedia/commons/thumb/7/7a/Plastic_spoon_n_Laundry_detergent_n_Washing_powder_in_white.jpg/500px-Plastic_spoon_n_Laundry_detergent_n_Washing_powder_in_white.jpg',
-  ],
-  salt: [
-    'https://upload.wikimedia.org/wikipedia/commons/thumb/4/43/Iodized_salt_packet.jpg/500px-Iodized_salt_packet.jpg',
-    'https://upload.wikimedia.org/wikipedia/commons/thumb/8/82/Iodised_salt.JPG/500px-Iodised_salt.JPG',
-    'https://upload.wikimedia.org/wikipedia/commons/thumb/9/92/TATA-CONSUMER-PRODUCTS_BLUE_LOGO_Feb_13.png/500px-TATA-CONSUMER-PRODUCTS_BLUE_LOGO_Feb_13.png',
-  ],
-  maggi: [
-    'https://upload.wikimedia.org/wikipedia/commons/thumb/8/83/Maggi_logo.svg/500px-Maggi_logo.svg.png',
-    'https://upload.wikimedia.org/wikipedia/commons/thumb/a/a8/Maggi_with_Tea_flavored_Milk.jpg/500px-Maggi_with_Tea_flavored_Milk.jpg',
-    'https://upload.wikimedia.org/wikipedia/commons/thumb/f/f5/Br%C3%BChw%C3%BCrfel-1.jpg/500px-Br%C3%BChw%C3%BCrfel-1.jpg',
-  ],
-  parleg: [
-    'https://upload.wikimedia.org/wikipedia/commons/thumb/0/05/Parle_G_logo.jpg/500px-Parle_G_logo.jpg',
-    'https://upload.wikimedia.org/wikipedia/commons/thumb/1/13/Parle_Gluco_ad_1947.jpg/500px-Parle_Gluco_ad_1947.jpg',
-  ],
-  butter: [
-    'https://upload.wikimedia.org/wikipedia/commons/thumb/c/c7/Home_made_Ghee.jpg/500px-Home_made_Ghee.jpg',
-    'https://upload.wikimedia.org/wikipedia/commons/thumb/d/db/Desi_ghee.JPG/500px-Desi_ghee.JPG',
-  ],
-};
+import { IMG } from './imageBank';
+import { generatedProducts } from './generatedProducts';
 
 export const seller: Seller = {
   id: 'seller-a',
@@ -602,6 +552,43 @@ export const brandRegistry: Record<string, BrandRegistryEntry> = {
   },
 };
 
+// Map distributor-catalog category ids → buyer product category ids.
+// CategoriesBrandsScreen uses the long-form distributor ids
+// ('atta-flours-sooji', 'oil-ghee', etc.) for its image grid, but products
+// are stored against the short app category ids ('flour', 'cooking-oil', ...).
+// Translating at the navigation boundary keeps both id namespaces intact.
+export const DIST_CAT_TO_PRODUCT_CAT: Record<string, string> = {
+  'oil-ghee': 'cooking-oil',
+  'cooking-baking': 'spices',
+  'foodgrains': 'rice',
+  'masala-seasoning': 'spices',
+  'ready-cook-eat': 'snacks',
+  'pickles-chutney': 'pickles',
+  'indian-sweets': 'snacks',
+  'atta-flours-sooji': 'flour',
+  'rice-rice-products': 'rice',
+  'salt-sugar-jaggery': 'spices',
+  'snacks-namkeen': 'snacks',
+  'chocolates-biscuits': 'snacks',
+  'pasta-soup-noodles': 'snacks',
+  'beauty-hygiene': 'personal-care',
+  'oral-care': 'personal-care',
+  'ayurvedic': 'ayurvedic',
+  'baby-care': 'personal-care',
+  'pooja-needs': 'pooja',
+  'dairy-cheese': 'dairy',
+  'beverages': 'beverages',
+  'dals-pulses': 'dals',
+  'kitchen-accessories': 'cleaning',
+  'sauces-spreads-dips': 'spices',
+  'detergents-dishwash': 'cleaning',
+  'bins-bathrooms': 'cleaning',
+  'cereals-breakfast': 'snacks',
+  'fruit-juices': 'beverages',
+  'bakery-cakes-dairy': 'dairy',
+  'tea-coffee': 'tea-coffee',
+};
+
 // Categories shown on the distributor storefront — names + images match
 // the attached "Category Images" set. Image is the source of truth; emoji kept
 // as a fallback when the PNG fails to load.
@@ -618,6 +605,7 @@ export const categories: Category[] = [
   { id: 'dry-fruits',    name: 'Dry Fruits',                 icon: '🥜',  count: 56,  color: '#FDE68A', image: '/wholesaler-category-images/Dry Fruits.png' },
   { id: 'pickles',       name: 'Pickles & Podis',            icon: '🥒',  count: 42,  color: '#FBCFE8', image: '/wholesaler-category-images/Pickles & Podis.png' },
   { id: 'pooja',         name: 'Pooja Needs',                icon: '🕉️',  count: 38,  color: '#FED7AA', image: '/wholesaler-category-images/Pooja Needs.png' },
+  { id: 'dairy',         name: 'Dairy & Cheese',             icon: '🧈',  count: 64,  color: '#FEF3C7', image: '/wholesaler-category-images/Cooking Oils & Ghee.png' },
 ];
 
 // Brands rail (uses registry data) — Phase-one brand-logo PNGs now live in
@@ -641,8 +629,11 @@ export const brands: Brand[] = [
 ];
 
 // Products — real MRPs verified from public listings (June 2026)
-// All variants include real case-pack/MOQ structure used by Indian distributors
-export const products: Product[] = [
+// All variants include real case-pack/MOQ structure used by Indian distributors.
+// Hand-curated set below; the much larger generatedProducts list (sourced
+// from the production Excel catalog) is appended at the bottom and deduped
+// by id so hand-curated entries win when the same group is in both.
+const handcraftedProducts: Product[] = [
   {
     id: 'freedom-sunflower',
     name: 'Freedom Refined Sunflower Oil',
@@ -851,7 +842,7 @@ export const products: Product[] = [
     countryOfOrigin: 'India',
     hsn: '0405',
     gst: 12,
-    category: 'dairy',
+    category: 'cooking-oil',
     image: '🧈',
     images: IMG.ghee,
     bgColor: '#FEF3C7',
@@ -937,7 +928,7 @@ export const products: Product[] = [
     countryOfOrigin: 'India',
     hsn: '2501',
     gst: 0,
-    category: 'rice',
+    category: 'spices',
     image: '🧂',
     images: IMG.salt,
     bgColor: '#F1F5F9',
@@ -1115,6 +1106,883 @@ export const products: Product[] = [
       },
     ],
   },
+
+  // ------------------------------------------------------------------
+  //  Expanded SKU set (June 2026) — adds catalog depth for distributor
+  //  flows and seeds edge cases the buyer flow has to handle:
+  //   • single-variant SKUs (Aashirvaad Salt, Madhur Sugar, Tata Tea Gold)
+  //   • Tomorrow-only delivery (perishables / express SKUs marked with
+  //     deliveryOptions: ['tomorrow'] — Britannia Good Day, Amul Cheese)
+  //   • Beat-day-only delivery (route-locked SKU — Eastern Sambar Powder)
+  //   • casePcs = 1 (jumbo single-piece SKU — ITC Bingo Mad Angles family pack)
+  //  MRPs verified from public listings; case packs match real Indian
+  //  distributor packaging conventions.
+  // ------------------------------------------------------------------
+  {
+    id: 'aashirvaad-multigrain',
+    name: 'Aashirvaad Nature\'s Super Foods Multigrain Atta',
+    brand: 'Aashirvaad',
+    manufacturer: 'ITC Limited',
+    countryOfOrigin: 'India',
+    hsn: '1101',
+    gst: 5,
+    category: 'flour',
+    image: '🌾',
+    images: IMG.atta,
+    bgColor: '#FED7AA',
+    variants: [
+      {
+        id: 'v1', size: '5 Kg Bag', casePack: '4 Pcs/Case',
+        casePcs: 4, mrp: 425, sellingPrice: 378, casePrice: 1512,
+        discount: 11, margin: 11, stock: 'available', moq: 1,
+        scheme: 'Buy 6 Cases Get 1 Free',
+      },
+      {
+        id: 'v2', size: '10 Kg Bag', casePack: '2 Pcs/Case',
+        casePcs: 2, mrp: 825, sellingPrice: 735, casePrice: 1470,
+        discount: 11, margin: 11, stock: 'available', moq: 1,
+        scheme: null,
+      },
+    ],
+  },
+  {
+    id: 'aashirvaad-salt',
+    name: 'Aashirvaad Iodised Crystal Salt',
+    brand: 'Aashirvaad',
+    manufacturer: 'ITC Limited',
+    countryOfOrigin: 'India',
+    hsn: '2501',
+    gst: 5,
+    category: 'spices',
+    image: '🧂',
+    images: IMG.salt,
+    bgColor: '#E0E7FF',
+    variants: [
+      {
+        id: 'v1', size: '1 Kg Pack', casePack: '24 Pcs/Case',
+        casePcs: 24, mrp: 28, sellingPrice: 24, casePrice: 576,
+        discount: 14, margin: 14, stock: 'available', moq: 1,
+        scheme: null,
+      },
+    ],
+  },
+  {
+    id: 'tata-tea-gold',
+    name: 'Tata Tea Gold Premium Assam Leaf Tea',
+    brand: 'Tata Tea',
+    manufacturer: 'Tata Consumer Products Ltd',
+    countryOfOrigin: 'India',
+    hsn: '0902',
+    gst: 5,
+    category: 'beverages',
+    image: '🍵',
+    images: IMG.maggi,
+    bgColor: '#FEF3C7',
+    variants: [
+      {
+        id: 'v1', size: '500 g Pack', casePack: '12 Pcs/Case',
+        casePcs: 12, mrp: 290, sellingPrice: 258, casePrice: 3096,
+        discount: 11, margin: 11, stock: 'available', moq: 1,
+        scheme: '4% Extra Discount',
+      },
+    ],
+    deliveryOptions: ['tomorrow'],
+  },
+  {
+    id: 'itc-sunfeast-marie',
+    name: 'Sunfeast Marie Light Biscuits',
+    brand: 'Sunfeast',
+    manufacturer: 'ITC Limited',
+    countryOfOrigin: 'India',
+    hsn: '1905',
+    gst: 18,
+    category: 'snacks',
+    image: '🍪',
+    images: IMG.parleg,
+    bgColor: '#FEF3C7',
+    variants: [
+      {
+        id: 'v1', size: '150 g Pack', casePack: '60 Pcs/Case',
+        casePcs: 60, mrp: 20, sellingPrice: 17, casePrice: 1020,
+        discount: 15, margin: 15, stock: 'available', moq: 1,
+        scheme: null,
+      },
+      {
+        id: 'v2', size: '250 g Pack', casePack: '40 Pcs/Case',
+        casePcs: 40, mrp: 35, sellingPrice: 30, casePrice: 1200,
+        discount: 14, margin: 14, stock: 'available', moq: 1,
+        scheme: 'Buy 5 Cases Get 1 Free',
+      },
+    ],
+  },
+  {
+    id: 'itc-bingo-mad-angles',
+    name: 'Bingo Mad Angles Tomato Madness Family Pack',
+    brand: 'Bingo',
+    manufacturer: 'ITC Limited',
+    countryOfOrigin: 'India',
+    hsn: '1905',
+    gst: 18,
+    category: 'snacks',
+    image: '🌶️',
+    images: IMG.parleg,
+    bgColor: '#FECACA',
+    variants: [
+      {
+        id: 'v1', size: '350 g Family Pack', casePack: '1 Pc',
+        casePcs: 1, mrp: 110, sellingPrice: 95, casePrice: 95,
+        discount: 14, margin: 14, stock: 'available', moq: 4,
+        scheme: null,
+      },
+    ],
+  },
+  {
+    id: 'britannia-good-day',
+    name: 'Britannia Good Day Cashew Almond Cookies',
+    brand: 'Britannia',
+    manufacturer: 'Britannia Industries Ltd',
+    countryOfOrigin: 'India',
+    hsn: '1905',
+    gst: 18,
+    category: 'snacks',
+    image: '🍪',
+    images: IMG.parleg,
+    bgColor: '#FEF3C7',
+    variants: [
+      {
+        id: 'v1', size: '90 g Pack', casePack: '72 Pcs/Case',
+        casePcs: 72, mrp: 15, sellingPrice: 13, casePrice: 936,
+        discount: 13, margin: 13, stock: 'available', moq: 1,
+        scheme: null,
+      },
+      {
+        id: 'v2', size: '200 g Pack', casePack: '36 Pcs/Case',
+        casePcs: 36, mrp: 50, sellingPrice: 44, casePrice: 1584,
+        discount: 12, margin: 12, stock: 'limited', moq: 1,
+        scheme: '5% Extra Discount',
+      },
+    ],
+    deliveryOptions: ['tomorrow'],
+  },
+  {
+    id: 'mtr-rasam-mix',
+    name: 'MTR Rasam Spice Mix',
+    brand: 'MTR',
+    manufacturer: 'MTR Foods Pvt Ltd',
+    countryOfOrigin: 'India',
+    hsn: '0910',
+    gst: 5,
+    category: 'spices',
+    image: '🌶️',
+    images: IMG.maggi,
+    bgColor: '#FED7AA',
+    variants: [
+      {
+        id: 'v1', size: '100 g Pack', casePack: '40 Pcs/Case',
+        casePcs: 40, mrp: 75, sellingPrice: 66, casePrice: 2640,
+        discount: 12, margin: 12, stock: 'available', moq: 1,
+        scheme: null,
+      },
+      {
+        id: 'v2', size: '200 g Pack', casePack: '24 Pcs/Case',
+        casePcs: 24, mrp: 140, sellingPrice: 122, casePrice: 2928,
+        discount: 13, margin: 13, stock: 'available', moq: 1,
+        scheme: null,
+      },
+    ],
+  },
+  {
+    id: 'priya-mango-pickle',
+    name: 'Priya Avakkai Andhra Mango Pickle',
+    brand: 'Priya Foods',
+    manufacturer: 'Priya Foods Pvt Ltd',
+    countryOfOrigin: 'India',
+    hsn: '2001',
+    gst: 12,
+    category: 'pickles',
+    image: '🥒',
+    images: IMG.salt,
+    bgColor: '#FEE2E2',
+    variants: [
+      {
+        id: 'v1', size: '300 g Jar', casePack: '12 Pcs/Case',
+        casePcs: 12, mrp: 95, sellingPrice: 84, casePrice: 1008,
+        discount: 12, margin: 12, stock: 'available', moq: 1,
+        scheme: null,
+      },
+      {
+        id: 'v2', size: '500 g Jar', casePack: '12 Pcs/Case',
+        casePcs: 12, mrp: 155, sellingPrice: 138, casePrice: 1656,
+        discount: 11, margin: 11, stock: 'available', moq: 1,
+        scheme: 'Buy 8 Cases Get 1 Free',
+      },
+    ],
+  },
+  {
+    id: 'eastern-sambar-powder',
+    name: 'Eastern Sambar Masala Powder',
+    brand: 'Eastern',
+    manufacturer: 'Eastern Condiments Pvt Ltd',
+    countryOfOrigin: 'India',
+    hsn: '0910',
+    gst: 5,
+    category: 'spices',
+    image: '🌶️',
+    images: IMG.maggi,
+    bgColor: '#FEF3C7',
+    variants: [
+      {
+        id: 'v1', size: '100 g Pack', casePack: '50 Pcs/Case',
+        casePcs: 50, mrp: 65, sellingPrice: 57, casePrice: 2850,
+        discount: 12, margin: 12, stock: 'available', moq: 1,
+        scheme: null,
+      },
+    ],
+    deliveryOptions: ['beat'],
+  },
+  {
+    id: 'madhur-sugar',
+    name: 'Madhur Pure Refined Sugar',
+    brand: 'Madhur',
+    manufacturer: 'Bajaj Hindusthan Sugar Ltd',
+    countryOfOrigin: 'India',
+    hsn: '1701',
+    gst: 5,
+    category: 'spices',
+    image: '🍬',
+    images: IMG.salt,
+    bgColor: '#FEF3C7',
+    variants: [
+      {
+        id: 'v1', size: '5 Kg Bag', casePack: '4 Pcs/Case',
+        casePcs: 4, mrp: 280, sellingPrice: 252, casePrice: 1008,
+        discount: 10, margin: 10, stock: 'available', moq: 1,
+        scheme: null,
+      },
+    ],
+  },
+  {
+    id: 'maggi-hot-sweet',
+    name: 'Maggi Hot & Sweet Tomato Chilli Sauce',
+    brand: 'Maggi',
+    manufacturer: 'Nestlé India Ltd',
+    countryOfOrigin: 'India',
+    hsn: '2103',
+    gst: 12,
+    category: 'spices',
+    image: '🌶️',
+    images: IMG.maggi,
+    bgColor: '#FECACA',
+    variants: [
+      {
+        id: 'v1', size: '500 g Bottle', casePack: '12 Pcs/Case',
+        casePcs: 12, mrp: 145, sellingPrice: 128, casePrice: 1536,
+        discount: 12, margin: 12, stock: 'available', moq: 1,
+        scheme: null,
+      },
+      {
+        id: 'v2', size: '1 Kg Pouch', casePack: '8 Pcs/Case',
+        casePcs: 8, mrp: 260, sellingPrice: 228, casePrice: 1824,
+        discount: 12, margin: 12, stock: 'limited', moq: 1,
+        scheme: '5% Extra Discount',
+      },
+    ],
+  },
+  {
+    id: 'surf-excel-quick-wash',
+    name: 'Surf Excel Quick Wash Detergent Powder',
+    brand: 'Surf Excel',
+    manufacturer: 'Hindustan Unilever Ltd',
+    countryOfOrigin: 'India',
+    hsn: '3402',
+    gst: 18,
+    category: 'cleaning',
+    image: '🧼',
+    images: IMG.detergent,
+    bgColor: '#E0E7FF',
+    variants: [
+      {
+        id: 'v1', size: '1 Kg Pack', casePack: '12 Pcs/Case',
+        casePcs: 12, mrp: 245, sellingPrice: 206, casePrice: 2472,
+        discount: 16, margin: 16, stock: 'available', moq: 1,
+        scheme: 'Buy 4 Cases Get 1 Free',
+      },
+      {
+        id: 'v2', size: '500 g Pack', casePack: '24 Pcs/Case',
+        casePcs: 24, mrp: 130, sellingPrice: 108, casePrice: 2592,
+        discount: 17, margin: 17, stock: 'available', moq: 1,
+        scheme: null,
+      },
+    ],
+  },
+
+  // ------------------------------------------------------------------
+  //  Real-data SKUs sourced from a production catalog export
+  //  (Final production Data with selling unit). Names, groups,
+  //  brands, manufacturers, sizes, and inner pack counts are real;
+  //  pricing (MRP / sellingPrice / margin) is synthesized at Indian
+  //  distributor norms (10–15% margin, MRPs cross-checked against
+  //  public listings). Linked to existing distributorsList brands so
+  //  storefronts pick them up via sellerForProduct().
+  // ------------------------------------------------------------------
+
+  // ===== Sneha (Sneha Farms) — Oil & Ghee =====
+  {
+    id: 'sneha-rice-bran-400ml',
+    name: 'Sneha Rice Bran Oil',
+    brand: 'Sneha',
+    manufacturer: 'Sneha Farms Pvt. Ltd.',
+    countryOfOrigin: 'India',
+    hsn: '1515',
+    gst: 5,
+    category: 'cooking-oil',
+    image: '🛢️',
+    images: IMG.sunflowerOil,
+    bgColor: '#FEF3C7',
+    variants: [
+      {
+        id: 'v1', size: '400 ml Pouch', casePack: '30 Pcs/Case',
+        casePcs: 30, mrp: 82, sellingPrice: 72, casePrice: 2160,
+        discount: 12, margin: 12, stock: 'available', moq: 1,
+        scheme: null,
+      },
+      {
+        id: 'v2', size: '800 ml Pouch', casePack: '20 Pcs/Case',
+        casePcs: 20, mrp: 160, sellingPrice: 142, casePrice: 2840,
+        discount: 11, margin: 11, stock: 'available', moq: 1,
+        scheme: 'Buy 5 Cases Get 1 Free',
+      },
+      {
+        id: 'v3', size: '900 ml Pouch', casePack: '15 Pcs/Case',
+        casePcs: 15, mrp: 180, sellingPrice: 160, casePrice: 2400,
+        discount: 11, margin: 11, stock: 'available', moq: 1,
+        scheme: null,
+      },
+    ],
+  },
+
+  // ===== Aashirvaad (ITC Limited) — Spices powders =====
+  {
+    id: 'aashirvaad-chilli-powder',
+    name: 'Aashirvaad Chilli Powder',
+    brand: 'Aashirvaad',
+    manufacturer: 'ITC Limited',
+    countryOfOrigin: 'India',
+    hsn: '0904',
+    gst: 5,
+    category: 'spices',
+    image: '🌶️',
+    images: IMG.maggi,
+    bgColor: '#FECACA',
+    variants: [
+      {
+        id: 'v1', size: '50 g Pouch', casePack: '20 Pcs/Case',
+        casePcs: 20, mrp: 45, sellingPrice: 40, casePrice: 800,
+        discount: 11, margin: 11, stock: 'available', moq: 1,
+        scheme: null,
+      },
+      {
+        id: 'v2', size: '100 g Pouch', casePack: '10 Pcs/Case',
+        casePcs: 10, mrp: 85, sellingPrice: 75, casePrice: 750,
+        discount: 12, margin: 12, stock: 'available', moq: 1,
+        scheme: null,
+      },
+      {
+        id: 'v3', size: '500 g Pouch', casePack: '2 Pcs/Case',
+        casePcs: 2, mrp: 380, sellingPrice: 335, casePrice: 670,
+        discount: 12, margin: 12, stock: 'available', moq: 1,
+        scheme: 'Buy 6 Cases Get 1 Free',
+      },
+    ],
+  },
+  {
+    id: 'aashirvaad-coriander-powder',
+    name: 'Aashirvaad Coriander Powder',
+    brand: 'Aashirvaad',
+    manufacturer: 'ITC Limited',
+    countryOfOrigin: 'India',
+    hsn: '0909',
+    gst: 5,
+    category: 'spices',
+    image: '🌿',
+    images: IMG.maggi,
+    bgColor: '#D1FAE5',
+    variants: [
+      {
+        id: 'v1', size: '100 g Pouch', casePack: '10 Pcs/Case',
+        casePcs: 10, mrp: 50, sellingPrice: 44, casePrice: 440,
+        discount: 12, margin: 12, stock: 'available', moq: 1,
+        scheme: null,
+      },
+      {
+        id: 'v2', size: '200 g Pouch', casePack: '5 Pcs/Case',
+        casePcs: 5, mrp: 95, sellingPrice: 84, casePrice: 420,
+        discount: 12, margin: 12, stock: 'available', moq: 1,
+        scheme: null,
+      },
+    ],
+  },
+  {
+    id: 'aashirvaad-turmeric-powder',
+    name: 'Aashirvaad Turmeric Powder',
+    brand: 'Aashirvaad',
+    manufacturer: 'ITC Limited',
+    countryOfOrigin: 'India',
+    hsn: '0910',
+    gst: 5,
+    category: 'spices',
+    image: '🟡',
+    images: IMG.maggi,
+    bgColor: '#FEF3C7',
+    variants: [
+      {
+        id: 'v1', size: '100 g Pouch', casePack: '10 Pcs/Case',
+        casePcs: 10, mrp: 55, sellingPrice: 48, casePrice: 480,
+        discount: 13, margin: 13, stock: 'available', moq: 1,
+        scheme: null,
+      },
+      {
+        id: 'v2', size: '200 g Pouch', casePack: '5 Pcs/Case',
+        casePcs: 5, mrp: 105, sellingPrice: 92, casePrice: 460,
+        discount: 12, margin: 12, stock: 'limited', moq: 1,
+        scheme: null,
+      },
+    ],
+  },
+
+  // ===== MTR (MTR Foods) — Ready-to-cook mixes =====
+  {
+    id: 'mtr-rava-idli-mix',
+    name: 'MTR Rava Idli Mix',
+    brand: 'MTR',
+    manufacturer: 'Orkla India Private Limited',
+    countryOfOrigin: 'India',
+    hsn: '1106',
+    gst: 5,
+    category: 'spices',
+    image: '🍚',
+    images: IMG.maggi,
+    bgColor: '#FEF3C7',
+    variants: [
+      {
+        id: 'v1', size: '500 g Pack', casePack: '12 Pcs/Case',
+        casePcs: 12, mrp: 165, sellingPrice: 145, casePrice: 1740,
+        discount: 12, margin: 12, stock: 'available', moq: 1,
+        scheme: null,
+      },
+    ],
+  },
+  {
+    id: 'mtr-vada-mix',
+    name: 'MTR Vada Mix',
+    brand: 'MTR',
+    manufacturer: 'Orkla India Private Limited',
+    countryOfOrigin: 'India',
+    hsn: '1106',
+    gst: 5,
+    category: 'spices',
+    image: '🍩',
+    images: IMG.maggi,
+    bgColor: '#FED7AA',
+    variants: [
+      {
+        id: 'v1', size: '500 g Pack', casePack: '12 Pcs/Case',
+        casePcs: 12, mrp: 155, sellingPrice: 137, casePrice: 1644,
+        discount: 12, margin: 12, stock: 'available', moq: 1,
+        scheme: '5% Extra Discount',
+      },
+    ],
+  },
+  {
+    id: 'mtr-rava-dosa-mix',
+    name: 'MTR Rava Dosa Mix',
+    brand: 'MTR',
+    manufacturer: 'Orkla India Private Limited',
+    countryOfOrigin: 'India',
+    hsn: '1106',
+    gst: 5,
+    category: 'spices',
+    image: '🥞',
+    images: IMG.maggi,
+    bgColor: '#FEF3C7',
+    variants: [
+      {
+        id: 'v1', size: '500 g Pack', casePack: '12 Pcs/Case',
+        casePcs: 12, mrp: 175, sellingPrice: 154, casePrice: 1848,
+        discount: 12, margin: 12, stock: 'available', moq: 1,
+        scheme: null,
+      },
+    ],
+  },
+  {
+    id: 'mtr-badam-drink',
+    name: 'MTR Badam Drink Mix',
+    brand: 'MTR',
+    manufacturer: 'Orkla India Private Limited',
+    countryOfOrigin: 'India',
+    hsn: '2106',
+    gst: 12,
+    category: 'beverages',
+    image: '🥛',
+    images: IMG.maggi,
+    bgColor: '#FEF3C7',
+    variants: [
+      {
+        id: 'v1', size: '8 g Pouch', casePack: '12 Pcs/Case',
+        casePcs: 12, mrp: 10, sellingPrice: 9, casePrice: 108,
+        discount: 10, margin: 10, stock: 'available', moq: 1,
+        scheme: null,
+      },
+      {
+        id: 'v2', size: '500 g Jar', casePack: '1 Pc',
+        casePcs: 1, mrp: 320, sellingPrice: 282, casePrice: 282,
+        discount: 12, margin: 12, stock: 'available', moq: 6,
+        scheme: 'Buy 12 Get 1 Free',
+      },
+    ],
+  },
+
+  // ===== Priya Foods (Ushodaya Enterprises) — Pickles =====
+  {
+    id: 'priya-lime-pickle',
+    name: 'Priya Lime Pickle',
+    brand: 'Priya Foods',
+    manufacturer: 'Ushodaya Enterprises Private Limited',
+    countryOfOrigin: 'India',
+    hsn: '2001',
+    gst: 12,
+    category: 'pickles',
+    image: '🍋',
+    images: IMG.salt,
+    bgColor: '#FEF3C7',
+    variants: [
+      {
+        id: 'v1', size: '300 g Jar', casePack: '12 Pcs/Case',
+        casePcs: 12, mrp: 90, sellingPrice: 80, casePrice: 960,
+        discount: 11, margin: 11, stock: 'available', moq: 1,
+        scheme: null,
+      },
+      {
+        id: 'v2', size: '1 Kg Jar', casePack: '6 Pcs/Case',
+        casePcs: 6, mrp: 285, sellingPrice: 252, casePrice: 1512,
+        discount: 12, margin: 12, stock: 'available', moq: 1,
+        scheme: 'Buy 8 Cases Get 1 Free',
+      },
+    ],
+  },
+  {
+    id: 'priya-gongura-pickle',
+    name: 'Priya Gongura Pickle',
+    brand: 'Priya Foods',
+    manufacturer: 'Ushodaya Enterprises Private Limited',
+    countryOfOrigin: 'India',
+    hsn: '2001',
+    gst: 12,
+    category: 'pickles',
+    image: '🌿',
+    images: IMG.salt,
+    bgColor: '#FEE2E2',
+    variants: [
+      {
+        id: 'v1', size: '300 g Jar', casePack: '12 Pcs/Case',
+        casePcs: 12, mrp: 110, sellingPrice: 96, casePrice: 1152,
+        discount: 13, margin: 13, stock: 'available', moq: 1,
+        scheme: null,
+      },
+    ],
+  },
+  {
+    id: 'priya-tamarind-pickle',
+    name: 'Priya Tamarind Pickle',
+    brand: 'Priya Foods',
+    manufacturer: 'Ushodaya Enterprises Private Limited',
+    countryOfOrigin: 'India',
+    hsn: '2001',
+    gst: 12,
+    category: 'pickles',
+    image: '🟤',
+    images: IMG.salt,
+    bgColor: '#FED7AA',
+    variants: [
+      {
+        id: 'v1', size: '300 g Jar', casePack: '12 Pcs/Case',
+        casePcs: 12, mrp: 85, sellingPrice: 74, casePrice: 888,
+        discount: 13, margin: 13, stock: 'limited', moq: 1,
+        scheme: null,
+      },
+    ],
+  },
+
+  // ===== Cycle (N. Ranga Rao & Sons) — Pooja Needs =====
+  {
+    id: 'cycle-3-in-1-agarbathi',
+    name: 'Cycle Pure 3-in-1 Agarbathi',
+    brand: 'Cycle',
+    manufacturer: 'N. Ranga Rao & Sons Private Limited',
+    countryOfOrigin: 'India',
+    hsn: '3307',
+    gst: 12,
+    category: 'pooja',
+    image: '🕉️',
+    images: IMG.salt,
+    bgColor: '#FCE7F3',
+    variants: [
+      {
+        id: 'v1', size: '20 Sticks Pack', casePack: '24 Pcs/Case',
+        casePcs: 24, mrp: 30, sellingPrice: 26, casePrice: 624,
+        discount: 13, margin: 13, stock: 'available', moq: 1,
+        scheme: null,
+      },
+      {
+        id: 'v2', size: '60 Sticks Pack', casePack: '12 Pcs/Case',
+        casePcs: 12, mrp: 80, sellingPrice: 70, casePrice: 840,
+        discount: 13, margin: 13, stock: 'available', moq: 1,
+        scheme: '5% Extra Discount',
+      },
+    ],
+  },
+  {
+    id: 'cycle-rhythm-agarbathi',
+    name: 'Cycle Rhythm Agarbathi',
+    brand: 'Cycle',
+    manufacturer: 'N. Ranga Rao & Sons Private Limited',
+    countryOfOrigin: 'India',
+    hsn: '3307',
+    gst: 12,
+    category: 'pooja',
+    image: '🪔',
+    images: IMG.salt,
+    bgColor: '#FED7AA',
+    variants: [
+      {
+        id: 'v1', size: '20 Sticks Pack', casePack: '24 Pcs/Case',
+        casePcs: 24, mrp: 35, sellingPrice: 30, casePrice: 720,
+        discount: 14, margin: 14, stock: 'available', moq: 1,
+        scheme: null,
+      },
+    ],
+  },
+
+  // ===== Mysore Sandal (Karnataka Soaps and Detergents) — Beauty =====
+  {
+    id: 'mysore-sandal-soap',
+    name: 'Mysore Sandal Soap',
+    brand: 'Mysore Sandal',
+    manufacturer: 'Karnataka Soaps And Detergents Limited',
+    countryOfOrigin: 'India',
+    hsn: '3401',
+    gst: 18,
+    category: 'personal-care',
+    image: '🧼',
+    images: IMG.detergent,
+    bgColor: '#FCE7F3',
+    variants: [
+      {
+        id: 'v1', size: '75 g Bar', casePack: '48 Pcs/Case',
+        casePcs: 48, mrp: 52, sellingPrice: 45, casePrice: 2160,
+        discount: 13, margin: 13, stock: 'available', moq: 1,
+        scheme: null,
+      },
+      {
+        id: 'v2', size: '125 g Bar', casePack: '24 Pcs/Case',
+        casePcs: 24, mrp: 78, sellingPrice: 68, casePrice: 1632,
+        discount: 13, margin: 13, stock: 'available', moq: 1,
+        scheme: 'Buy 5 Cases Get 1 Free',
+      },
+      {
+        id: 'v3', size: '150 g Bar', casePack: '20 Pcs/Case',
+        casePcs: 20, mrp: 92, sellingPrice: 80, casePrice: 1600,
+        discount: 13, margin: 13, stock: 'available', moq: 1,
+        scheme: null,
+      },
+    ],
+  },
+
+  // ===== Lal Kila (LT Foods) — Rice =====
+  {
+    id: 'lal-kila-basmati',
+    name: 'Lal Kila Classic Basmati Rice',
+    brand: 'Lal Kila',
+    manufacturer: 'LT Foods Limited',
+    countryOfOrigin: 'India',
+    hsn: '1006',
+    gst: 5,
+    category: 'rice',
+    image: '🌾',
+    images: IMG.atta,
+    bgColor: '#FEF3C7',
+    variants: [
+      {
+        id: 'v1', size: '1 Kg Pack', casePack: '20 Pcs/Case',
+        casePcs: 20, mrp: 165, sellingPrice: 144, casePrice: 2880,
+        discount: 13, margin: 13, stock: 'available', moq: 1,
+        scheme: null,
+      },
+      {
+        id: 'v2', size: '5 Kg Bag', casePack: '4 Pcs/Case',
+        casePcs: 4, mrp: 780, sellingPrice: 685, casePrice: 2740,
+        discount: 12, margin: 12, stock: 'available', moq: 1,
+        scheme: 'Buy 5 Cases Get 1 Free',
+      },
+    ],
+  },
+  {
+    id: 'sri-lalitha-sona-masuri',
+    name: 'Sri Lalitha Sona Masuri Rice',
+    brand: 'Sri Lalitha',
+    manufacturer: 'Sri Lalitha Enterprises Industries P Limited',
+    countryOfOrigin: 'India',
+    hsn: '1006',
+    gst: 5,
+    category: 'rice',
+    image: '🌾',
+    images: IMG.atta,
+    bgColor: '#FCE7F3',
+    variants: [
+      {
+        id: 'v1', size: '25 Kg Bag', casePack: '1 Pc',
+        casePcs: 1, mrp: 1850, sellingPrice: 1620, casePrice: 1620,
+        discount: 12, margin: 12, stock: 'available', moq: 1,
+        scheme: null,
+      },
+    ],
+  },
+
+  // ===== Tata Sampann / Madhur — Dals & Pulses =====
+  {
+    id: 'tata-sampann-toor-dal',
+    name: 'Tata Sampann Unpolished Toor Dal',
+    brand: 'Tata',
+    manufacturer: 'Tata Consumer Products Ltd',
+    countryOfOrigin: 'India',
+    hsn: '0713',
+    gst: 0,
+    category: 'dals',
+    image: '🫘',
+    images: IMG.atta,
+    bgColor: '#FED7AA',
+    variants: [
+      {
+        id: 'v1', size: '500 g Pack', casePack: '24 Pcs/Case',
+        casePcs: 24, mrp: 92, sellingPrice: 80, casePrice: 1920,
+        discount: 13, margin: 13, stock: 'available', moq: 1,
+        scheme: null,
+      },
+      {
+        id: 'v2', size: '1 Kg Pack', casePack: '12 Pcs/Case',
+        casePcs: 12, mrp: 175, sellingPrice: 153, casePrice: 1836,
+        discount: 13, margin: 13, stock: 'available', moq: 1,
+        scheme: null,
+      },
+    ],
+  },
+  {
+    id: 'sneha-moong-dal',
+    name: 'Sneha Premium Moong Dal',
+    brand: 'Sneha',
+    manufacturer: 'Sneha Farms Pvt. Ltd.',
+    countryOfOrigin: 'India',
+    hsn: '0713',
+    gst: 0,
+    category: 'dals',
+    image: '🫘',
+    images: IMG.atta,
+    bgColor: '#D1FAE5',
+    variants: [
+      {
+        id: 'v1', size: '1 Kg Pack', casePack: '12 Pcs/Case',
+        casePcs: 12, mrp: 150, sellingPrice: 132, casePrice: 1584,
+        discount: 12, margin: 12, stock: 'available', moq: 1,
+        scheme: null,
+      },
+    ],
+  },
+
+  // ===== Lion (Lion Dates) — Dry Fruits =====
+  {
+    id: 'lion-dates',
+    name: 'Lion Pitted Soft Dates',
+    brand: 'Lion',
+    manufacturer: 'Lion Dates Impex (P) Ltd',
+    countryOfOrigin: 'India',
+    hsn: '0804',
+    gst: 5,
+    category: 'dry-fruits',
+    image: '🌰',
+    images: IMG.salt,
+    bgColor: '#FED7AA',
+    variants: [
+      {
+        id: 'v1', size: '250 g Pack', casePack: '24 Pcs/Case',
+        casePcs: 24, mrp: 110, sellingPrice: 96, casePrice: 2304,
+        discount: 13, margin: 13, stock: 'available', moq: 1,
+        scheme: null,
+      },
+      {
+        id: 'v2', size: '500 g Pack', casePack: '12 Pcs/Case',
+        casePcs: 12, mrp: 210, sellingPrice: 184, casePrice: 2208,
+        discount: 12, margin: 12, stock: 'available', moq: 1,
+        scheme: 'Buy 6 Cases Get 1 Free',
+      },
+    ],
+  },
+  {
+    id: 'sneha-cashews',
+    name: 'Sneha Premium Whole Cashews',
+    brand: 'Sneha',
+    manufacturer: 'Sneha Farms Pvt. Ltd.',
+    countryOfOrigin: 'India',
+    hsn: '0801',
+    gst: 5,
+    category: 'dry-fruits',
+    image: '🥜',
+    images: IMG.salt,
+    bgColor: '#FEF3C7',
+    variants: [
+      {
+        id: 'v1', size: '250 g Pack', casePack: '12 Pcs/Case',
+        casePcs: 12, mrp: 280, sellingPrice: 246, casePrice: 2952,
+        discount: 12, margin: 12, stock: 'limited', moq: 1,
+        scheme: null,
+      },
+    ],
+  },
+
+  // ===== Eastern (Eastern Condiments) — Spice blends =====
+  {
+    id: 'eastern-garam-masala',
+    name: 'Eastern Garam Masala Powder',
+    brand: 'Eastern',
+    manufacturer: 'Eastern Condiments Pvt Ltd',
+    countryOfOrigin: 'India',
+    hsn: '0910',
+    gst: 5,
+    category: 'spices',
+    image: '🌶️',
+    images: IMG.maggi,
+    bgColor: '#FEF3C7',
+    variants: [
+      {
+        id: 'v1', size: '50 g Pack', casePack: '50 Pcs/Case',
+        casePcs: 50, mrp: 38, sellingPrice: 33, casePrice: 1650,
+        discount: 13, margin: 13, stock: 'available', moq: 1,
+        scheme: null,
+      },
+      {
+        id: 'v2', size: '100 g Pack', casePack: '24 Pcs/Case',
+        casePcs: 24, mrp: 70, sellingPrice: 61, casePrice: 1464,
+        discount: 13, margin: 13, stock: 'available', moq: 1,
+        scheme: null,
+      },
+    ],
+  },
+];
+
+// Merge hand-curated + generated catalog, deduped by id (hand-curated wins).
+const _handcraftedIds = new Set(handcraftedProducts.map((p) => p.id));
+export const products: Product[] = [
+  ...handcraftedProducts,
+  ...generatedProducts.filter((p) => !_handcraftedIds.has(p.id)),
 ];
 
 // Initial cart with items from 2 sellers — shows MOV met, MOV pending, multi-seller complexity
@@ -1580,12 +2448,9 @@ export const distributorsList = [
       { id: 'freedom',       short: 'Freedom',       initials: 'F',  bg: '#FEF3C7', logo: '/brand-logos/Freedon Oil.png' },
       { id: 'fortune',       short: 'Fortune',       initials: 'Fo', bg: '#DBEAFE', logo: '/brand-logos/Forture Oil.png' },
       { id: 'ruchi-gold',    short: 'Ruchi Gold',    initials: 'RG', bg: '#FEE2E2', logo: '/brand-logos/Ruchi Gold.png' },
-      { id: 'ruchi',         short: 'Ruchi',         initials: 'R',  bg: '#FEE2E2', logo: '/brand-logos/Ruchi.png' },
       { id: 'gold-drop',     short: 'Gold Drop',     initials: 'GD', bg: '#FEF3C7', logo: '/brand-logos/Gold Drop.png' },
-      { id: 'gold-fresh',    short: 'Gold Fresh',    initials: 'GF', bg: '#FEF3C7', logo: '/brand-logos/Gold Fresh.png' },
       { id: 'sri-lalitha',   short: 'Sri Lalitha',   initials: 'SL', bg: '#FCE7F3', logo: '/brand-logos/Sri Lalitha.png' },
       { id: 'priya-foods',   short: 'Priya Foods',   initials: 'PF', bg: '#FED7AA', logo: '/brand-logos/Priya Foods.png' },
-      { id: 'parrys',        short: 'Parry Sugar',   initials: 'PS', bg: '#FEF3C7', logo: '/brand-logos/Parry Sugar.png' },
       { id: 'madhur',        short: 'Madhur',        initials: 'M',  bg: '#D1FAE5', logo: '/brand-logos/Madhur.png' },
       { id: 'aashirvaad',    short: 'Aashirvaad',    initials: 'A',  bg: '#FED7AA', logo: '/brand-logos/Aashirvaad.png' },
       { id: 'mtr',           short: 'MTR',           initials: 'MT', bg: '#FEE2E2', logo: '/brand-logos/MTR.png' },
@@ -1594,35 +2459,21 @@ export const distributorsList = [
       { id: 'tata',          short: 'Tata',          initials: 'T',  bg: '#DBEAFE', logo: '/brand-logos/Tata.png' },
       { id: 'sneha',         short: 'Sneha',         initials: 'Sn', bg: '#FEF3C7', logo: '/brand-logos/Sneha.png' },
       { id: 'gokul',         short: 'Gokul',         initials: 'G',  bg: '#FEF3C7', logo: '/brand-logos/Gokul.png' },
-      { id: 'rajini-gold',   short: 'Rajini Gold',   initials: 'RJ', bg: '#FEF3C7', logo: '/brand-logos/Rajini Gold.png' },
       { id: 'double-horse',  short: 'Double Horse',  initials: 'DH', bg: '#FEE2E2', logo: '/brand-logos/Double Horse.png' },
-      { id: 'deer-brand',    short: 'Deer Brand',    initials: 'DB', bg: '#FED7AA', logo: '/brand-logos/Deer Brand.png' },
-      { id: 'mahateja',      short: 'Mahateja',      initials: 'Mh', bg: '#FEF3C7', logo: '/brand-logos/Mahateja.png' },
-      { id: 'gd-hing',       short: 'GD Hing',       initials: 'GH', bg: '#FED7AA', logo: '/brand-logos/GD Hing.png' },
     ],
   },
   {
     id: 'ssrm',
     name: 'Sri Sairam Enterprises',
     brands: [
-      { id: 'ajay-care',     short: 'Ajay Care',     initials: 'AC', bg: '#E0E7FF', logo: '/brand-logos/Ajy.png' },
+      { id: 'ajay-care',     short: 'Ajay',     initials: 'AC', bg: '#E0E7FF', logo: '/brand-logos/Ajy.png' },
       { id: 'cycle',         short: 'Cycle',         initials: 'C',  bg: '#FEF3C7', logo: '/brand-logos/Cycle.png' },
       { id: 'grb',           short: 'GRB',           initials: 'GR', bg: '#D1FAE5', logo: '/brand-logos/GRB.png' },
       { id: 'priya-gold',    short: 'Priya Gold',    initials: 'PG', bg: '#FEE2E2', logo: '/brand-logos/Priya Gold.png' },
-      { id: 'nippo',         short: 'Nippo',         initials: 'N',  bg: '#DBEAFE', logo: '/brand-logos/Nippo.png' },
-      { id: 'festival',      short: 'Festival',      initials: 'Fe', bg: '#FCE7F3', logo: '/brand-logos/Festival.png' },
       { id: 'netaji',        short: 'Netaji',        initials: 'Nt', bg: '#FEF3C7', logo: '/brand-logos/Netaji.png' },
       { id: 'roxy',          short: 'Roxy',          initials: 'Rx', bg: '#FEE2E2', logo: '/brand-logos/Roxy.png' },
       { id: 'gajraj',        short: 'Gajraj',        initials: 'Gj', bg: '#FED7AA', logo: '/brand-logos/Gajraj.png' },
-      { id: 'karani',        short: 'Karani',        initials: 'Ka', bg: '#FEF3C7', logo: '/brand-logos/Karani.png' },
       { id: 'malai-magic',   short: 'Malai Magic',   initials: 'MM', bg: '#FCE7F3', logo: '/brand-logos/Malai Magic.png' },
-      { id: 'my-choice',     short: 'My Choice',     initials: 'MC', bg: '#DBEAFE', logo: '/brand-logos/My Choice.png' },
-      { id: 'kurnool',       short: 'Kurnool',       initials: 'Ku', bg: '#FEF3C7', logo: '/brand-logos/Kurnool.png' },
-      { id: 'sri-krishna',   short: 'Sri Krishna',   initials: 'SK', bg: '#FED7AA', logo: '/brand-logos/Sri Krishna.png' },
-      { id: 'sri-rk',        short: 'Sri RK',        initials: 'RK', bg: '#FEE2E2', logo: '/brand-logos/Sri RK.png' },
-      { id: 'prime',         short: 'Prime',         initials: 'Pr', bg: '#E0E7FF', logo: '/brand-logos/Prime.png' },
-      { id: 'mv',            short: 'MV',            initials: 'MV', bg: '#FEF3C7', logo: '/brand-logos/MV.png' },
-      { id: 'mvr',           short: 'MVR',          initials: 'MR', bg: '#FED7AA', logo: '/brand-logos/MVR.png' },
     ],
   },
   {
@@ -1632,18 +2483,12 @@ export const distributorsList = [
       { id: 'mysore-sandal', short: 'Mysore Sandal', initials: 'MS', bg: '#FCE7F3', logo: '/brand-logos/Mysore Sandal.png' },
       { id: 'vicco',         short: 'Vicco',         initials: 'V',  bg: '#FEE2E2', logo: '/brand-logos/Vicco.png' },
       { id: 'black-rose',    short: 'Black Rose',    initials: 'BR', bg: '#F3F4F6', logo: '/brand-logos/Blackrose.png' },
-      { id: 'dwibhashi',     short: 'Dwibhashi',     initials: 'D',  bg: '#D1FAE5', logo: '/brand-logos/Dwibhashi Ayurveda.png' },
-      { id: 'himalaya',      short: 'Himalaya',      initials: 'H',  bg: '#D1FAE5', logo: '/brand-logos/Himalaya.png' },
-      { id: 'cow',           short: 'Cow',           initials: 'Co', bg: '#FEF3C7', logo: '/brand-logos/Cow.png' },
+      { id: 'dwibhashi',     short: 'Dwibhashi Ayurvedic',     initials: 'D',  bg: '#D1FAE5', logo: '/brand-logos/Dwibhashi Ayurveda.png' },
       { id: 'naturralle',    short: 'Naturralle',    initials: 'Na', bg: '#D1FAE5', logo: '/brand-logos/Naturralle.png' },
       { id: 'nature-guru',   short: 'Nature Guru',   initials: 'NG', bg: '#D1FAE5', logo: '/brand-logos/Nature Guru.png' },
-      { id: 'zindha',        short: 'Zindha Tilismath', initials: 'ZT', bg: '#FED7AA', logo: '/brand-logos/Zindha Tilismath.png' },
-      { id: 'zuri',          short: 'Zuri',          initials: 'Z',  bg: '#FCE7F3', logo: '/brand-logos/Zuri.png' },
+      { id: 'zindha',        short: 'Zinda', initials: 'ZT', bg: '#FED7AA', logo: '/brand-logos/Zindha Tilismath.png' },
       { id: 'vijaya',        short: 'Vijaya',        initials: 'Vj', bg: '#FEF3C7', logo: '/brand-logos/Vijaya.png' },
-      { id: 'as-brand',      short: 'AS Brand',      initials: 'AS', bg: '#E0E7FF', logo: '/brand-logos/As Brand.png' },
-      { id: 'sjl',           short: 'SJL',           initials: 'SJ', bg: '#FED7AA', logo: '/brand-logos/SJL.png' },
-      { id: 'sms',           short: 'SMS',           initials: 'SM', bg: '#FEE2E2', logo: '/brand-logos/SMS.png' },
-      { id: 'ssi',           short: 'SSI',           initials: 'SI', bg: '#E0E7FF', logo: '/brand-logos/SSI.png' },
+      { id: 'as-brand',      short: 'A S Brand',      initials: 'AS', bg: '#E0E7FF', logo: '/brand-logos/As Brand.png' },
     ],
   },
 ];

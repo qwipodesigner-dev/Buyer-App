@@ -96,10 +96,7 @@ export default function WholesalerProductListScreen({
                       {product.name} - {sizeTitle} Packet X {variant.casePcs} Nos
                     </div>
                     <div className="product-subline">
-                      <span>{variant.casePcs} pc/Case</span>
-                      <span className="product-case-price">
-                        ₹ {variant.casePrice.toLocaleString('en-IN')}
-                      </span>
+                      <span>Case: {variant.casePcs} pcs</span>
                     </div>
                   </div>
                   <button

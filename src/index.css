@@ -3540,6 +3540,9 @@ body {
    the chosen option's fee. */
 .product-delivery {
   display: grid;
+  /* Always reserve two columns so a single-option card (Beat == Tomorrow
+     for this buyer's route) keeps the same half-width pill as the
+     two-option layout — no stretching to the full row. */
   grid-template-columns: 1fr 1fr;
   gap: 8px;
   margin-top: 10px;
@@ -3560,6 +3563,13 @@ body {
   text-align: left;
   cursor: pointer;
   transition: border-color 120ms ease, background 120ms ease, color 120ms ease;
+}
+
+/* Read-only variant — same shape, no interactivity. Used by the
+   ProductListingV2 preview where delivery info is informational only. */
+.product-delivery-option.readonly {
+  cursor: default;
+  background: var(--surface-hover, #f7f7f9);
 }
 
 .product-delivery-option.active {
