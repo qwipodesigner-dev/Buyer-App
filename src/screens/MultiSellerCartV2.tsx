@@ -189,16 +189,9 @@ function SellerCardV2({ seller, onPickDelivery }: any) {
         </div>
       </div>
 
-      {/* Action row — delivery fee on the left (Free Delivery / + ₹X
-          Delivery), Add More + View items on the right. The MOV breakdown
-          (status / progress / Current vs MOV) lives in the next block. */}
+      {/* Action row — Add More + View items pills on the right; left side
+          stays empty so the row aligns with the header above. */}
       <div className="cart-v2-card-mov">
-        <div className="cart-v2-card-fee">
-          <Icon.Truck />
-          {seller.deliveryFee === 0
-            ? 'Free Delivery'
-            : `₹${seller.deliveryFee} delivery fees`}
-        </div>
         <div className="cart-v2-card-actions">
           <button className="cart-v2-pill">
             <Icon.Plus /> Add More
@@ -207,6 +200,8 @@ function SellerCardV2({ seller, onPickDelivery }: any) {
         </div>
       </div>
 
+      {/* MOV breakdown — keep the V1-style progress block: status badge,
+          gradient bar, then Current vs MOV detail line. */}
       <div className="cart-v2-mov-block">
         <div className="cart-v2-mov-status-row">
           <span className="cart-v2-mov-status-label">Minimum Order Value</span>
@@ -236,6 +231,8 @@ function SellerCardV2({ seller, onPickDelivery }: any) {
         </div>
       </div>
 
+      <div className="cart-v2-divider-line" />
+
       <div className="cart-v2-rail">
         {rail.map((it) => (
           <div key={it.key} className="cart-v2-rail-item">
@@ -249,28 +246,40 @@ function SellerCardV2({ seller, onPickDelivery }: any) {
         ))}
       </div>
 
+      {/* Bottom row — "Delivery by" + radio choices on the left, delivery
+          fee (Free / paid) on the right. Radios per the Figma: small
+          coloured circles, active = primary, inactive = muted grey. */}
       <div className="cart-v2-delivery">
-        <div className="cart-v2-delivery-label">Delivery by</div>
-        {isWholesaler ? (
-          <div className="cart-v2-delivery-static">Tomorrow</div>
-        ) : (
-          <div className="cart-v2-delivery-chips" role="radiogroup">
-            {(['beat', 'tomorrow'] as DeliveryKind[]).map((kind) => {
-              const active = seller.deliveryKind === kind;
-              return (
-                <button
-                  key={kind}
-                  role="radio"
-                  aria-checked={active}
-                  className={`cart-v2-chip ${active ? 'active' : ''}`}
-                  onClick={() => onPickDelivery?.(kind)}
-                >
-                  {DELIVERY_OPTIONS[kind].label}
-                </button>
-              );
-            })}
-          </div>
-        )}
+        <div className="cart-v2-delivery-left">
+          <div className="cart-v2-delivery-label">Delivery by</div>
+          {isWholesaler ? (
+            <div className="cart-v2-delivery-static">Tomorrow</div>
+          ) : (
+            <div className="cart-v2-delivery-radios" role="radiogroup">
+              {(['tomorrow', 'beat'] as DeliveryKind[]).map((kind) => {
+                const active = seller.deliveryKind === kind;
+                return (
+                  <button
+                    key={kind}
+                    role="radio"
+                    aria-checked={active}
+                    className={`cart-v2-radio ${active ? 'active' : ''}`}
+                    onClick={() => onPickDelivery?.(kind)}
+                  >
+                    <span className="cart-v2-radio-dot" aria-hidden="true" />
+                    {DELIVERY_OPTIONS[kind].label}
+                  </button>
+                );
+              })}
+            </div>
+          )}
+        </div>
+        <div className="cart-v2-card-fee">
+          <Icon.Truck />
+          {seller.deliveryFee === 0
+            ? 'Free Delivery'
+            : `₹${seller.deliveryFee} delivery fees`}
+        </div>
       </div>
     </div>
   );

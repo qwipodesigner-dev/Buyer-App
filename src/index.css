@@ -9379,12 +9379,13 @@ body {
 
 .cart-v2-card {
   background: #fff;
-  border-radius: 14px;
-  padding: 14px 14px 12px;
+  border-radius: 8px;
+  padding: 12px;
   box-shadow: 0 1px 2px rgba(15, 23, 42, 0.04);
   display: flex;
   flex-direction: column;
-  gap: 12px;
+  gap: 8px;
+  font-family: 'Inter', system-ui, -apple-system, sans-serif;
 }
 
 .cart-v2-card-head {
@@ -9395,55 +9396,64 @@ body {
 }
 
 .cart-v2-card-meta {
-  font-size: 11px;
-  color: var(--text-secondary);
+  font-size: 10px;
+  font-weight: 400;
+  line-height: 16px;
+  color: #505050;
 }
 
 .cart-v2-card-name {
-  font-size: 13px;
-  font-weight: 600;
-  color: var(--primary);
-  line-height: 1.2;
-  margin-top: 1px;
+  font-size: 12px;
+  font-weight: 500;
+  line-height: 16px;
+  color: #2781E7;
 }
 
 .cart-v2-card-headr {
   text-align: right;
   display: flex;
   flex-direction: column;
-  gap: 3px;
+  align-items: flex-end;
+  gap: 4px;
 }
 
 .cart-v2-card-total {
-  font-size: 12px;
-  color: var(--text-secondary);
+  font-size: 10px;
+  font-weight: 400;
+  line-height: 16px;
+  color: #505050;
 }
 
 .cart-v2-card-total span {
-  font-size: 13px;
-  font-weight: 600;
-  color: var(--primary);
+  font-size: 14px;
+  font-weight: 500;
+  line-height: 16px;
+  color: #2781E7;
+  margin-left: 4px;
 }
 
 .cart-v2-card-drop {
   display: inline-flex;
   align-items: center;
   gap: 4px;
-  font-size: 11px;
-  color: var(--text-secondary);
-  justify-content: flex-end;
+  font-size: 10px;
+  font-weight: 400;
+  line-height: 16px;
+  color: #505050;
   white-space: nowrap;
 }
 
 .cart-v2-card-drop span {
-  color: #16a34a;
+  color: #01771B;
   font-weight: 600;
+  font-size: 10px;
+  line-height: 16px;
 }
 
 .cart-v2-card-drop svg {
-  width: 14px;
-  height: 14px;
-  color: #16a34a;
+  width: 16px;
+  height: 16px;
+  color: #01771B;
 }
 
 .cart-v2-card-fee {
@@ -9452,19 +9462,20 @@ body {
   gap: 4px;
   font-size: 12px;
   font-weight: 500;
-  color: #16a34a;
+  line-height: 16px;
+  color: #01771B;
 }
 
 .cart-v2-card-fee svg {
-  width: 14px;
-  height: 14px;
+  width: 16px;
+  height: 16px;
 }
 
 .cart-v2-card-mov {
   display: flex;
-  justify-content: space-between;
+  justify-content: flex-end;
   align-items: center;
-  gap: 10px;
+  gap: 8px;
 }
 
 .cart-v2-card-movl {
@@ -9504,31 +9515,39 @@ body {
 .cart-v2-pill {
   display: inline-flex;
   align-items: center;
-  gap: 2px;
+  gap: 4px;
   padding: 4px 8px;
-  font-size: 10.5px;
-  font-weight: 500;
+  height: 24px;
+  font-size: 10px;
+  font-weight: 600;
+  line-height: 16px;
   background: #fff;
-  border: 1px solid var(--primary);
-  border-radius: 8px;
-  color: var(--primary);
+  border: 1px solid #2781E7;
+  border-radius: 4px;
+  color: #2781E7;
   cursor: pointer;
   white-space: nowrap;
   transition: background 120ms ease;
 }
 
 .cart-v2-pill svg {
-  width: 11px;
-  height: 11px;
+  width: 12px;
+  height: 12px;
 }
 
 .cart-v2-pill:hover {
-  background: rgba(37, 99, 235, 0.04);
+  background: rgba(39, 129, 231, 0.06);
+}
+
+.cart-v2-divider-line {
+  width: 100%;
+  height: 0;
+  border-top: 0.5px solid #D3D3D3;
 }
 
 .cart-v2-mov-block {
   background: var(--surface-hover, #f3f4f6);
-  border-radius: 10px;
+  border-radius: 8px;
   padding: 10px 12px;
 }
 
@@ -9660,59 +9679,97 @@ body {
 }
 
 .cart-v2-rail-qty {
-  font-size: 12px;
-  color: var(--text-secondary);
+  font-size: 10px;
+  font-weight: 400;
+  line-height: 16px;
+  color: #1B1B1B;
+  text-align: center;
 }
 
 .cart-v2-rail-price {
-  font-size: 13px;
-  font-weight: 600;
-  color: var(--foreground);
+  font-size: 10px;
+  font-weight: 400;
+  line-height: 16px;
+  color: #1B1B1B;
+  text-align: center;
 }
 
 .cart-v2-delivery {
   display: flex;
+  justify-content: space-between;
   align-items: center;
-  gap: 10px;
-  padding-top: 10px;
-  border-top: 1px solid var(--border-soft);
-  flex-wrap: wrap;
+  gap: 12px;
+  padding-top: 4px;
+}
+
+.cart-v2-delivery-left {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  min-width: 0;
 }
 
 .cart-v2-delivery-label {
-  font-size: 12px;
-  font-weight: 600;
-  color: var(--foreground);
+  font-size: 10px;
+  font-weight: 500;
+  line-height: 20px;
+  color: #4F4F4F;
 }
 
 .cart-v2-delivery-static {
-  font-size: 13px;
+  font-size: 12px;
   font-weight: 500;
-  color: var(--primary);
+  line-height: 20px;
+  color: #2781E7;
 }
 
-.cart-v2-delivery-chips {
+.cart-v2-delivery-radios {
   display: flex;
-  gap: 6px;
+  align-items: center;
+  gap: 12px;
   flex-wrap: wrap;
 }
 
-.cart-v2-chip {
-  padding: 5px 12px;
-  border: 1px solid var(--border);
-  background: var(--surface-1, #fff);
-  color: var(--text-secondary);
-  border-radius: 999px;
+.cart-v2-radio {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  background: none;
+  border: 0;
+  padding: 0;
   font-size: 12px;
   font-weight: 500;
+  line-height: 20px;
+  color: #9A9A9A;
   cursor: pointer;
-  transition: background 120ms ease, color 120ms ease, border-color 120ms ease;
+  white-space: nowrap;
 }
 
-.cart-v2-chip.active {
-  background: var(--primary);
-  border-color: var(--primary);
-  color: var(--primary-fg);
+.cart-v2-radio.active {
+  color: #2781E7;
+}
+
+.cart-v2-radio-dot {
+  width: 14px;
+  height: 14px;
+  border-radius: 50%;
+  border: 1.5px solid #9A9A9A;
+  background: #fff;
+  position: relative;
+  transition: border-color 120ms ease;
+}
+
+.cart-v2-radio.active .cart-v2-radio-dot {
+  border-color: #2781E7;
+  background: #2781E7;
+}
+
+.cart-v2-radio.active .cart-v2-radio-dot::after {
+  content: '';
+  position: absolute;
+  inset: 2.5px;
+  border-radius: 50%;
+  background: #fff;
 }
 
 .cart-v2-footer {
@@ -9769,4 +9826,158 @@ body {
   font-size: 14px;
   font-weight: 600;
   cursor: pointer;
+}
+
+/* ==========================================================================
+   KYC Failed / Pending — Auth screen shown after Onboarding when KYC did
+   not clear. Non-blocking dead-end with a support contact + retry CTA.
+   ========================================================================= */
+.screen-body.kyc-failed-screen {
+  background: #fff;
+  padding-bottom: 100px;
+}
+
+.kyc-body {
+  padding: 24px 20px 16px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 12px;
+  text-align: center;
+}
+
+.kyc-icon {
+  margin-top: 12px;
+  margin-bottom: 4px;
+}
+
+.kyc-title {
+  font-family: 'Inter', system-ui, sans-serif;
+  font-size: 20px;
+  font-weight: 600;
+  line-height: 26px;
+  color: #EE404C;
+  margin: 0;
+}
+
+.kyc-sub {
+  font-family: 'Inter', system-ui, sans-serif;
+  font-size: 13px;
+  font-weight: 400;
+  line-height: 20px;
+  color: #505050;
+  margin: 0;
+  max-width: 320px;
+}
+
+.kyc-support-card {
+  margin-top: 20px;
+  width: 100%;
+  background: #F7F7F9;
+  border: 1px solid #E5E5EA;
+  border-radius: 12px;
+  padding: 14px 16px;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 10px;
+  text-align: left;
+}
+
+.kyc-support-head {
+  display: flex;
+  gap: 12px;
+  align-items: flex-start;
+}
+
+.kyc-support-head svg {
+  width: 20px;
+  height: 20px;
+  color: #2781E7;
+  flex: 0 0 auto;
+  margin-top: 2px;
+}
+
+.kyc-support-title {
+  font-family: 'Inter', system-ui, sans-serif;
+  font-size: 13px;
+  font-weight: 600;
+  line-height: 18px;
+  color: #1B1B1B;
+}
+
+.kyc-support-note {
+  font-family: 'Inter', system-ui, sans-serif;
+  font-size: 11px;
+  font-weight: 400;
+  line-height: 16px;
+  color: #6B7280;
+  margin-top: 2px;
+}
+
+.kyc-support-phone,
+.kyc-support-email {
+  display: block;
+  width: 100%;
+  padding: 10px 12px;
+  background: #fff;
+  border: 1px solid #D3D3D3;
+  border-radius: 8px;
+  font-family: 'Inter', system-ui, sans-serif;
+  font-size: 13px;
+  font-weight: 600;
+  color: #2781E7;
+  text-decoration: none;
+  text-align: center;
+}
+
+.kyc-support-email {
+  font-weight: 500;
+  font-size: 12px;
+  color: #505050;
+}
+
+.kyc-footer {
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  padding: 12px 16px 20px;
+  background: #fff;
+  border-top: 1px solid #E5E5EA;
+  display: flex;
+  gap: 10px;
+}
+
+.kyc-retry-btn,
+.kyc-call-btn {
+  flex: 1;
+  height: 44px;
+  border-radius: 10px;
+  font-family: 'Inter', system-ui, sans-serif;
+  font-size: 14px;
+  font-weight: 600;
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  text-decoration: none;
+}
+
+.kyc-retry-btn {
+  background: #fff;
+  color: #2781E7;
+  border: 1px solid #2781E7;
+}
+
+.kyc-call-btn {
+  background: #2781E7;
+  color: #fff;
+  border: 0;
+}
+
+.kyc-call-btn svg {
+  width: 16px;
+  height: 16px;
 }

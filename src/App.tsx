@@ -14,6 +14,7 @@ import SplashScreen from './screens/SplashScreen';
 import LoginScreen from './screens/LoginScreen';
 import OTPScreen from './screens/OTPScreen';
 import OnboardingScreen from './screens/OnboardingScreen';
+import KycFailedScreen from './screens/KycFailedScreen';
 import OrderSummaryScreen from './screens/OrderSummaryScreen';
 import MyOrdersScreen from './screens/MyOrdersScreen';
 import OrderDetailsScreen from './screens/OrderDetailsScreen';
@@ -334,7 +335,14 @@ export default function App() {
             {screen === 'onboarding' && (
               <OnboardingScreen
                 onBack={() => goBack('otp')}
-                onProceed={() => resetTo('home')}
+                onProceed={() => setScreen('kyc-failed')}
+              />
+            )}
+            {screen === 'kyc-failed' && (
+              <KycFailedScreen
+                onBack={() => goBack('onboarding')}
+                onRetry={() => resetTo('home')}
+                onCallSupport={() => setToast('Dialling Qwipo support…')}
               />
             )}
 
@@ -726,6 +734,7 @@ const SCREEN_GROUPS: { title: string; items: { id: string; label: string }[] }[]
       { id: 'login', label: 'Login' },
       { id: 'otp', label: 'OTP Verification' },
       { id: 'onboarding', label: 'Onboarding' },
+      { id: 'kyc-failed', label: 'KYC Failed / Pending' },
     ],
   },
   {
