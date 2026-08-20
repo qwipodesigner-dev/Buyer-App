@@ -29,6 +29,7 @@ import AddressesScreen from './screens/sub/AddressesScreen';
 import PaymentScreen from './screens/sub/PaymentScreen';
 import CreditScreen from './screens/sub/CreditScreen';
 import HelpScreen from './screens/sub/HelpScreen';
+import SupportChatScreen from './screens/sub/SupportChatScreen';
 import SettingsScreen from './screens/sub/SettingsScreen';
 import LanguageScreen from './screens/sub/LanguageScreen';
 import AddToCartSheet from './components/AddToCartSheet';
@@ -86,6 +87,7 @@ export default function App() {
   const [activeOrder, setActiveOrder] = useState<any>(null);
   const [cartValidationOpen, setCartValidationOpen] = useState<boolean>(false);
   const [appliedCoupon, setAppliedCoupon] = useState<any>(null);
+  const [chatSeed, setChatSeed] = useState<string | undefined>(undefined);
   const [cart, setCart] = useState(initialCart);
   const [listingCart, setListingCart] = useState({});
   // Per-seller delivery selection — shared between ProductListing and the
@@ -563,7 +565,24 @@ export default function App() {
             {screen === 'sub:addresses' && <AddressesScreen onBack={() => goBack('profile')} />}
             {screen === 'sub:payment' && <PaymentScreen onBack={() => goBack('profile')} />}
             {screen === 'sub:credit' && <CreditScreen onBack={() => goBack('profile')} />}
-            {screen === 'sub:help' && <HelpScreen onBack={() => goBack('profile')} />}
+            {screen === 'sub:help' && (
+              <HelpScreen
+                onBack={() => goBack('profile')}
+                onOpenChat={(seed?: string) => {
+                  setChatSeed(seed);
+                  setScreen('sub:support-chat');
+                }}
+              />
+            )}
+            {screen === 'sub:support-chat' && (
+              <SupportChatScreen
+                seed={chatSeed}
+                onBack={() => {
+                  setChatSeed(undefined);
+                  goBack('sub:help');
+                }}
+              />
+            )}
             {screen === 'sub:language' && (
               <LanguageScreen onBack={() => goBack('profile')} />
             )}
@@ -782,6 +801,7 @@ const SCREEN_GROUPS: { title: string; items: { id: string; label: string }[] }[]
       { id: 'sub:payment', label: 'Account · Payment Methods' },
       { id: 'sub:credit', label: 'Account · Qwipo Credit' },
       { id: 'sub:help', label: 'Account · Help & Support' },
+      { id: 'sub:support-chat', label: 'Account · Qwipo Assist (chat)' },
       { id: 'sub:settings', label: 'Account · Settings' },
       { id: 'sub:notif-prefs', label: 'Account · Notification Prefs' },
       { id: 'sub:language', label: 'Account · Language' },
